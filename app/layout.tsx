@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Noto_Sans_Bengali, Alex_Brush as Kalpurush, Baloo_Da_2, Tiro_Bangla } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ClerkProvider } from "@clerk/nextjs"
 
 const notoSansBengali = Noto_Sans_Bengali({
   subsets: ["bengali"],
@@ -32,7 +33,7 @@ const tiroBangla = Tiro_Bangla({
 })
 
 export const metadata: Metadata = {
-  title: "বাংলা সংস্কৃতি | Bengali Culture",
+  title: "কণ্ঠ কোষ | Bengali Cultural Platform",
   description: "Celebrating the rich heritage and culture of Bengal",
   generator: "v0.app",
 }
@@ -43,16 +44,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="bn"
-      className={`${notoSansBengali.variable} ${kalpurush.variable} ${balooDa2.variable} ${tiroBangla.variable}`}
-      suppressHydrationWarning
-    >
-      <body className="font-bengali antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang="bn"
+        className={`${notoSansBengali.variable} ${kalpurush.variable} ${balooDa2.variable} ${tiroBangla.variable}`}
+        suppressHydrationWarning
+      >
+        <body className="font-bengali antialiased">
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

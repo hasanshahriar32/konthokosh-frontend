@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Save, Send, Eye, FileText, Hash, Shield, Clock } from "lucide-react"
 import { useState } from "react"
+import { Navbar } from "@/components/navbar"
 
 const categories = [
   "গল্প",
@@ -52,8 +53,13 @@ export default function WritePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-red-200 sticky top-0 z-50">
+      <div className="relative">
+        <div className="h-20 bg-gradient-to-r from-red-600 to-orange-600"></div>
+        <Navbar />
+      </div>
+
+      {/* Write Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-red-200 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">

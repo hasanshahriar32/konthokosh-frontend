@@ -4,10 +4,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Navbar } from "@/components/navbar"
 
 export default function BengaliCulturalLandingPage() {
   const [scrollY, setScrollY] = useState(0)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
@@ -19,71 +19,7 @@ export default function BengaliCulturalLandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 cultural-pattern">
       {/* Hero Section with Full Width Image and Logo Overlay */}
       <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-[90vh] overflow-hidden">
-        <nav className="absolute top-0 left-0 right-0 z-30 bg-black/20 backdrop-blur-sm">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-white font-kalpurush text-xl font-semibold">বাংলার সংস্কৃতি</div>
-              <div className="hidden md:flex items-center space-x-8">
-                <a href="/" className="text-white/90 hover:text-white font-bengali transition-colors">
-                  প্রচ্ছদ
-                </a>
-                <a href="/feed" className="text-white/90 hover:text-white font-bengali transition-colors">
-                  ফিড
-                </a>
-                <a href="/write" className="text-white/90 hover:text-white font-bengali transition-colors">
-                  লিখুন
-                </a>
-                <a href="/my-posts" className="text-white/90 hover:text-white font-bengali transition-colors">
-                  আমার পোস্ট
-                </a>
-              </div>
-              <Button
-                variant="ghost"
-                className="md:hidden text-white hover:bg-white/20"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </Button>
-            </div>
-
-            {isMobileMenuOpen && (
-              <div className="md:hidden mt-4 pb-4 border-t border-white/20">
-                <div className="flex flex-col space-y-4 pt-4">
-                  <a
-                    href="/"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    প্রচ্ছদ
-                  </a>
-                  <a
-                    href="/feed"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    ফিড
-                  </a>
-                  <a
-                    href="/write"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    লিখুন
-                  </a>
-                  <a
-                    href="/my-posts"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    আমার পোস্ট
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
-        </nav>
+        <Navbar />
 
         {/* Full Width Background Image with Parallax Effect */}
         <div
@@ -538,7 +474,7 @@ export default function BengaliCulturalLandingPage() {
       {/* Footer */}
       <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12 transition-colors duration-300">
         <div className="container mx-auto px-4 text-center">
-          <h3 className="text-2xl font-kalpurush font-semibold mb-4">বাংলার সংস্কৃতি</h3>
+          <h3 className="text-2xl font-kalpurush font-semibold mb-4">কণ্ঠ কোষ</h3>
           <p className="font-bengali text-gray-300 dark:text-gray-400 mb-6">
             আমাদের ঐতিহ্য সংরক্ষণ ও প্রচারে আমরা প্রতিশ্রুতিবদ্ধ
           </p>
