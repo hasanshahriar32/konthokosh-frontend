@@ -285,3 +285,86 @@
 .curved-text:hover {
   transform: rotate(0deg) scale(1.02);
 }
+
+/* Markdown Editor Styles */
+.w-md-editor {
+  background-color: transparent !important;
+}
+
+.w-md-editor.w-md-editor-focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 1px #dc2626 !important;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-container,
+.w-md-editor-text,
+.w-md-editor-text-area {
+  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+.wmde-markdown {
+  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
+  line-height: 1.6 !important;
+}
+
+.wmde-markdown h1,
+.wmde-markdown h2,
+.wmde-markdown h3,
+.wmde-markdown h4,
+.wmde-markdown h5,
+.wmde-markdown h6 {
+  font-family: var(--font-kalpurush), ui-serif, serif !important;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.wmde-markdown p {
+  margin-bottom: 1em;
+}
+
+.wmde-markdown blockquote {
+  border-left: 4px solid #dc2626;
+  background-color: #fef2f2;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0.375rem;
+}
+
+.wmde-markdown code {
+  background-color: #f3f4f6;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.wmde-markdown pre {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.wmde-markdown pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.w-md-editor-toolbar {
+  border-bottom: 1px solid #e5e7eb !important;
+  background-color: #f9fafb !important;
+}
+
+.w-md-editor-toolbar li button {
+  color: #374151 !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  background-color: #e5e7eb !important;
+  color: #dc2626 !important;
+}

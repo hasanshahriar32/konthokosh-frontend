@@ -11,7 +11,8 @@ import type { KonthoKoshPost } from "@/types/konthokosh-api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
-import { Navbar } from "@/components/navbar";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function WritePage() {
   const router = useRouter();
@@ -179,9 +180,37 @@ export default function WritePage() {
                         </div>
                       </div>
                       <div className="mt-2 p-3 rounded bg-white/70 dark:bg-black/20 border text-sm">
-                        <pre className="whitespace-pre-wrap break-words">
-                          {createdPost.post}
-                        </pre>
+                        <div className="markdown-content prose prose-sm max-w-none">
+                          <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              h1: ({ children }) => <h1 className="text-lg font-bold font-kalpurush mb-2">{children}</h1>,
+                              h2: ({ children }) => <h2 className="text-base font-semibold font-kalpurush mb-2">{children}</h2>,
+                              h3: ({ children }) => <h3 className="text-sm font-medium font-kalpurush mb-1">{children}</h3>,
+                              p: ({ children }) => <p className="mb-2 font-bengali leading-relaxed">{children}</p>,
+                              blockquote: ({ children }) => (
+                                <blockquote className="border-l-2 border-red-300 pl-3 ml-2 italic text-gray-600 mb-2">
+                                  {children}
+                                </blockquote>
+                              ),
+                              code: ({ children }) => (
+                                <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">
+                                  {children}
+                                </code>
+                              ),
+                              pre: ({ children }) => (
+                                <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto mb-2">
+                                  {children}
+                                </pre>
+                              ),
+                              ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+                              ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+                              li: ({ children }) => <li className="text-sm font-bengali">{children}</li>,
+                            }}
+                          >
+                            {createdPost.post}
+                          </ReactMarkdown>
+                        </div>
                       </div>
                       <div className="flex gap-2 pt-2">
                         <Button
