@@ -132,6 +132,23 @@
   }
 }
 
+/* Bengali font utility classes */
+.font-bengali {
+  font-family: var(--font-bengali);
+}
+
+.font-kalpurush {
+  font-family: var(--font-kalpurush);
+}
+
+.font-baloo-da-2 {
+  font-family: var(--font-baloo-da-2);
+}
+
+.font-tiro-bangla {
+  font-family: var(--font-tiro-bangla);
+}
+
 .hero-hover {
   transition: transform 0.3s ease-in-out;
 }
@@ -224,6 +241,40 @@
   50% {
     transform: translateY(-5px);
   }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  75% {
+    transform: scale(1.15);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
 }
 
 .curved-text {
