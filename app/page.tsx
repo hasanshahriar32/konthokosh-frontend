@@ -489,10 +489,10 @@ export default function BengaliCulturalLandingPage() {
               সংগ্রহ
             </Button>
           </div>
-          <div className="flex justify-center items-center gap-2 pt-4 border-t border-gray-700 dark:border-gray-600">
+          {/* <div className="flex justify-center items-center gap-2 pt-4 border-t border-gray-700 dark:border-gray-600">
             <span className="text-sm font-bengali text-gray-400">থিম পরিবর্তন:</span>
             <ThemeToggle />
-          </div>
+          </div> */}
         </div>
       </footer>
     </div>
