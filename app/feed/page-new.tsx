@@ -104,7 +104,7 @@ const FeedPage = () => {
       <ProtectedRoute>
         <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
           <div className="relative">
-            <div className="h-16 bg-gradient-to-r from-red-600 to-orange-600"></div>
+            <div className="h-20 bg-gradient-to-r from-red-600 to-orange-600"></div>
             <Navbar />
           </div>
           <div className="flex items-center justify-center min-h-[50vh]">
@@ -122,7 +122,7 @@ const FeedPage = () => {
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
         <div className="relative">
-          <div className="h-16 bg-gradient-to-r from-red-600 to-orange-600"></div>
+          <div className="h-20 bg-gradient-to-r from-red-600 to-orange-600"></div>
           <Navbar />
         </div>
 
