@@ -143,8 +143,10 @@ export const useApiClient = (config: ApiClientConfig = {}) => {
             const token = await getToken();
             if (token) {
               headersRecord.Authorization = `Bearer ${token}`;
+              console.log("✅ Token added to request headers:", token.substring(0, 20) + "...");
             } else {
               console.warn("⚠️ No token available from Clerk");
+              throw new ApiError("No authentication token available", 401);
             }
           } catch (tokenError) {
             console.error("❌ Failed to get Clerk token:", tokenError);

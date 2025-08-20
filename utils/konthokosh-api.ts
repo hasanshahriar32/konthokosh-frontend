@@ -4,6 +4,7 @@ import type {
   KonthoKoshApiResponse,
   KonthoKoshPost,
   CreatePostRequest,
+  CreatePostResponseData,
   KonthoKoshPagedPostsResponse,
   KonthoKoshFeedPost,
 } from "@/types/konthokosh-api";
@@ -39,7 +40,7 @@ export const useKonthoKoshApi = () => {
         };
 
         // 🔐 JWT token automatically added by the API client
-        const response = await api.post<KonthoKoshApiResponse<KonthoKoshPost>>(
+        const response = await api.post<KonthoKoshApiResponse<CreatePostResponseData>>(
           "/api/v1/posts",
           requestBody
         );
@@ -55,7 +56,7 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        if (!response.data.data) {
+        if (!response.data.data || !response.data.data.post) {
           throw new ApiError(
             "No post data returned",
             response.status,
@@ -63,8 +64,8 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        console.log("✅ Post created successfully:", response.data.data);
-        return response.data.data;
+        console.log("✅ Post created successfully:", response.data.data.post);
+        return response.data.data.post;
       } catch (error) {
         console.error("❌ Failed to create post on KonthoKosh:", error);
 

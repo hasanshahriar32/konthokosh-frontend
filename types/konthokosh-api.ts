@@ -36,6 +36,16 @@ export type CreatePostRequest = {
 };
 
 /**
+ * Create post response data structure
+ */
+export type CreatePostResponseData = {
+  post: KonthoKoshPost;
+  similarPosts: any[];
+  ragEnabled: boolean;
+  similarPostsCount: number;
+};
+
+/**
  * Error response structure
  */
 export type KonthoKoshError = {
