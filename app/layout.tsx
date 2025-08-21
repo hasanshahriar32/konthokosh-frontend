@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Noto_Sans_Bengali, Alex_Brush as Kalpurush, Baloo_Da_2, Tiro_Bangla } from "next/font/google"
-import "./globals.css"
+import "../styles/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ClerkProvider } from "@clerk/nextjs"
 
