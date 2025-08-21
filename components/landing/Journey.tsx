@@ -1,4 +1,5 @@
 import { Button } from "../ui/button";
+import { journey } from "@/constants/landing";
 
 const Journey = () => {
   return (
@@ -8,21 +9,19 @@ const Journey = () => {
           <div className="w-full animate-fade-in-left">
             <img
               src="/images/train-station.jpg"
-              alt="ট্রেন স্টেশন"
+              alt={journey.imageAlt}
               className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
             />
           </div>
           <div className="max-w-full animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-kalpurush font-bold text-blue-800 mb-4 lg:mb-6">
-              আপনার সৃজনশীল যাত্রা
+              {journey.title}
             </h2>
             <p className="text-base lg:text-lg font-bengali text-gray-700 leading-relaxed mb-6 lg:mb-8">
-              প্রতিটি লেখক, কবি এবং গল্পকারের একটি অনন্য যাত্রা রয়েছে। আমাদের
-              প্ল্যাটফর্মে আপনি আপনার চিন্তাভাবনা, অভিজ্ঞতা এবং কল্পনাকে নিরাপদে
-              প্রকাশ করতে পারবেন।
+              {journey.description}
             </p>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bengali px-6 lg:px-8 py-2 lg:py-3 hover:scale-105 transition-transform duration-200">
-              যাত্রা শুরু করুন
+              {journey.button}
             </Button>
           </div>
         </div>

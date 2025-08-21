@@ -1,4 +1,5 @@
 import React from "react";
+import { ourPlatform } from "@/constants/landing";
 
 const OurPlatform = () => {
   return (
@@ -6,11 +7,10 @@ const OurPlatform = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-12 animate-fade-in-up">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-kalpurush font-bold text-emerald-800 mb-6">
-            আমাদের প্ল্যাটফর্মের পরিচয়
+            {ourPlatform.title}
           </h2>
           <p className="text-lg lg:text-xl font-bengali text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            এই ভিডিওতে দেখুন কিভাবে আমাদের প্ল্যাটফর্ম আপনার সৃজনশীল কাজকে
-            সুরক্ষিত রাখে এবং বাংলা সাহিত্যের নতুন দিগন্ত উন্মোচন করে।
+            {ourPlatform.description}
           </p>
         </div>
         <div className="max-w-4xl mx-auto animate-fade-in-up">
@@ -24,10 +24,10 @@ const OurPlatform = () => {
               controls={false}
             >
               <source
-                src="https://pub-91b6dab2710249aebab317bffbbcd649.r2.dev/a7273cd356998459a075dd8dcfff8603.mp4"
+                src={ourPlatform.videoSrc}
                 type="video/mp4"
               />
-              আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।
+              {ourPlatform.videoAlt}
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
           </div>

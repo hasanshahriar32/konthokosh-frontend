@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 import { communityPower } from "@/constants/landing";
+import CommunityItem from "./CommunityItem";
 
 const CommunityPower: React.FC = () => {
   return (
@@ -10,7 +11,7 @@ const CommunityPower: React.FC = () => {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="w-full animate-fade-in-right">
             <Image
-              src="/images/rickshaw-park.jpg"
+              src={communityPower.imageSrc}
               alt={communityPower.imageAlt}
               width={800}
               height={400}
@@ -26,22 +27,14 @@ const CommunityPower: React.FC = () => {
               {communityPower.description}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-              <div className="bg-green-50 p-4 lg:p-6 rounded-lg hover:bg-green-100 transition-colors duration-300">
-                <h3 className="text-lg lg:text-xl font-kalpurush font-semibold text-green-700 mb-2">
-                  {communityPower.readerCommunityTitle}
-                </h3>
-                <p className="font-bengali text-gray-600 text-sm lg:text-base">
-                  {communityPower.readerCommunityDesc}
-                </p>
-              </div>
-              <div className="bg-green-50 p-4 lg:p-6 rounded-lg hover:bg-green-100 transition-colors duration-300">
-                <h3 className="text-lg lg:text-xl font-kalpurush font-semibold text-green-700 mb-2">
-                  {communityPower.writerNetworkTitle}
-                </h3>
-                <p className="font-bengali text-gray-600 text-sm lg:text-base">
-                  {communityPower.writerNetworkDesc}
-                </p>
-              </div>
+              <CommunityItem
+                title={communityPower.readerCommunityTitle}
+                description={communityPower.readerCommunityDesc}
+              />
+              <CommunityItem
+                title={communityPower.writerNetworkTitle}
+                description={communityPower.writerNetworkDesc}
+              />
             </div>
           </div>
         </div>
