@@ -10,11 +10,11 @@ const CommunityItem: React.FC<CommunityItemProps> = ({
   description,
 }) => {
   return (
-    <div className="bg-green-50 p-4 lg:p-6 rounded-lg hover:bg-green-100 transition-colors duration-300">
-      <h3 className="text-lg lg:text-xl font-kalpurush font-semibold text-green-700 mb-2">
+    <div className="bg-card p-4 lg:p-6 rounded-lg hover:bg-muted transition-colors duration-300">
+      <h3 className="text-lg lg:text-xl font-kalpurush font-semibold text-primary mb-2">
         {title}
       </h3>
-      <p className="font-bengali text-gray-600 text-sm lg:text-base">
+      <p className="font-bengali text-muted-foreground text-sm lg:text-base">
         {description}
       </p>
     </div>

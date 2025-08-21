@@ -1,5 +1,4 @@
-import Image from "next/image";
-import React from "react";
+import Image from 'next/image'
 import { Button } from "../ui/button";
 
 type FeatureSectionProps = {
@@ -31,7 +30,7 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({
       <div className="container mx-auto px-4 max-w-7xl">
         <div
           className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center ${
-            reverse ? "" : ""
+            reverse ? "lg:grid-flow-col-dense" : ""
           }`}
         >
           {!reverse && (
@@ -52,12 +51,12 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({
             >
               {title}
             </h2>
-            <p className="text-base lg:text-lg font-bengali text-gray-700 leading-relaxed mb-6 lg:mb-8">
+            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
               {description}
             </p>
             {buttonText && (
               <Button
-                className={`${colorScheme.button} ${colorScheme.buttonHover} text-white font-bengali px-6 lg:px-8 py-2 lg:py-3 hover:scale-105 transition-transform duration-200 rounded-full`}
+                className={`${colorScheme.button} ${colorScheme.buttonHover} text-primary-foreground font-bengali hover:scale-105 transition-transform duration-200 rounded-full`}
               >
                 {buttonText}
               </Button>

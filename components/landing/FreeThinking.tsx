@@ -4,17 +4,17 @@ import { freeThinking } from "@/constants/landing";
 
 const FreeThinking: React.FC = () => {
   return (
-    <section className="py-20 overflow-hidden bg-gradient-to-br from-red-100 to-orange-100">
+    <section className="py-20 overflow-hidden bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="order-2 lg:order-1 max-w-full animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-kalpurush font-bold text-red-800 mb-6 lg:mb-8">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-kalpurush font-bold text-primary mb-6 lg:mb-8">
               {freeThinking.title}
             </h2>
-            <p className="text-base lg:text-lg font-bengali text-gray-700 leading-relaxed mb-6 lg:mb-8">
+            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
               {freeThinking.description}
             </p>
-            <Button className="bg-red-600 hover:bg-red-700 text-white font-bengali px-6 lg:px-8 py-2 lg:py-3 hover:scale-105 transition-transform duration-200">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-bengali px-6 lg:px-8 py-2 lg:py-3 hover:scale-105 transition-transform duration-200">
               {freeThinking.button}
             </Button>
           </div>

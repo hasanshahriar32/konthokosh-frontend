@@ -3,7 +3,7 @@ import { quote } from "@/constants/landing";
 
 const Quote: React.FC = () => {
   return (
-    <section className="py-20 bg-gradient-to-r from-red-600 to-orange-600 text-white">
+    <section className="py-20 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 text-center">
         <blockquote className="text-3xl lg:text-4xl font-kalpurush font-medium mb-8 bengali-text-shadow">
           "{quote.text}"

@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-[90vh] overflow-hidden">
+    <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-[90vh] overflow-hidden bg-background">
       <Navbar />
 
       <div
@@ -42,19 +42,19 @@ const Hero: React.FC = () => {
         }}
       >
         <h1
-          className="text-3xl md:text-5xl xl:text-6xl font-bold text-white mb-4 bengali-text-shadow"
+          className="text-3xl md:text-5xl xl:text-6xl font-bold text-primary-foreground mb-4 bengali-text-shadow"
           style={{ fontFamily: "var(--font-baloo-da-2)" }}
         >
           {hero.title}
         </h1>
         <p
-          className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-white/95 leading-relaxed bengali-text-shadow mb-3"
+          className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-primary-foreground/95 leading-relaxed bengali-text-shadow mb-3"
           style={{ fontFamily: "var(--font-tiro-bangla)" }}
         >
           {hero.subtitle}
         </p>
         <p
-          className="text-sm md:text-base lg:text-lg xl:text-xl text-white/90"
+          className="text-sm md:text-base lg:text-lg xl:text-xl text-primary-foreground/90"
           style={{ fontFamily: "var(--font-kalpurush)" }}
         >
           {hero.categories}
@@ -65,8 +65,7 @@ const Hero: React.FC = () => {
       <div
         className="absolute -bottom-2 -right-8 z-20 w-[60%]"
         style={{
-          transform: `translateY(${scrollY * 0.7}px) translateX(${
-            scrollY * 0.2
+          transform: `translateY(${scrollY * 0.7}px) translateX(${scrollY * 0.2
           }px)`,
           opacity: Math.max(0, 1 - scrollY / 400),
         }}

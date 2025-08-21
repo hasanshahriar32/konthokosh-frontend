@@ -6,7 +6,7 @@ import CommunityItem from "./CommunityItem";
 
 const CommunityPower: React.FC = () => {
   return (
-    <section className="py-20 overflow-hidden bg-white">
+    <section className="py-20 overflow-hidden bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="w-full animate-fade-in-right">
@@ -20,10 +20,10 @@ const CommunityPower: React.FC = () => {
             />
           </div>
           <div className="max-w-full animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-kalpurush font-bold text-green-800 mb-4 lg:mb-6">
+            <h2 className="text-3xl md:text-4xl font-kalpurush font-bold text-primary mb-4 lg:mb-6">
               {communityPower.title}
             </h2>
-            <p className="text-base lg:text-lg font-bengali text-gray-700 leading-relaxed mb-6 lg:mb-8">
+            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
               {communityPower.description}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">

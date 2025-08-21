@@ -4,14 +4,14 @@ import FeatureItem from "../landing/FeatureItem";
 
 const SafePlatform: React.FC = () => {
   return (
-    <section className="py-20 overflow-hidden bg-gradient-to-br from-red-50 to-orange-50">
+    <section className="py-20 overflow-hidden bg-background">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="order-2 lg:order-1 max-w-full animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-kalpurush font-bold text-red-800 mb-6 lg:mb-8">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-kalpurush font-bold text-primary mb-6 lg:mb-8">
               {safePlatform.title}
             </h2>
-            <p className="text-lg lg:text-xl font-bengali text-gray-700 leading-relaxed mb-6 lg:mb-8">
+            <p className="text-lg lg:text-xl font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
               {safePlatform.description}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
