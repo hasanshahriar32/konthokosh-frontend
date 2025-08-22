@@ -7,6 +7,9 @@ import type {
 
 export const BRAND_NAME = "কণ্ঠ কোষ";
 
+export const TITLE = "আপনার ওয়ালেট সংযুক্ত করুন";
+export const SUBTITLE = "MetaMask ব্রাউজার এক্সটেনশন প্রয়োজন";
+
 export const TRUST_INDICATORS: TrustIndicator[] = [
   {
     icon: Icons.Shield,

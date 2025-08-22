@@ -219,6 +219,10 @@
   @apply font-bengali leading-relaxed;
 }
 
+.text-x14 {
+  @apply font-bengali text-sm leading-relaxed;
+}
+
 /* ---------- Hero Hover & Animations ---------- */
 .hero-hover {
   transition: transform 0.3s ease-in-out;
