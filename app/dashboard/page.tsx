@@ -4,7 +4,7 @@ import { useUser, useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import Link from "next/link";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/common/Icons";
@@ -138,13 +138,13 @@ const DashboardPage = () => {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h1 
+            <h1
               className="text-3xl font-bold text-red-800 mb-2 bengali-text-shadow"
               style={{ fontFamily: "var(--font-kalpurush)" }}
             >
               স্বাগতম, {user?.firstName || "ব্যবহারকারী"}!
             </h1>
-            <p 
+            <p
               className="text-gray-700 font-bengali leading-relaxed"
               style={{ fontFamily: "var(--font-bengali)" }}
             >
@@ -154,14 +154,14 @@ const DashboardPage = () => {
 
           {/* JWT Token Debug Section */}
           <Card className="mb-8 p-6 bg-gradient-to-br from-red-50 to-orange-50 border-red-200 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <h2 
+            <h2
               className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-800"
               style={{ fontFamily: "var(--font-kalpurush)" }}
             >
               <Icons.Shield className="h-5 w-5 text-red-600" />
               JWT টোকেন ডিবাগ কনসোল
             </h2>
-            <p 
+            <p
               className="text-sm text-gray-700 mb-4 font-bengali leading-relaxed"
               style={{ fontFamily: "var(--font-bengali)" }}
             >
@@ -211,7 +211,7 @@ const DashboardPage = () => {
 
             {tokenStatus && (
               <div className="p-3 rounded-lg bg-white/80 border border-red-200">
-                <p 
+                <p
                   className="text-sm font-mono text-gray-700"
                   style={{ fontFamily: "var(--font-bengali)" }}
                 >
@@ -222,7 +222,7 @@ const DashboardPage = () => {
 
             {clientToken && (
               <div className="mt-4 p-4 rounded-lg bg-orange-50 border border-orange-200">
-                <h4 
+                <h4
                   className="font-medium text-sm text-orange-800 mb-2"
                   style={{ fontFamily: "var(--font-kalpurush)" }}
                 >
@@ -238,7 +238,7 @@ const DashboardPage = () => {
           {/* Debug: User Object Display */}
           {user && (
             <Card className="mb-8 p-6 bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200 shadow-lg">
-              <h2 
+              <h2
                 className="text-lg font-semibold mb-4 flex items-center gap-2 text-yellow-800"
                 style={{ fontFamily: "var(--font-kalpurush)" }}
               >
@@ -247,7 +247,7 @@ const DashboardPage = () => {
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 
+                  <h3
                     className="font-medium text-sm text-yellow-700 mb-2"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -272,7 +272,7 @@ const DashboardPage = () => {
                 </div>
 
                 <div>
-                  <h3 
+                  <h3
                     className="font-medium text-sm text-yellow-700 mb-2"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -298,7 +298,7 @@ const DashboardPage = () => {
                 </div>
 
                 <div>
-                  <h3 
+                  <h3
                     className="font-medium text-sm text-yellow-700 mb-2"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -317,7 +317,7 @@ const DashboardPage = () => {
                 </div>
 
                 <div>
-                  <h3 
+                  <h3
                     className="font-medium text-sm text-yellow-700 mb-2"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -340,13 +340,13 @@ const DashboardPage = () => {
                   <Icons.FileText className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-semibold text-green-800"
                     style={{ fontFamily: "var(--font-kalpurush)" }}
                   >
                     নতুন পোস্ট তৈরি
                   </h3>
-                  <p 
+                  <p
                     className="text-sm text-green-700 font-bengali"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -369,13 +369,13 @@ const DashboardPage = () => {
                   <Icons.Search className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-semibold text-blue-800"
                     style={{ fontFamily: "var(--font-kalpurush)" }}
                   >
                     কন্টেন্ট যাচাই
                   </h3>
-                  <p 
+                  <p
                     className="text-sm text-blue-700 font-bengali"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -396,13 +396,13 @@ const DashboardPage = () => {
                   <Icons.Gem className="h-6 w-6 text-purple-600" />
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className="font-semibold text-purple-800"
                     style={{ fontFamily: "var(--font-kalpurush)" }}
                   >
                     আমার কন্টেন্ট
                   </h3>
-                  <p 
+                  <p
                     className="text-sm text-purple-700 font-bengali"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -419,7 +419,7 @@ const DashboardPage = () => {
 
           {/* Stats Section */}
           <div className="mt-12">
-            <h2 
+            <h2
               className="text-xl font-semibold mb-6 text-red-800 bengali-text-shadow"
               style={{ fontFamily: "var(--font-kalpurush)" }}
             >
@@ -427,13 +427,13 @@ const DashboardPage = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card className="p-4 text-center bg-gradient-to-br from-red-50 to-orange-50 border-red-200 hover:shadow-lg transition-shadow duration-300">
-                <div 
+                <div
                   className="text-2xl font-bold text-red-600"
                   style={{ fontFamily: "var(--font-baloo-da-2)" }}
                 >
                   ০
                 </div>
-                <div 
+                <div
                   className="text-sm text-red-700 font-bengali"
                   style={{ fontFamily: "var(--font-bengali)" }}
                 >
@@ -441,13 +441,13 @@ const DashboardPage = () => {
                 </div>
               </Card>
               <Card className="p-4 text-center bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200 hover:shadow-lg transition-shadow duration-300">
-                <div 
+                <div
                   className="text-2xl font-bold text-orange-600"
                   style={{ fontFamily: "var(--font-baloo-da-2)" }}
                 >
                   ০
                 </div>
-                <div 
+                <div
                   className="text-sm text-orange-700 font-bengali"
                   style={{ fontFamily: "var(--font-bengali)" }}
                 >
@@ -455,13 +455,13 @@ const DashboardPage = () => {
                 </div>
               </Card>
               <Card className="p-4 text-center bg-gradient-to-br from-yellow-50 to-green-50 border-yellow-200 hover:shadow-lg transition-shadow duration-300">
-                <div 
+                <div
                   className="text-2xl font-bold text-yellow-600"
                   style={{ fontFamily: "var(--font-baloo-da-2)" }}
                 >
                   ০
                 </div>
-                <div 
+                <div
                   className="text-sm text-yellow-700 font-bengali"
                   style={{ fontFamily: "var(--font-bengali)" }}
                 >
@@ -469,13 +469,13 @@ const DashboardPage = () => {
                 </div>
               </Card>
               <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-teal-50 border-green-200 hover:shadow-lg transition-shadow duration-300">
-                <div 
+                <div
                   className="text-2xl font-bold text-green-600"
                   style={{ fontFamily: "var(--font-baloo-da-2)" }}
                 >
                   ১০০%
                 </div>
-                <div 
+                <div
                   className="text-sm text-green-700 font-bengali"
                   style={{ fontFamily: "var(--font-bengali)" }}
                 >

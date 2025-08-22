@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { hero } from "@/constants/landing";
-import { Navbar } from "../navbar";
+import Navbar from "../Navbar";
 
 const Hero: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -14,33 +14,23 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-[90vh] overflow-hidden bg-background">
-      <Navbar />
+    <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-screen overflow-hidden">
+      <Suspense fallback={<></>}>
+        <Navbar />
+      </Suspense>
 
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10"
         style={{
           transform: `translateY(${scrollY * 0.5}px)`,
+          backgroundImage: `linear-gradient(135deg, rgba(0,0,0,0.75), rgba(0,0,0,0.45)), url(${hero.imageSrc})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
-      >
-        <Image
-          src={hero.imageSrc}
-          alt={hero.imageAlt}
-          width={0}
-          height={0}
-          sizes="full"
-          className="w-full h-full object-cover hero-hover"
-        />
-        <div className="absolute inset-0 bg-black/20"></div>
-      </div>
+        aria-label={hero.imageAlt}
+      />
 
-      <div
-        className="absolute top-20 left-4 md:left-8 z-20 max-w-md"
-        style={{
-          transform: `translateY(${scrollY * 0.3}px)`,
-          opacity: Math.max(0, 1 - scrollY / 300),
-        }}
-      >
+      <div className="relative h-full max-w-lg flex flex-col justify-center px-10">
         <h1
           className="text-3xl md:text-5xl xl:text-6xl font-bold text-primary-foreground mb-4 bengali-text-shadow"
           style={{ fontFamily: "var(--font-baloo-da-2)" }}
@@ -65,14 +55,18 @@ const Hero: React.FC = () => {
       <div
         className="absolute -bottom-2 -right-8 z-20 w-[60%]"
         style={{
-          transform: `translateY(${scrollY * 0.7}px) translateX(${scrollY * 0.2
+          transform: `translateY(${scrollY * 0.7}px) translateX(${
+            scrollY * 0.2
           }px)`,
           opacity: Math.max(0, 1 - scrollY / 400),
         }}
       >
-        <img
+        <Image
           src={hero.bottomImageSrc}
           alt={hero.bottomImageAlt}
+          height={0}
+          width={0}
+          sizes="full"
           className="w-full h-auto object-contain drop-shadow-lg"
         />
       </div>

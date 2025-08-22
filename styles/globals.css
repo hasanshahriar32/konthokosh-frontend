@@ -6,20 +6,21 @@
 /* ---------- Light theme tokens ---------- */
 :root {
   --background: oklch(99% 0.002 280); /* white */
-  --foreground: oklch(18% 0.01 280); /* near-black text */
+  --foreground: oklch(41% 0 0);
+  --foreground-dark: oklch(18% 0.01 280); /* near-black text */
 
   --card: oklch(99% 0.002 280);
-  --card-foreground: oklch(18% 0.01 280);
+  --card-foreground: oklch(41% 0 0);
 
   --popover: oklch(99% 0.002 280);
-  --popover-foreground: oklch(18% 0.01 280);
+  --popover-foreground: oklch(41% 0 0);
 
   /* Brand colors */
   --primary: oklch(47.2% 0.191 276.6); /* Indigo */
   --primary-foreground: oklch(98% 0.02 280);
 
   --secondary: oklch(82.7% 0.166 77.6); /* Saffron */
-  --secondary-foreground: oklch(18% 0.01 280);
+  --secondary-foreground: oklch(41% 0 0);
 
   /* Support */
   --muted: oklch(95% 0.01 280);
@@ -188,6 +189,26 @@
       color-mix(in oklch, var(--secondary) 15%, transparent) 0%,
       transparent 50%
     );
+}
+
+/* -------------------------------- Headings -------------------------------- */
+
+.heading-primary {
+  @apply text-4xl font-kalpurush font-bold text-center mb-8;
+}
+
+.heading-secondary {
+  @apply text-2xl font-kalpurush font-semibold text-foreground;
+}
+
+/* ---------------------------------- Text ---------------------------------- */
+
+.text-subtitle {
+  @apply text-lg font-bengali text-center text-foreground mb-16 max-w-4xl mx-auto leading-relaxed;
+}
+
+.text-x16 {
+  @apply font-bengali text-muted-foreground leading-relaxed;
 }
 
 /* ---------- Hero Hover & Animations ---------- */

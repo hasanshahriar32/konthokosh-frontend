@@ -37,32 +37,6 @@ export const culture = {
         "কাঁথা, শাড়ি, পটচিত্র, মৃৎশিল্প, কাঠের কাজ, পিতলের কাজ - আমাদের হস্তশিল্পে রয়েছে অপূর্ব কারুকার্য। প্রতিটি নিদর্শনে ফুটে উঠেছে শিল্পীর মনের কথা।",
     },
   ],
-  shortCategories: [
-    {
-      title: "স্থাপত্য",
-      icon: PanelLeftOpen,
-      bg: "from-green-50 to-teal-50",
-      description: "মসজিদ, মন্দির, জমিদার বাড়ি",
-    },
-    {
-      icon: VenetianMask,
-      title: "সাহিত্য",
-      bg: "from-blue-50 to-indigo-50",
-      description: "কবিতা, গল্প, উপন্যাস, প্রবন্ধ",
-    },
-    {
-      icon: Music,
-      title: "খাদ্য সংস্কৃতি",
-      bg: "from-purple-50 to-pink-50",
-      description: "ভাত, মাছ, মিষ্টি, পিঠা",
-    },
-    {
-      icon: PanelLeftOpen,
-      title: "উৎসব",
-      bg: "from-rose-50 to-red-50",
-      description: "পহেলা বৈশাখ, দুর্গাপূজা, ঈদ",
-    },
-  ],
 };
 
 export const safePlatform = {
@@ -199,7 +173,8 @@ export const ourPlatform = {
   title: "আমাদের প্ল্যাটফর্মের পরিচয়",
   description:
     "এই ভিডিওতে দেখুন কিভাবে আমাদের প্ল্যাটফর্ম আপনার সৃজনশীল কাজকে সুরক্ষিত রাখে এবং বাংলা সাহিত্যের নতুন দিগন্ত উন্মোচন করে।",
-  videoSrc: "https://pub-91b6dab2710249aebab317bffbbcd649.r2.dev/a7273cd356998459a075dd8dcfff8603.mp4",
+  videoSrc:
+    "https://pub-91b6dab2710249aebab317bffbbcd649.r2.dev/a7273cd356998459a075dd8dcfff8603.mp4",
   videoAlt: "আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।",
 };
 

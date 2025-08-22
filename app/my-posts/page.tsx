@@ -42,14 +42,14 @@ import {
   PenTool,
 } from "lucide-react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/Navbar";
 import { useBackendApi } from "@/utils/api-client";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import Link from "next/link";
 
 export default function MyPostsPage() {
   const api = useBackendApi();
-  
+
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,7 +66,7 @@ export default function MyPostsPage() {
   const loadPosts = useCallback(async (pageNum: number, searchKeyword: string = "", approvalStatus: boolean | null = null) => {
     setLoading(true);
     setError("");
-    
+
     try {
       const params: Record<string, string | number | boolean> = {
         page: pageNum,
@@ -84,17 +84,17 @@ export default function MyPostsPage() {
 
       const response = await api.get("/api/v1/posts", { params });
 
-      const data = response.data as { 
-        success: boolean; 
-        data: { 
-          data: KonthoKoshFeedPost[]; 
-          pagination: { 
-            totalPages: number; 
-            totalCount: number; 
-          } 
-        } 
+      const data = response.data as {
+        success: boolean;
+        data: {
+          data: KonthoKoshFeedPost[];
+          pagination: {
+            totalPages: number;
+            totalCount: number;
+          }
+        }
       };
-      
+
       if (data.success && data.data) {
         setPosts(data.data.data);
         setTotalPages(data.data.pagination.totalPages);
@@ -112,15 +112,15 @@ export default function MyPostsPage() {
 
   const deletePost = useCallback(async (postId: number) => {
     setDeleteLoading(postId);
-    
+
     try {
       const response = await api.delete(`/api/v1/posts/${postId}`);
-      
+
       if (response.status === 200 || response.status === 204) {
         // Remove the deleted post from the current posts list
         setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
         setTotalCount(prevCount => Math.max(0, prevCount - 1));
-        
+
         // If this was the last post on the current page and we're not on page 1, go to previous page
         if (posts.length === 1 && page > 1) {
           const newPage = page - 1;
@@ -196,7 +196,7 @@ export default function MyPostsPage() {
   };
 
   const totalViews = 0; // API doesn't provide view count
-  const totalLikes = 0; // API doesn't provide like count  
+  const totalLikes = 0; // API doesn't provide like count
   const totalComments = 0; // API doesn't provide comment count
 
   if (loading && !hasLoaded) {
@@ -313,15 +313,15 @@ export default function MyPostsPage() {
                         className="pl-10 border-red-200 focus:border-red-400 font-bengali"
                       />
                     </div>
-                    <Button 
-                      type="submit" 
-                      className="bg-red-600 hover:bg-red-700 font-bengali" 
+                    <Button
+                      type="submit"
+                      className="bg-red-600 hover:bg-red-700 font-bengali"
                       disabled={loading}
                     >
                       {loading ? "খুঁজছি..." : "খুঁজুন"}
                     </Button>
                   </form>
-                  
+
                   {/* Approval Status Filter */}
                   <div className="flex gap-2">
                     <Button
@@ -364,10 +364,10 @@ export default function MyPostsPage() {
                   </div>
                   <div>
                     <p className="text-sm text-red-700 font-bengali">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mt-2 font-bengali" 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2 font-bengali"
                       onClick={() => loadPosts(page, searchTerm, isApproved)}
                     >
                       আবার চেষ্টা করুন
@@ -525,19 +525,19 @@ export default function MyPostsPage() {
                     পৃষ্ঠা {page} / {totalPages}
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handlePrevPage} 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handlePrevPage}
                       disabled={page <= 1 || loading}
                       className="font-bengali border-red-200 hover:bg-red-50"
                     >
                       পূর্ববর্তী
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleNextPage} 
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleNextPage}
                       disabled={page >= totalPages || loading}
                       className="font-bengali border-red-200 hover:bg-red-50"
                     >
