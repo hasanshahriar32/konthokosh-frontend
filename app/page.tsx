@@ -5,14 +5,13 @@ import Cta from "@/components/landing/Cta";
 import Culture from "@/components/landing/Culture";
 import FeatureSection from "@/components/landing/FeatureSection";
 import Footer from "@/components/landing/Footer";
-import FreeThinking from "@/components/landing/FreeThinking";
 import Hero from "@/components/landing/Hero";
-import Journey from "@/components/landing/Journey";
 import OurPlatform from "@/components/landing/OurPlatform";
 import Quote from "@/components/landing/Quote";
 import SafePlatform from "@/components/landing/SafePlatform";
 import Technology from "@/components/landing/Technology";
-import { featureSections } from "@/constants/landing";
+import AdvantageItem from "@/components/landing/AdvantageItem";
+import { featureSections, alternatingContentSections } from "@/constants/landing";
 
 export default function BengaliCulturalLandingPage() {
   return (
@@ -23,9 +22,17 @@ export default function BengaliCulturalLandingPage() {
 
       <SafePlatform />
 
-      <Journey />
-
-      <FreeThinking />
+      {alternatingContentSections.map((section, index) => (
+        <AdvantageItem
+          key={index}
+          title={section.title}
+          description={section.description}
+          imageSrc={section.imageSrc}
+          imageAlt={section.imageAlt}
+          buttonText={section.button}
+          reverse={section.reverse}
+        />
+      ))}
 
       <CommunityPower />
 

@@ -64,23 +64,26 @@ export const safePlatform = {
   imageSrc: "/images/shaheed-minar.jpg",
 };
 
-export const journey = {
-  title: "আপনার সৃজনশীল যাত্রা",
-  description:
-    "প্রতিটি লেখক, কবি এবং গল্পকারের একটি অনন্য যাত্রা রয়েছে। আমাদের প্ল্যাটফর্মে আপনি আপনার চিন্তাভাবনা, অভিজ্ঞতা এবং কল্পনাকে নিরাপদে প্রকাশ করতে পারবেন।",
-  button: "যাত্রা শুরু করুন",
-  imageAlt: "ট্রেন স্টেশন",
-  imageSrc: "/images/train-station.jpg",
-};
-
-export const freeThinking = {
-  title: "মুক্ত চিন্তার স্বাধীনতা",
-  description:
-    "আমাদের পূর্বপুরুষরা যে স্বাধীনতার জন্য লড়াই করেছেন, সেই স্বাধীনতার চেতনায় আমরা আপনাকে মুক্ত চিন্তা প্রকাশের সুযোগ দিচ্ছি।",
-  button: "স্বাধীনভাবে লিখুন",
-  imageAlt: "স্বাধীনতার শিল্প",
-  imageSrc: "/images/independence-art.jpg",
-};
+export const alternatingContentSections = [
+  {
+    title: "আপনার সৃজনশীল যাত্রা",
+    description:
+      "প্রতিটি লেখক, কবি এবং গল্পকারের একটি অনন্য যাত্রা রয়েছে। আমাদের প্ল্যাটফর্মে আপনি আপনার চিন্তাভাবনা, অভিজ্ঞতা এবং কল্পনাকে নিরাপদে প্রকাশ করতে পারবেন।",
+    button: "যাত্রা শুরু করুন",
+    imageAlt: "ট্রেন স্টেশন",
+    imageSrc: "/images/train-station.jpg",
+    reverse: false,
+  },
+  {
+    title: "মুক্ত চিন্তার স্বাধীনতা",
+    description:
+      "আমাদের পূর্বপুরুষরা যে স্বাধীনতার জন্য লড়াই করেছেন, সেই স্বাধীনতার চেতনায় আমরা আপনাকে মুক্ত চিন্তা প্রকাশের সুযোগ দিচ্ছি।",
+    button: "স্বাধীনভাবে লিখুন",
+    imageAlt: "স্বাধীনতার শিল্প",
+    imageSrc: "/images/independence-art.jpg",
+    reverse: true,
+  },
+];
 
 export const communityPower = {
   title: "সম্প্রদায়ের শক্তি",
