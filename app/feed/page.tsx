@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/Navbar";
 import { useBackendApi } from "@/utils/api-client";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 
 const FeedPage = () => {
   const api = useBackendApi();
-  
+
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
@@ -29,7 +29,7 @@ const FeedPage = () => {
   const loadPosts = useCallback(async (pageNum: number, searchKeyword: string = "") => {
     setLoading(true);
     setError("");
-    
+
     try {
       const response = await api.get("/api/v1/posts", {
         params: {
@@ -39,17 +39,17 @@ const FeedPage = () => {
         }
       });
 
-      const data = response.data as { 
-        success: boolean; 
-        data: { 
-          data: KonthoKoshFeedPost[]; 
-          pagination: { 
-            totalPages: number; 
-            totalCount: number; 
-          } 
-        } 
+      const data = response.data as {
+        success: boolean;
+        data: {
+          data: KonthoKoshFeedPost[];
+          pagination: {
+            totalPages: number;
+            totalCount: number;
+          }
+        }
       };
-      
+
       if (data.success && data.data) {
         setPosts(data.data.data);
         setTotalPages(data.data.pagination.totalPages);
@@ -157,9 +157,9 @@ const FeedPage = () => {
                       className="pl-9 font-bengali border-red-200 focus:border-red-400"
                     />
                   </div>
-                  <Button 
-                    type="submit" 
-                    className="bg-red-600 hover:bg-red-700 font-bengali" 
+                  <Button
+                    type="submit"
+                    className="bg-red-600 hover:bg-red-700 font-bengali"
                     disabled={loading}
                   >
                     {loading ? "অনুসন্ধান..." : "খুঁজুন"}
@@ -178,10 +178,10 @@ const FeedPage = () => {
                     </div>
                     <div>
                       <p className="text-sm text-red-700 font-bengali">{error}</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="mt-2 font-bengali" 
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2 font-bengali"
                         onClick={() => loadPosts(page, keyword)}
                       >
                         আবার চেষ্টা করুন
@@ -198,7 +198,7 @@ const FeedPage = () => {
                 <Card className="bg-white/90 backdrop-blur-sm border-red-100">
                   <CardContent className="p-6 text-center">
                     <p className="font-bengali text-gray-600">
-                      কোন পোস্ট পাওয়া যায়নি। 
+                      কোন পোস্ট পাওয়া যায়নি।
                       {keyword && " অন্য কীওয়ার্ড দিয়ে চেষ্টা করুন।"}
                     </p>
                   </CardContent>
@@ -212,10 +212,10 @@ const FeedPage = () => {
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center overflow-hidden">
                         {post.userImageUrl ? (
-                          <img 
-                            src={post.userImageUrl} 
-                            alt={post.userFirstName || "ব্যবহারকারী"} 
-                            className="h-full w-full object-cover" 
+                          <img
+                            src={post.userImageUrl}
+                            alt={post.userFirstName || "ব্যবহারকারী"}
+                            className="h-full w-full object-cover"
                           />
                         ) : (
                           <Icons.User className="h-5 w-5 text-red-600" />
@@ -278,19 +278,19 @@ const FeedPage = () => {
                       পৃষ্ঠা {page} / {totalPages}
                     </div>
                     <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handlePrevPage} 
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePrevPage}
                         disabled={page <= 1 || loading}
                         className="font-bengali border-red-200 hover:bg-red-50"
                       >
                         পূর্ববর্তী
                       </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleNextPage} 
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleNextPage}
                         disabled={page >= totalPages || loading}
                         className="font-bengali border-red-200 hover:bg-red-50"
                       >
