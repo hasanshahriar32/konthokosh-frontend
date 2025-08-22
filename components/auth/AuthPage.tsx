@@ -12,18 +12,6 @@ import {
   METAMASK_REQUIREMENT,
 } from "@/constants/auth";
 
-/**
- * 🔐 Unified authentication page component with MetaMask integration
- *
- * IMPORTANT: To enable Web3/MetaMask authentication through Clerk:
- * 1. Go to your Clerk Dashboard > SSO Connections
- * 2. Enable Web3 authentication (MetaMask)
- * 3. Configure the Web3 settings in your Clerk dashboard
- * 4. Set up proper environment variables for Web3 support
- *
- * The SignIn component will automatically show Web3 authentication options
- * when properly configured in the Clerk dashboard.
- */
 const AuthPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 cultural-pattern">
@@ -39,7 +27,7 @@ const AuthPage = () => {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white group-hover:scale-105 transition-transform duration-200">
                 <Icons.Shield className="h-5 w-5" />
               </div>
-              <span 
+              <span
                 className="text-xl font-bold text-white bengali-text-shadow"
                 style={{ fontFamily: "var(--font-kalpurush)" }}
               >
@@ -77,20 +65,20 @@ const AuthPage = () => {
             {/* Main Title */}
             <div className="space-y-6">
               <h1 className="text-4xl font-bold tracking-tight text-red-800 sm:text-5xl lg:text-6xl bengali-text-shadow">
-                <span 
+                <span
                   className="block"
                   style={{ fontFamily: "var(--font-baloo-da-2)" }}
                 >
                   {AUTH_CONTENT.title.line1}
                 </span>
-                <span 
+                <span
                   className="block text-red-600 mt-2"
                   style={{ fontFamily: "var(--font-kalpurush)" }}
                 >
                   {AUTH_CONTENT.title.line2}
                 </span>
               </h1>
-              <p 
+              <p
                 className="text-xl leading-8 text-gray-700 max-w-2xl font-bengali"
                 style={{ fontFamily: "var(--font-tiro-bangla)" }}
               >
@@ -112,13 +100,13 @@ const AuthPage = () => {
                       className={`h-6 w-6 ${indicator.iconColor}`}
                     />
                   </div>
-                  <div 
+                  <div
                     className="text-2xl font-bold text-red-800"
                     style={{ fontFamily: "var(--font-baloo-da-2)" }}
                   >
                     {indicator.value}
                   </div>
-                  <div 
+                  <div
                     className="text-sm text-gray-600 font-bengali"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -130,7 +118,7 @@ const AuthPage = () => {
 
             {/* Testimonial Quote */}
             <Card className="p-6 bg-gradient-to-br from-red-50 to-orange-50 border-red-200 hover:shadow-lg transition-shadow border-l-4 border-l-red-300 hover:border-l-red-500 duration-300 group">
-              <blockquote 
+              <blockquote
                 className="text-sm italic text-gray-700 leading-relaxed font-bengali"
                 style={{ fontFamily: "var(--font-tiro-bangla)" }}
               >
@@ -141,13 +129,13 @@ const AuthPage = () => {
                   <Icons.User className="h-4 w-4 text-red-600" />
                 </div>
                 <div>
-                  <div 
+                  <div
                     className="text-xs font-medium text-red-800 font-bengali"
                     style={{ fontFamily: "var(--font-kalpurush)" }}
                   >
                     {TESTIMONIAL.author.name}
                   </div>
-                  <div 
+                  <div
                     className="text-xs text-gray-600 font-bengali"
                     style={{ fontFamily: "var(--font-bengali)" }}
                   >
@@ -170,17 +158,18 @@ const AuthPage = () => {
                   <div className="space-y-6">
                     {/* Header */}
                     <div className="text-center space-y-2">
-                      <h2 
+                      <h2
                         className="text-2xl font-bold text-red-800 bengali-text-shadow"
                         style={{ fontFamily: "var(--font-kalpurush)" }}
                       >
                         আপনার ওয়ালেট সংযুক্ত করুন
                       </h2>
-                      <p 
+                      <p
                         className="text-sm text-gray-700 font-bengali"
                         style={{ fontFamily: "var(--font-bengali)" }}
                       >
-                        বিকেন্দ্রীভূত কন্টেন্ট সুরক্ষা প্ল্যাটফর্মে প্রবেশের জন্য MetaMask দিয়ে সংযুক্ত হন
+                        বিকেন্দ্রীভূত কন্টেন্ট সুরক্ষা প্ল্যাটফর্মে প্রবেশের
+                        জন্য MetaMask দিয়ে সংযুক্ত হন
                       </p>
                     </div>
 
@@ -204,7 +193,8 @@ const AuthPage = () => {
                             "text-red-600 hover:text-red-700 font-medium transition-colors duration-200 font-bengali",
                           dividerLine: "bg-red-200",
                           dividerText: "text-gray-600 text-xs font-bengali",
-                          formFieldLabel: "text-red-800 font-medium font-bengali",
+                          formFieldLabel:
+                            "text-red-800 font-medium font-bengali",
                           identityPreviewText: "text-red-800 font-bengali",
                           identityPreviewEditButton:
                             "text-red-600 hover:text-red-700",
@@ -222,7 +212,7 @@ const AuthPage = () => {
 
                     {/* MetaMask Installation Requirement */}
                     <div className="mt-8 space-y-4">
-                      <div 
+                      <div
                         className="text-xs text-center text-gray-600 font-bengali"
                         style={{ fontFamily: "var(--font-bengali)" }}
                       >
@@ -234,13 +224,13 @@ const AuthPage = () => {
                             <Icons.Download className="h-4 w-4 text-orange-600" />
                           </div>
                           <div className="text-sm flex-1">
-                            <div 
+                            <div
                               className="font-medium text-red-800 font-bengali"
                               style={{ fontFamily: "var(--font-kalpurush)" }}
                             >
                               {METAMASK_REQUIREMENT.installTitle}
                             </div>
-                            <div 
+                            <div
                               className="text-gray-600 text-xs font-bengali"
                               style={{ fontFamily: "var(--font-bengali)" }}
                             >

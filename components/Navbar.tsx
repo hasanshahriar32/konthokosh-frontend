@@ -13,6 +13,7 @@ import {
   SIGN_UP_BUTTON_TEXT,
 } from "@/constants/header";
 import { easeInOut } from "framer-motion";
+import { paths } from "@/constants";
 
 const slideDownVariants = {
   hidden: {
@@ -102,24 +103,23 @@ const MainNav: React.FC = () => {
               <div className="hidden md:flex items-center space-x-8">
                 {NAV_LINKS.map((link) => (
                   <NavLink
-                    key={link.href}
-                    href={link.href}
-                    label={link.label}
+                    key={link.path}
+                    href={link.path}
+                    label={link.title}
                   />
                 ))}
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
                 <SignedOut>
-                  <SignUpButton mode="modal">
-                    <Button
-                      className="text-white font-bengali text-base"
-                      variant={"ghost"}
-                      size={"sm"}
-                    >
-                      {SIGN_UP_BUTTON_TEXT}
-                    </Button>
-                  </SignUpButton>
+                  <Button
+                    className="text-white font-bengali text-base"
+                    variant={"ghost"}
+                    size={"sm"}
+                    asChild
+                  >
+                    <Link href={paths.auth}>{SIGN_UP_BUTTON_TEXT}</Link>
+                  </Button>
                 </SignedOut>
                 <SignedIn>
                   <UserButton
@@ -158,9 +158,9 @@ const MainNav: React.FC = () => {
                 <div className="flex flex-col space-y-4 pt-4">
                   {NAV_LINKS.map((link) => (
                     <NavLink
-                      key={link.href}
-                      href={link.href}
-                      label={link.label}
+                      key={link.path}
+                      href={link.path}
+                      label={link.title}
                       onClick={() => setIsMobileMenuOpen(false)}
                       isMobile
                     />
@@ -174,7 +174,7 @@ const MainNav: React.FC = () => {
                           variant={"ghost"}
                           size={"sm"}
                         >
-                          {SIGN_UP_BUTTON_TEXT}
+                          <Link href={paths.auth}>{SIGN_UP_BUTTON_TEXT}</Link>
                         </Button>
                       </SignUpButton>
                     </SignedOut>

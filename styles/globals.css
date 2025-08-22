@@ -398,3 +398,18 @@
   background-color: var(--secondary) !important;
   color: var(--secondary-foreground) !important;
 }
+
+/* ---------------------------------- Clerk --------------------------------- */
+
+.cl-cardBox {
+  @apply !shadow-none border-none;
+}
+
+.cl-internal-d5pd3d {
+  @apply shadow-none rounded-none;
+}
+
+.cl-footer,
+.cl-internal-1k7jtru {
+  @apply bg-none;
+}
