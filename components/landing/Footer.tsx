@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
           {footer.links.map((link, index) => (
             <Button
               key={index}
-              variant="ghost"
+              variant="link"
               className="text-foreground hover:text-primary font-bengali"
               asChild
             >

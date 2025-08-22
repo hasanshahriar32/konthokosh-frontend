@@ -50,7 +50,7 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({
             <p className="text-x18 mb-6 lg:mb-8">{description}</p>
             {buttonText && (
               <Button
-                className={`${colorScheme.button} ${colorScheme.buttonHover}`}
+                className={`${colorScheme.button} ${colorScheme.buttonHover} font-semibold`}
               >
                 {buttonText}
               </Button>

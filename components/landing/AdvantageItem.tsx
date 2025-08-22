@@ -34,13 +34,13 @@ const AdvantageItem: React.FC<AdvantageItem> = ({
               height={0}
               width={0}
               sizes="full"
-              className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg"
             />
           </div>
           <div className={`max-w-full ${reverse ? "order-1" : "order-2"} animate-fade-in-up`}>
             <h2 className="heading-secondary">{title}</h2>
             <p className="text-x18 mb-6 lg:mb-8">{description}</p>
-            <Button size={"lg"}>{buttonText}</Button>
+            <Button size={"lg"} className="font-semibold">{buttonText}</Button>
           </div>
         </div>
       </div>
