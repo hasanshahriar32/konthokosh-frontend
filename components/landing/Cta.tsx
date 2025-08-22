@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "../ui/button";
-import { cta } from "@/constants/landing";
+import { cta, quote } from "@/constants/landing";
 
 const Cta = () => {
   return (
@@ -31,6 +31,15 @@ const Cta = () => {
               {cta.learnMoreButton}
             </Button>
           </div>
+        </div>
+        {/* Quote section */}
+        <div className="mt-20">
+          <blockquote className="text-3xl lg:text-4xl font-kalpurush font-medium mb-8 bengali-text-shadow">
+            "{quote.text}"
+          </blockquote>
+          <cite className="text-xl font-bengali opacity-90">
+            - {quote.author}
+          </cite>
         </div>
       </div>
     </section>

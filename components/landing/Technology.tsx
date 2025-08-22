@@ -15,9 +15,15 @@ const Technology: React.FC = () => {
                 {technology.blockchainTitle}
               </h3>
               <ul className="font-bengali text-muted-foreground space-y-2 text-sm lg:text-base">
-                {technology.features.map((feature, index) => (
-                  <li key={index}>• {feature}</li>
-                ))}
+                {technology.features.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <li key={index} className="flex items-center gap-2">
+                      <Icon className="h-5 w-5 text-primary" />
+                      {feature.text}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>

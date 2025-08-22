@@ -11,29 +11,17 @@ const Footer: React.FC = () => {
           {footer.description}
         </p>
         <div className="flex justify-center items-center gap-6 mb-4">
-          <Button
-            variant="ghost"
-            className="text-foreground hover:text-primary font-bengali"
-          >
-            {footer.contact}
-          </Button>
-          <Button
-            variant="ghost"
-            className="text-foreground hover:text-primary font-bengali"
-          >
-            {footer.about}
-          </Button>
-          <Button
-            variant="ghost"
-            className="text-foreground hover:text-primary font-bengali"
-          >
-            {footer.collection}
-          </Button>
+          {footer.links.map((link, index) => (
+            <Button
+              key={index}
+              variant="ghost"
+              className="text-foreground hover:text-primary font-bengali"
+              asChild
+            >
+              <a href={link.href}>{link.name}</a>
+            </Button>
+          ))}
         </div>
-        {/* <div className="flex justify-center items-center gap-2 pt-4 border-t border-gray-700 dark:border-gray-600">
-            <span className="text-sm font-bengali text-gray-400">থিম পরিবর্তন:</span>
-            <ThemeToggle />
-          </div> */}
       </div>
     </footer>
   );

@@ -8,6 +8,10 @@ import {
   Users,
   UserSearch,
   VenetianMask,
+  Signature,
+  History,
+  HardDrive,
+  Wallet,
 } from "lucide-react";
 
 export const hero = {
@@ -182,10 +186,22 @@ export const technology = {
     "ব্লকচেইন প্রযুক্তি ব্যবহার করে আমরা নিশ্চিত করি যে আপনার প্রতিটি লেখা সুরক্ষিত থাকে। কেউ আপনার লেখা চুরি করতে পারবে না এবং আপনি সর্বদা আপনার কাজের মালিকানা প্রমাণ করতে পারবেন।",
   blockchainTitle: "ব্লকচেইন সুরক্ষা",
   features: [
-    "প্রতিটি লেখার জন্য অনন্য ডিজিটাল স্বাক্ষর",
-    "অপরিবর্তনীয় টাইমস্ট্যাম্প",
-    "বিকেন্দ্রীভূত সংরক্ষণ ব্যবস্থা",
-    "স্বচ্ছ মালিকানা প্রমাণ",
+    {
+      icon: Signature,
+      text: "প্রতিটি লেখার জন্য অনন্য ডিজিটাল স্বাক্ষর"
+    },
+    {
+      icon: History,
+      text: "অপরিবর্তনীয় টাইমস্ট্যাম্প"
+    },
+    {
+      icon: HardDrive,
+      text: "বিকেন্দ্রীভূত সংরক্ষণ ব্যবস্থা"
+    },
+    {
+      icon: Wallet,
+      text: "স্বচ্ছ মালিকানা প্রমাণ"
+    },
   ],
   imageAlt: "বাংলা টাইপোগ্রাফি",
   imageSrc: "/images/bengali-typography.webp",
@@ -216,9 +232,10 @@ export const quote = {
 export const footer = {
   title: "কণ্ঠ কোষ",
   description: "আমাদের ঐতিহ্য সংরক্ষণ ও প্রচারে আমরা প্রতিশ্রুতিবদ্ধ",
-  contact: "যোগাযোগ",
-  about: "সম্পর্কে",
-  collection: "সংগ্রহ",
   copyright: "© ২০২৫ কণ্ঠকোষ. সর্বস্বত্ব সংরক্ষিত.",
-  links: ["হোম", "সম্পর্কে", "যোগাযোগ"],
+  links: [
+    { name: "যোগাযোগ", href: "/contact" },
+    { name: "সম্পর্কে", href: "/about" },
+    { name: "সংগ্রহ", href: "/collection" },
+  ],
 };

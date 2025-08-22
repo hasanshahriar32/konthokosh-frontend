@@ -7,7 +7,6 @@ import FeatureSection from "@/components/landing/FeatureSection";
 import Footer from "@/components/landing/Footer";
 import Hero from "@/components/landing/Hero";
 import OurPlatform from "@/components/landing/OurPlatform";
-import Quote from "@/components/landing/Quote";
 import SafePlatform from "@/components/landing/SafePlatform";
 import Technology from "@/components/landing/Technology";
 import AdvantageItem from "@/components/landing/AdvantageItem";
@@ -54,8 +53,6 @@ export default function BengaliCulturalLandingPage() {
       <OurPlatform />
 
       <Cta />
-
-      <Quote />
 
       <Footer />
     </div>
