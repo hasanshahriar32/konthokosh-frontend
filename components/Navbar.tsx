@@ -3,11 +3,52 @@
 import { Button } from "@/components/ui/button";
 import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import Link from "next/link";
 
-import { headerVisibleHeight } from "@/constants";
+import { headerVisibleHeight, SITE_NAME, NAV_LINKS, SIGN_UP_BUTTON_TEXT } from "@/constants/header";
+import { easeInOut } from "framer-motion";
 
-const MainNav: React.FC = ({}) => {
+const slideDownVariants = {
+  hidden: {
+    y: "-100%",
+    opacity: 0,
+    transition: {
+      y: { duration: 0.3 },
+      opacity: { duration: 0.3 },
+    },
+  },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      y: { ease: easeInOut, duration: 0.3 },
+      opacity: { duration: 0.3 },
+    },
+  },
+};
+
+interface NavLinkProps {
+  href: string;
+  label: string;
+  onClick?: () => void;
+  isMobile?: boolean;
+}
+
+const NavLink: React.FC<NavLinkProps> = ({ href, label, onClick, isMobile = false }) => (
+  <Link href={href} passHref>
+    <span
+      className={`text-white/90 hover:text-white font-bengali transition-colors ${
+        isMobile ? "block py-2" : ""
+      }`}
+      onClick={onClick}
+    >
+      {label}
+    </span>
+  </Link>
+);
+
+const MainNav: React.FC = () => {
   const { scrollY } = useScroll();
   const [isHero, setIsHero] = useState(true);
   const [visible, setVisible] = useState(true);
@@ -45,41 +86,20 @@ const MainNav: React.FC = ({}) => {
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="text-white font-kalpurush text-xl font-semibold">
-                কণ্ঠ কোষ
+                {SITE_NAME}
               </div>
 
               <div className="hidden md:flex items-center space-x-8">
-                <a
-                  href="/"
-                  className="text-white/90 hover:text-white font-bengali transition-colors"
-                >
-                  প্রচ্ছদ
-                </a>
-                <a
-                  href="/feed"
-                  className="text-white/90 hover:text-white font-bengali transition-colors"
-                >
-                  ফিড
-                </a>
-                <a
-                  href="/write"
-                  className="text-white/90 hover:text-white font-bengali transition-colors"
-                >
-                  লিখুন
-                </a>
-                <a
-                  href="/my-posts"
-                  className="text-white/90 hover:text-white font-bengali transition-colors"
-                >
-                  আমার পোস্ট
-                </a>
+                {NAV_LINKS.map((link) => (
+                  <NavLink key={link.href} href={link.href} label={link.label} />
+                ))}
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
                 <SignedOut>
                   <SignUpButton mode="modal">
                     <Button className="bg-red-600 hover:bg-red-700 text-white font-bengali">
-                      নিবন্ধন
+                      {SIGN_UP_BUTTON_TEXT}
                     </Button>
                   </SignUpButton>
                 </SignedOut>
@@ -94,7 +114,7 @@ const MainNav: React.FC = ({}) => {
                 </SignedIn>
               </div>
 
-              <Button
+              {/* <Button
                 variant="ghost"
                 className="md:hidden text-white hover:bg-white/20"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -112,46 +132,27 @@ const MainNav: React.FC = ({}) => {
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
-              </Button>
+              </Button> */}
             </div>
 
             {isMobileMenuOpen && (
               <div className="md:hidden mt-4 pb-4 border-t border-white/20">
                 <div className="flex flex-col space-y-4 pt-4">
-                  <a
-                    href="/"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    প্রচ্ছদ
-                  </a>
-                  <a
-                    href="/feed"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    ফিড
-                  </a>
-                  <a
-                    href="/write"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    লিখুন
-                  </a>
-                  <a
-                    href="/my-posts"
-                    className="text-white/90 hover:text-white font-bengali transition-colors block py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    আমার পোস্ট
-                  </a>
+                  {NAV_LINKS.map((link) => (
+                    <NavLink
+                      key={link.href}
+                      href={link.href}
+                      label={link.label}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      isMobile
+                    />
+                  ))}
 
                   <div className="border-t border-white/20 pt-4 space-y-2">
                     <SignedOut>
                       <SignUpButton mode="modal">
                         <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-bengali">
-                          নিবন্ধন
+                          {SIGN_UP_BUTTON_TEXT}
                         </Button>
                       </SignUpButton>
                     </SignedOut>
@@ -179,24 +180,3 @@ const MainNav: React.FC = ({}) => {
 };
 
 export default MainNav;
-
-import { easeInOut } from "framer-motion";
-
-const slideDownVariants = {
-  hidden: {
-    y: "-100%",
-    opacity: 0,
-    transition: {
-      y: { duration: 0.3 },
-      opacity: { duration: 0.3 },
-    },
-  },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { ease: easeInOut, duration: 0.3 },
-      opacity: { duration: 0.3 },
-    },
-  },
-};
