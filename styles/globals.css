@@ -194,10 +194,14 @@
 /* -------------------------------- Headings -------------------------------- */
 
 .heading-primary {
-  @apply text-4xl font-kalpurush font-bold mb-8;
+  @apply text-[44px] font-kalpurush font-bold text-center;
 }
 
 .heading-secondary {
+  @apply text-4xl font-kalpurush font-bold mb-6 lg:mb-8;
+}
+
+.heading-tertiary {
   @apply text-2xl font-kalpurush font-semibold text-foreground;
 }
 

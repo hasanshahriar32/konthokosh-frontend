@@ -20,7 +20,7 @@ const CulturalCard: React.FC<CulturalCardProps> = ({
       <div className="flex items-center justify-center p-6 rounded-full bg-primary/15">
         <Icon className="size-9 text-primary" />
       </div>
-      <h3 className="heading-secondary">
+      <h3 className="heading-tertiary">
         {title}
       </h3>
       <p className="text-x16 text-muted-foreground">

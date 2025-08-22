@@ -1,5 +1,6 @@
-import React from "react";
 import { technology } from "@/constants/landing";
+import Image from "next/image";
+import React from "react";
 
 const Technology: React.FC = () => {
   return (
@@ -7,14 +8,10 @@ const Technology: React.FC = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="order-2 lg:order-1 max-w-full animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-kalpurush font-bold text-primary mb-4 lg:mb-6">
-              {technology.title}
-            </h2>
-            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
-              {technology.description}
-            </p>
-            <div className="bg-card/80 backdrop-blur-sm p-6 lg:p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <h3 className="text-xl lg:text-2xl font-kalpurush font-semibold text-primary mb-4">
+            <h2 className="heading-secondary">{technology.title}</h2>
+            <p className="text-x18">{technology.description}</p>
+            <div className="p-6 lg:p-8">
+              <h3 className="heading-tertiary mb-4">
                 {technology.blockchainTitle}
               </h3>
               <ul className="font-bengali text-muted-foreground space-y-2 text-sm lg:text-base">
@@ -25,10 +22,13 @@ const Technology: React.FC = () => {
             </div>
           </div>
           <div className="order-1 lg:order-2 w-full animate-fade-in-left">
-            <img
+            <Image
               src={technology.imageSrc}
               alt={technology.imageAlt}
-              className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              height={0}
+              width={0}
+              sizes="full"
+              className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg"
             />
           </div>
         </div>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 import { communityPower } from "@/constants/landing";
-import CommunityItem from "./CommunityItem";
+import FeatureItem from "./FeatureItem";
 
 const CommunityPower: React.FC = () => {
   return (
@@ -20,21 +20,19 @@ const CommunityPower: React.FC = () => {
             />
           </div>
           <div className="max-w-full animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-kalpurush font-bold text-primary mb-4 lg:mb-6">
-              {communityPower.title}
-            </h2>
-            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
+            <h2 className="heading-secondary">{communityPower.title}</h2>
+            <p className="text-x18 mb-6 lg:mb-8">
               {communityPower.description}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-              <CommunityItem
-                title={communityPower.readerCommunityTitle}
-                description={communityPower.readerCommunityDesc}
-              />
-              <CommunityItem
-                title={communityPower.writerNetworkTitle}
-                description={communityPower.writerNetworkDesc}
-              />
+              {communityPower.communityItem.map((item, index) => (
+                <FeatureItem
+                  key={index}
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.description}
+                />
+              ))}
             </div>
           </div>
         </div>

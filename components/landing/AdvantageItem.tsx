@@ -38,7 +38,7 @@ const AdvantageItem: React.FC<AdvantageItem> = ({
             />
           </div>
           <div className={`max-w-full ${reverse ? "order-1" : "order-2"} animate-fade-in-up`}>
-            <h2 className="heading-primary">{title}</h2>
+            <h2 className="heading-secondary">{title}</h2>
             <p className="text-x18 mb-6 lg:mb-8">{description}</p>
             <Button size={"lg"}>{buttonText}</Button>
           </div>

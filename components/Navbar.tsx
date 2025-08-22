@@ -6,7 +6,12 @@ import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
 
-import { headerVisibleHeight, SITE_NAME, NAV_LINKS, SIGN_UP_BUTTON_TEXT } from "@/constants/header";
+import {
+  headerVisibleHeight,
+  SITE_NAME,
+  NAV_LINKS,
+  SIGN_UP_BUTTON_TEXT,
+} from "@/constants/header";
 import { easeInOut } from "framer-motion";
 
 const slideDownVariants = {
@@ -35,7 +40,12 @@ interface NavLinkProps {
   isMobile?: boolean;
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ href, label, onClick, isMobile = false }) => (
+const NavLink: React.FC<NavLinkProps> = ({
+  href,
+  label,
+  onClick,
+  isMobile = false,
+}) => (
   <Link href={href} passHref>
     <span
       className={`text-white/90 hover:text-white font-bengali transition-colors ${
@@ -91,14 +101,22 @@ const MainNav: React.FC = () => {
 
               <div className="hidden md:flex items-center space-x-8">
                 {NAV_LINKS.map((link) => (
-                  <NavLink key={link.href} href={link.href} label={link.label} />
+                  <NavLink
+                    key={link.href}
+                    href={link.href}
+                    label={link.label}
+                  />
                 ))}
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
                 <SignedOut>
                   <SignUpButton mode="modal">
-                    <Button className="bg-red-600 hover:bg-red-700 text-white font-bengali">
+                    <Button
+                      className="text-white font-bengali text-base"
+                      variant={"ghost"}
+                      size={"sm"}
+                    >
                       {SIGN_UP_BUTTON_TEXT}
                     </Button>
                   </SignUpButton>
@@ -114,7 +132,7 @@ const MainNav: React.FC = () => {
                 </SignedIn>
               </div>
 
-              {/* <Button
+              <Button
                 variant="ghost"
                 className="md:hidden text-white hover:bg-white/20"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -132,7 +150,7 @@ const MainNav: React.FC = () => {
                     d="M4 6h16M4 12h16M4 18h16"
                   />
                 </svg>
-              </Button> */}
+              </Button>
             </div>
 
             {isMobileMenuOpen && (
@@ -151,7 +169,11 @@ const MainNav: React.FC = () => {
                   <div className="border-t border-white/20 pt-4 space-y-2">
                     <SignedOut>
                       <SignUpButton mode="modal">
-                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-bengali">
+                        <Button
+                          className="w-full text-white font-bengali"
+                          variant={"ghost"}
+                          size={"sm"}
+                        >
                           {SIGN_UP_BUTTON_TEXT}
                         </Button>
                       </SignUpButton>

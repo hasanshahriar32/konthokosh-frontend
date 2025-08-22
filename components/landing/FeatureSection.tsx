@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from "next/image";
 import { Button } from "../ui/button";
 
 type FeatureSectionProps = {
@@ -40,23 +40,17 @@ const FeatureSection: React.FC<FeatureSectionProps> = ({
                 alt={imageAlt}
                 width={800}
                 height={400}
-                className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
+                className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg"
                 priority
               />
             </div>
           )}
           <div className="max-w-full animate-fade-in-up">
-            <h2
-              className={`text-3xl md:text-4xl font-kalpurush font-bold ${colorScheme.title} mb-4 lg:mb-6`}
-            >
-              {title}
-            </h2>
-            <p className="text-base lg:text-lg font-bengali text-foreground leading-relaxed mb-6 lg:mb-8">
-              {description}
-            </p>
+            <h2 className={`heading-secondary ${colorScheme.title}`}>{title}</h2>
+            <p className="text-x18 mb-6 lg:mb-8">{description}</p>
             {buttonText && (
               <Button
-                className={`${colorScheme.button} ${colorScheme.buttonHover} text-primary-foreground font-bengali hover:scale-105 transition-transform duration-200 rounded-full`}
+                className={`${colorScheme.button} ${colorScheme.buttonHover}`}
               >
                 {buttonText}
               </Button>

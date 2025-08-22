@@ -1,4 +1,14 @@
-import { GlobeLock, Music, NotebookPen, Palette, PanelLeftOpen, ShieldBan, VenetianMask } from "lucide-react";
+import {
+  GlobeLock,
+  Music,
+  NotebookPen,
+  Palette,
+  PanelLeftOpen,
+  ShieldBan,
+  Users,
+  UserSearch,
+  VenetianMask,
+} from "lucide-react";
 
 export const hero = {
   title: "বাংলার ঐতিহ্য",
@@ -89,12 +99,20 @@ export const communityPower = {
   title: "সম্প্রদায়ের শক্তি",
   description:
     "আমাদের প্ল্যাটফর্মে লেখক, পাঠক এবং সমালোচকদের একটি সক্রিয় সম্প্রদায় রয়েছে। এখানে আপনি আপনার লেখার উপর মতামত পাবেন এবং অন্যদের সাথে আলোচনায় অংশ নিতে পারবেন।",
-  readerCommunityTitle: "পাঠক সম্প্রদায়",
-  readerCommunityDesc: "হাজারো পাঠকের সাথে যুক্ত হন",
-  writerNetworkTitle: "লেখক নেটওয়ার্ক",
-  writerNetworkDesc: "অভিজ্ঞ লেখকদের সাথে শিখুন",
   imageAlt: "রিকশা পার্ক",
   imageSrc: "/images/rickshaw-park.jpg",
+  communityItem: [
+    {
+      icon: Users,
+      title: "পাঠক সম্প্রদায়",
+      description: "হাজারো পাঠকের সাথে যুক্ত হন",
+    },
+    {
+      icon: UserSearch,
+      title: "লেখক নেটওয়ার্ক",
+      description: "অভিজ্ঞ লেখকদের সাথে শিখুন",
+    },
+  ],
 };
 
 export const featureSections = [
