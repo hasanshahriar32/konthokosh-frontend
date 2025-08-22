@@ -8,7 +8,7 @@ const Journey = () => {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="w-full animate-fade-in-left">
             <img
-              src="/images/train-station.jpg"
+              src={journey.imageSrc}
               alt={journey.imageAlt}
               className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
             />

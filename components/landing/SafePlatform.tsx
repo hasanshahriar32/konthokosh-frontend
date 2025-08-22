@@ -27,7 +27,7 @@ const SafePlatform: React.FC = () => {
           </div>
           <div className="order-1 lg:order-2 w-full animate-fade-in-left">
             <img
-              src="/images/shaheed-minar.jpg"
+              src={safePlatform.imageSrc}
               alt={safePlatform.imageAlt}
               className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
             />

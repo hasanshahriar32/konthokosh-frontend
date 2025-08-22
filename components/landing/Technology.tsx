@@ -15,7 +15,7 @@ const Technology: React.FC = () => {
             </p>
             <div className="bg-card/80 backdrop-blur-sm p-6 lg:p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl lg:text-2xl font-kalpurush font-semibold text-primary mb-4">
-                ব্লকচেইন সুরক্ষা
+                {technology.blockchainTitle}
               </h3>
               <ul className="font-bengali text-muted-foreground space-y-2 text-sm lg:text-base">
                 {technology.features.map((feature, index) => (
@@ -26,7 +26,7 @@ const Technology: React.FC = () => {
           </div>
           <div className="order-1 lg:order-2 w-full animate-fade-in-left">
             <img
-              src="/images/bengali-typography.webp"
+              src={technology.imageSrc}
               alt={technology.imageAlt}
               className="w-full h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300"
             />
