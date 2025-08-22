@@ -9,5 +9,4 @@ export const NAV_LINKS = [
 
 export const SIGN_UP_BUTTON_TEXT = "নিবন্ধন";
 
-// This is already defined in the original file, keeping it for consistency.
 export const headerVisibleHeight = 150;

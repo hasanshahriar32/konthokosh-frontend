@@ -23,7 +23,7 @@ const CulturalCard: React.FC<CulturalCardProps> = ({
       <h3 className="heading-secondary">
         {title}
       </h3>
-      <p className="text-x16">
+      <p className="text-x16 text-muted-foreground">
         {description}
       </p>
     </div>

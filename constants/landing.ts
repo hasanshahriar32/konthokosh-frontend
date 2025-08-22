@@ -1,4 +1,4 @@
-import { Music, PanelLeftOpen, VenetianMask } from "lucide-react";
+import { GlobeLock, Music, NotebookPen, Palette, PanelLeftOpen, ShieldBan, VenetianMask } from "lucide-react";
 
 export const hero = {
   title: "বাংলার ঐতিহ্য",
@@ -30,7 +30,7 @@ export const culture = {
         "রবীন্দ্রসংগীত, নজরুলগীতি, বাউল গান, ভাটিয়ালি, ভাওয়াইয়া - আমাদের সংগীতের ভাণ্ডার অফুরন্ত। প্রতিটি সুরে লুকিয়ে আছে বাঙালির হৃদয়ের কথা।",
     },
     {
-      icon: PanelLeftOpen,
+      icon: Palette,
       title: "শিল্প ও কারুকাজ",
 
       description:
@@ -45,17 +45,17 @@ export const safePlatform = {
     "আমাদের প্ল্যাটফর্মে আপনি নিরাপদে আপনার ব্লগ, প্রবন্ধ, কবিতা এবং গল্প শেয়ার করতে পারবেন। ব্লকচেইন প্রযুক্তির মাধ্যমে আমরা নিশ্চিত করি যে আপনার লেখা চুরি হবে না।",
   features: [
     {
-      icon: PanelLeftOpen,
+      icon: GlobeLock,
       title: "নিরাপত্তা",
       description: "ব্লকচেইন প্রযুক্তিতে সুরক্ষিত",
     },
     {
-      icon: PanelLeftOpen,
+      icon: NotebookPen,
       title: "স্বাধীনতা",
       description: "ভয় ছাড়াই লিখুন",
     },
     {
-      icon: PanelLeftOpen,
+      icon: ShieldBan,
       title: "চুরি প্রতিরোধ",
       description: "প্লেজিয়ারিজম প্রুফ সিস্টেম",
     },

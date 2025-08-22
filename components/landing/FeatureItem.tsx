@@ -7,12 +7,14 @@ const FeatureItem: React.FC<{
   description: string;
 }> = ({ icon: Icon, title, description }) => {
   return (
-    <div className="bg-card/80 backdrop-blur-sm p-4 lg:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <Icon className="size-6 lg:size-[30px] mb-3 lg:mb-4 mx-auto text-primary" />
+    <div className="flex flex-col items-center justify-start">
+      <div className="flex items-center justify-center p-4 bg-primary/10 rounded-full mb-3 lg:mb-4">
+        <Icon className="size-5 lg:size-7 text-primary" />
+      </div>
       <h3 className="text-lg lg:text-xl font-kalpurush font-semibold text-foreground mb-2">
         {title}
       </h3>
-      <p className="font-bengali text-muted-foreground text-sm lg:text-base">
+      <p className="text-x16 text-center text-muted-foreground">
         {description}
       </p>
     </div>

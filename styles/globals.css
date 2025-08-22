@@ -194,7 +194,7 @@
 /* -------------------------------- Headings -------------------------------- */
 
 .heading-primary {
-  @apply text-4xl font-kalpurush font-bold text-center mb-8;
+  @apply text-4xl font-kalpurush font-bold mb-8;
 }
 
 .heading-secondary {
@@ -207,8 +207,12 @@
   @apply text-lg font-bengali text-center text-foreground mb-16 max-w-4xl mx-auto leading-relaxed;
 }
 
+.text-x18 {
+  @apply font-bengali text-lg leading-relaxed;
+}
+
 .text-x16 {
-  @apply font-bengali text-muted-foreground leading-relaxed;
+  @apply font-bengali leading-relaxed;
 }
 
 /* ---------- Hero Hover & Animations ---------- */
