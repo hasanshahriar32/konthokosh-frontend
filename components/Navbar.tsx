@@ -89,20 +89,19 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
       >
         <nav
           className={`absolute top-0 left-0 right-0 z-30 ${
-            !isInHero ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
+            !isInHero ? "bg-black/15 backdrop-blur-md" : "bg-transparent"
           }`}
         >
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div
+              <Link
+                href={routes.home.path}
                 className={`font-kalpurush text-xl font-semibold ${
-                  isInHero
-                    ? "text-white"
-                    : "text-[color:var(--color-foreground)]"
+                  isHero ? "text-white" : "text-[color:var(--color-foreground)]"
                 }`}
               >
                 {SITE_NAME}
-              </div>
+              </Link>
 
               <div className="hidden md:flex items-center space-x-8">
                 {navLinks.map((link) => (
@@ -137,7 +136,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
                   <UserButton
                     appearance={{
                       elements: {
-                        avatarBox: "w-10 h-10",
+                        avatarBox: "w-8 h-8",
                       },
                     }}
                   />

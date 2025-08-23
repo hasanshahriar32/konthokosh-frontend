@@ -10,10 +10,11 @@ import {
 import { SignIn } from "@clerk/nextjs";
 import { ArrowLeft, CircleAlert } from "lucide-react";
 import Link from "next/link";
+import Background from "../common/Background";
 
 const AuthPage = () => {
   return (
-    <div className="min-h-screen bg-surface-default">
+    <Background>
       <div className="relative flex min-h-screen items-center justify-center px-6 pt-20 pb-8">
         <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6 lg:pr-8">
@@ -96,11 +97,7 @@ const AuthPage = () => {
           </div>
         </div>
       </div>
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-80 h-80 bg-primary/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-primary/20 rounded-full blur-3xl" />
-      </div>
-    </div>
+    </Background>
   );
 };
 

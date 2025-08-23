@@ -1,42 +1,48 @@
 import { Icons } from "@/components/common/Icons";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type FeedLoaderProps = {
   message?: string;
+  skeletons?: number;
 };
 
-const SkeletonCard = () => (
-  <div className="w-full rounded-xl p-6 bg-[color:var(--color-card)]/80" style={{ borderColor: 'var(--color-border)' }}>
+const SkeletonCard: React.FC<FeedLoaderProps> = () => (
+  <div className="w-full rounded-xl p-6 bg-card/80">
     <div className="flex items-center gap-4">
-      <div className="h-12 w-12 rounded-full bg-[color:var(--color-secondary)]" />
+      <Skeleton className="h-12 w-12 rounded-full bg-secondary" />
       <div className="flex-1 space-y-2">
-        <div className="h-4 rounded bg-[color:var(--color-muted)] w-1/3" />
-        <div className="h-3 rounded bg-[color:var(--color-muted)] w-1/2" />
+        <Skeleton className="h-4 w-1/3 rounded bg-muted" />
+        <Skeleton className="h-3 w-1/2 rounded bg-muted" />
       </div>
     </div>
 
     <div className="mt-4 space-y-3">
-      <div className="h-3 rounded bg-[color:var(--color-muted)] w-full" />
-      <div className="h-3 rounded bg-[color:var(--color-muted)] w-5/6" />
-      <div className="h-3 rounded bg-[color:var(--color-muted)] w-4/6" />
+      <Skeleton className="h-3 w-full rounded bg-muted" />
+      <Skeleton className="h-3 w-5/6 rounded bg-muted" />
+      <Skeleton className="h-3 w-4/6 rounded bg-muted" />
     </div>
   </div>
 );
 
-const FeedLoader = ({ message = "লোড হচ্ছে..." }: FeedLoaderProps) => {
+const FeedLoader: React.FC<FeedLoaderProps> = ({
+  message = "লোড হচ্ছে...",
+  skeletons = 3,
+}) => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start py-24">
+    <div className="w-full flex flex-col items-center justify-start py-8">
       <div className="w-full max-w-4xl space-y-4 px-4">
         <div className="flex items-center justify-center space-x-3">
           <div className="animate-heartbeat">
-            <Icons.Shield className="h-10 w-10 text-[color:var(--color-secondary)]" />
+            <Icons.Shield className="h-10 w-10 text-secondary" />
           </div>
-          <p className="font-bengali text-sm" style={{ color: 'var(--color-muted-foreground)' }}>{message}</p>
+          <p className="font-bengali text-sm text-muted-foreground">
+            {message}
+          </p>
         </div>
 
-        {/* a few skeleton cards to indicate content */}
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
+        {Array.from({ length: skeletons }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
       </div>
     </div>
   );

@@ -208,7 +208,7 @@
 /* ---------------------------------- Text ---------------------------------- */
 
 .text-subtitle {
-  @apply text-lg font-bengali text-center text-foreground mb-16 max-w-4xl mx-auto leading-relaxed;
+  @apply text-lg font-bengali text-center text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed;
 }
 
 .text-x18 {
