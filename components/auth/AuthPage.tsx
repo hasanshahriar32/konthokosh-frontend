@@ -1,5 +1,6 @@
 import { Icons } from "@/components/common/Icons";
 import { Button } from "@/components/ui/button";
+import { paths } from "@/constants";
 import {
   AUTH_CONTENT,
   BRAND_NAME,
@@ -18,7 +19,7 @@ const AuthPage = () => {
       <header className="absolute top-0 w-full z-50 bg-white/60 backdrop-blur-sm border-b border-gray-100">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href={paths.home} className="flex items-center gap-2 group">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg group-hover:scale-105 transition-transform duration-200 bg-primary text-primary-foreground">
                 <Icons.Shield className="h-5 w-5" />
               </div>
@@ -27,7 +28,7 @@ const AuthPage = () => {
               </span>
             </Link>
 
-            <Link href="/">
+            <Link href={paths.home}>
               <Button variant="ghost" className="group" size={"sm"}>
                 <Icons.ArrowRight className="mr-1.5 h-4 w-4 rotate-180 group-hover:-translate-x-1 transition-transform duration-200" />
                 {NAVIGATION.backToHome}
@@ -122,7 +123,7 @@ const AuthPage = () => {
                         showOptionalFields: false,
                       },
                     }}
-                    redirectUrl="/dashboard"
+                    redirectUrl={paths.home}
                   />
                 </div>
               </div>
