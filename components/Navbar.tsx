@@ -1,38 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { useState } from "react";
-import Link from "next/link";
-
 import {
-  headerVisibleHeight,
-  SITE_NAME,
-  NAV_LINKS,
-  SIGN_UP_BUTTON_TEXT,
-} from "@/constants/header";
-import { easeInOut } from "framer-motion";
-import { paths } from "@/constants";
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useAuth,
+} from "@clerk/nextjs";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
-const slideDownVariants = {
-  hidden: {
-    y: "-100%",
-    opacity: 0,
-    transition: {
-      y: { duration: 0.3 },
-      opacity: { duration: 0.3 },
-    },
-  },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { ease: easeInOut, duration: 0.3 },
-      opacity: { duration: 0.3 },
-    },
-  },
-};
+import { paths, routes } from "@/constants";
+import { SITE_NAME, headerVisibleHeight } from "@/constants/header";
+import { easeInOut } from "framer-motion";
 
 interface NavLinkProps {
   href: string;
@@ -64,6 +46,7 @@ const MainNav: React.FC = () => {
   const [isHero, setIsHero] = useState(true);
   const [visible, setVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isLoaded, isSignedIn } = useAuth();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -79,6 +62,12 @@ const MainNav: React.FC = () => {
       setVisible(true);
     }
   });
+
+  const navLinks = useMemo(() => {
+    const initialLinks = [routes.feed, routes.write];
+
+    return isSignedIn ? [routes.home, ...initialLinks] : initialLinks;
+  }, [isLoaded, isSignedIn]);
 
   return (
     <>
@@ -101,7 +90,7 @@ const MainNav: React.FC = () => {
               </div>
 
               <div className="hidden md:flex items-center space-x-8">
-                {NAV_LINKS.map((link) => (
+                {navLinks.map((link) => (
                   <NavLink
                     key={link.path}
                     href={link.path}
@@ -118,7 +107,7 @@ const MainNav: React.FC = () => {
                     size={"sm"}
                     asChild
                   >
-                    <Link href={paths.auth}>{SIGN_UP_BUTTON_TEXT}</Link>
+                    <Link href={routes.auth.path}>{routes.auth.title}</Link>
                   </Button>
                 </SignedOut>
                 <SignedIn>
@@ -156,7 +145,7 @@ const MainNav: React.FC = () => {
             {isMobileMenuOpen && (
               <div className="md:hidden mt-4 pb-4 border-t border-white/20">
                 <div className="flex flex-col space-y-4 pt-4">
-                  {NAV_LINKS.map((link) => (
+                  {navLinks.map((link) => (
                     <NavLink
                       key={link.path}
                       href={link.path}
@@ -174,7 +163,9 @@ const MainNav: React.FC = () => {
                           variant={"ghost"}
                           size={"sm"}
                         >
-                          <Link href={paths.auth}>{SIGN_UP_BUTTON_TEXT}</Link>
+                          <Link href={routes.auth.path}>
+                            {routes.auth.title}
+                          </Link>
                         </Button>
                       </SignUpButton>
                     </SignedOut>
@@ -202,3 +193,22 @@ const MainNav: React.FC = () => {
 };
 
 export default MainNav;
+
+const slideDownVariants = {
+  hidden: {
+    y: "-100%",
+    opacity: 0,
+    transition: {
+      y: { duration: 0.3 },
+      opacity: { duration: 0.3 },
+    },
+  },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      y: { ease: easeInOut, duration: 0.3 },
+      opacity: { duration: 0.3 },
+    },
+  },
+};

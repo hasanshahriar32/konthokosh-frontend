@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { useBackendApi } from "@/utils/api-client";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
@@ -26,44 +26,47 @@ const FeedPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  const loadPosts = useCallback(async (pageNum: number, searchKeyword: string = "") => {
-    setLoading(true);
-    setError("");
+  const loadPosts = useCallback(
+    async (pageNum: number, searchKeyword: string = "") => {
+      setLoading(true);
+      setError("");
 
-    try {
-      const response = await api.get("/api/v1/posts", {
-        params: {
-          page: pageNum,
-          size: 10,
-          ...(searchKeyword ? { keyword: searchKeyword } : {})
+      try {
+        const response = await api.get("/api/v1/posts", {
+          params: {
+            page: pageNum,
+            size: 10,
+            ...(searchKeyword ? { keyword: searchKeyword } : {}),
+          },
+        });
+
+        const data = response.data as {
+          success: boolean;
+          data: {
+            data: KonthoKoshFeedPost[];
+            pagination: {
+              totalPages: number;
+              totalCount: number;
+            };
+          };
+        };
+
+        if (data.success && data.data) {
+          setPosts(data.data.data);
+          setTotalPages(data.data.pagination.totalPages);
+          setTotalCount(data.data.pagination.totalCount);
+        } else {
+          setError("পোস্ট লোড করতে ব্যর্থ");
         }
-      });
-
-      const data = response.data as {
-        success: boolean;
-        data: {
-          data: KonthoKoshFeedPost[];
-          pagination: {
-            totalPages: number;
-            totalCount: number;
-          }
-        }
-      };
-
-      if (data.success && data.data) {
-        setPosts(data.data.data);
-        setTotalPages(data.data.pagination.totalPages);
-        setTotalCount(data.data.pagination.totalCount);
-      } else {
-        setError("পোস্ট লোড করতে ব্যর্থ");
+      } catch {
+        setError("নেটওয়ার্ক সমস্যা। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      } finally {
+        setLoading(false);
+        setHasLoaded(true);
       }
-    } catch {
-      setError("নেটওয়ার্ক সমস্যা। অনুগ্রহ করে আবার চেষ্টা করুন।");
-    } finally {
-      setLoading(false);
-      setHasLoaded(true);
-    }
-  }, [api]);
+    },
+    [api]
+  );
 
   const handleInitialLoad = () => {
     if (!hasLoaded) {
@@ -147,7 +150,10 @@ const FeedPage = () => {
             {/* Search Section */}
             <Card className="bg-white/90 backdrop-blur-sm border-red-100">
               <CardContent className="p-4">
-                <form onSubmit={handleSearch} className="flex items-center gap-2">
+                <form
+                  onSubmit={handleSearch}
+                  className="flex items-center gap-2"
+                >
                   <div className="relative flex-1">
                     <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
@@ -177,7 +183,9 @@ const FeedPage = () => {
                       <Icons.X className="h-5 w-5 text-red-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-red-700 font-bengali">{error}</p>
+                      <p className="text-sm text-red-700 font-bengali">
+                        {error}
+                      </p>
                       <Button
                         variant="outline"
                         size="sm"
@@ -206,7 +214,10 @@ const FeedPage = () => {
               )}
 
               {posts.map((post) => (
-                <Card key={post.id} className="bg-white/90 backdrop-blur-sm border-red-100 hover:shadow-lg transition-shadow">
+                <Card
+                  key={post.id}
+                  className="bg-white/90 backdrop-blur-sm border-red-100 hover:shadow-lg transition-shadow"
+                >
                   <CardContent className="p-6 space-y-4">
                     {/* Post Header */}
                     <div className="flex items-center gap-3">
@@ -223,7 +234,8 @@ const FeedPage = () => {
                       </div>
                       <div className="min-w-0">
                         <div className="font-kalpurush font-medium text-red-800">
-                          {post.userFirstName || "ব্যবহারকারী"} {post.userLastName || ""}
+                          {post.userFirstName || "ব্যবহারকারী"}{" "}
+                          {post.userLastName || ""}
                         </div>
                         <div className="text-xs text-gray-500 font-bengali">
                           {new Date(post.createdAt).toLocaleString("bn-BD")}
@@ -243,15 +255,27 @@ const FeedPage = () => {
                     {/* Post Footer */}
                     <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                       <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-red-600">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-500 hover:text-red-600"
+                        >
                           <Heart className="h-4 w-4 mr-1" />
                           <span className="font-bengali">পছন্দ</span>
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-red-600">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-500 hover:text-red-600"
+                        >
                           <MessageCircle className="h-4 w-4 mr-1" />
                           <span className="font-bengali">মন্তব্য</span>
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-gray-500 hover:text-red-600">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-500 hover:text-red-600"
+                        >
                           <Share2 className="h-4 w-4 mr-1" />
                           <span className="font-bengali">শেয়ার</span>
                         </Button>

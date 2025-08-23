@@ -123,7 +123,7 @@ const AuthPage = () => {
                         showOptionalFields: false,
                       },
                     }}
-                    redirectUrl={paths.home}
+                    redirectUrl={paths.feed}
                   />
                 </div>
               </div>
