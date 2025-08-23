@@ -417,3 +417,8 @@
 .cl-internal-1k7jtru {
   @apply bg-none;
 }
+
+.cl-footerAction,
+.cl-footerAction__text {
+  display: none !important;
+}

@@ -107,8 +107,6 @@ const AuthPage = () => {
                           "text-gray-900 font-medium font-bengali",
                         formFieldInput:
                           "border-gray-200 bg-white rounded-md focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-all duration-150",
-                        footerActionLink:
-                          "text-indigo-600 hover:text-indigo-700 font-medium font-bengali",
                         dividerLine: "bg-gray-100",
                         dividerText: "text-gray-500 text-xs font-bengali",
                         formFieldLabel:
@@ -125,35 +123,7 @@ const AuthPage = () => {
                       },
                     }}
                     redirectUrl="/dashboard"
-                    signUpUrl="/auth"
                   />
-
-                  {/* <div className="mt-8 space-y-4">
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/10 border border-secondary/30 hover:border-secondary/50 transition-colors duration-300">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/20">
-                          <Icons.Download className="h-4 w-4 text-secondary" />
-                        </div>
-                        <div className="text-sm flex-1">
-                          <div className="font-medium text-secondary-foreground font-kalpurush">
-                            {METAMASK_REQUIREMENT.installTitle}
-                          </div>
-                          <div className="text-muted-foreground text-xs font-bengali">
-                            {METAMASK_REQUIREMENT.installDescription}
-                          </div>
-                        </div>
-                        <Link
-                          href={METAMASK_REQUIREMENT.installUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 rounded-full bg-secondary text-secondary-foreground px-3 py-1.5 text-xs font-medium hover:bg-secondary/90 transition-all duration-200 shadow-sm hover:shadow-md font-bengali"
-                        >
-                          <Icons.Download className="h-3 w-3" />
-                          {METAMASK_REQUIREMENT.installButtonText}
-                        </Link>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
