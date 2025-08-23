@@ -18,7 +18,7 @@ const PostFormEditor = ({ content, onChange, errors }: Props) => {
   const editorRef = React.useRef<MDXEditorMethods | null>(null);
 
   return (
-    <Card className="bg-card/90 backdrop-blur-md rounded-2xl shadow-lg border-none">
+    <Card className="bg-card/70 dark:bg-primary/5 backdrop-blur-md rounded-2xl shadow-lg border-none">
       <CardHeader className="px-6 pt-6">
         <CardTitle className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10">

@@ -6,20 +6,25 @@ import { PostForm } from "@/components/post/PostForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { type PostFormData } from "@/types/post";
-import { useKonthoKoshApi, handleKonthoKoshError } from "@/utils/konthokosh-api";
+import {
+  useKonthoKoshApi,
+  handleKonthoKoshError,
+} from "@/utils/konthokosh-api";
 import type { KonthoKoshPost } from "@/types/konthokosh-api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Navbar from "@/components/Navbar";
+import Background from "@/components/common/Background";
 
 export default function WritePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdPost, setCreatedPost] = useState<KonthoKoshPost | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  
+
   // 🌐 KonthoKosh API integration with automatic JWT token
   const { createPost } = useKonthoKoshApi();
 
@@ -57,24 +62,27 @@ export default function WritePage() {
   /**
    * Handle saving as draft (using KonthoKosh API)
    */
-  const handleSaveDraft = useCallback(async (data: PostFormData) => {
-    try {
-      console.log("💾 Saving draft to KonthoKosh API...");
+  const handleSaveDraft = useCallback(
+    async (data: PostFormData) => {
+      try {
+        console.log("💾 Saving draft to KonthoKosh API...");
 
-      // Combine title and content for the API, mark as draft
-      const draftContent = `[DRAFT] ${data.title}\n\n${data.content}`;
-      
-      // 🌐 Save draft using KonthoKosh API with automatic JWT token
-      const savedDraft = await createPost(draftContent);
-      
-      console.log("✅ Draft saved successfully:", savedDraft);
-      alert("Draft saved successfully to KonthoKosh!");
-    } catch (error) {
-      console.error("❌ Error saving draft:", error);
-      const errorMessage = handleKonthoKoshError(error);
-      alert(`Failed to save draft: ${errorMessage}`);
-    }
-  }, [createPost]);
+        // Combine title and content for the API, mark as draft
+        const draftContent = `[DRAFT] ${data.title}\n\n${data.content}`;
+
+        // 🌐 Save draft using KonthoKosh API with automatic JWT token
+        const savedDraft = await createPost(draftContent);
+
+        console.log("✅ Draft saved successfully:", savedDraft);
+        alert("Draft saved successfully to KonthoKosh!");
+      } catch (error) {
+        console.error("❌ Error saving draft:", error);
+        const errorMessage = handleKonthoKoshError(error);
+        alert(`Failed to save draft: ${errorMessage}`);
+      }
+    },
+    [createPost]
+  );
 
   // Reset helpers
   const handleReset = useCallback(() => {
@@ -84,32 +92,10 @@ export default function WritePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
-        <div className="">
-          <div className=""></div>
-          {/* <Navbar /> */}
-        </div>
+      <Background>
+        <Navbar />
 
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-red-200 sticky top-0 z-40">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Link href="/">
-                  <Button variant="outline" className="group">
-                    <Icons.ChevronLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform duration-200" />
-                    প্রচ্ছদ
-                  </Button>
-                </Link>
-                <h1 className="text-2xl font-kalpurush font-bold text-red-800">
-                  নতুন পোস্ট লিখুন
-                </h1>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <main className="container mx-auto px-4 py-8 max-w-4xl mt-28">
           <div className="space-y-8">
             {/* Post Form */}
             <div>
@@ -181,13 +167,29 @@ export default function WritePage() {
                       </div>
                       <div className="mt-2 p-3 rounded bg-white/70 dark:bg-black/20 border text-sm">
                         <div className="markdown-content prose prose-sm max-w-none">
-                          <ReactMarkdown 
+                          <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
-                              h1: ({ children }) => <h1 className="text-lg font-bold font-kalpurush mb-2">{children}</h1>,
-                              h2: ({ children }) => <h2 className="text-base font-semibold font-kalpurush mb-2">{children}</h2>,
-                              h3: ({ children }) => <h3 className="text-sm font-medium font-kalpurush mb-1">{children}</h3>,
-                              p: ({ children }) => <p className="mb-2 font-bengali leading-relaxed">{children}</p>,
+                              h1: ({ children }) => (
+                                <h1 className="text-lg font-bold font-kalpurush mb-2">
+                                  {children}
+                                </h1>
+                              ),
+                              h2: ({ children }) => (
+                                <h2 className="text-base font-semibold font-kalpurush mb-2">
+                                  {children}
+                                </h2>
+                              ),
+                              h3: ({ children }) => (
+                                <h3 className="text-sm font-medium font-kalpurush mb-1">
+                                  {children}
+                                </h3>
+                              ),
+                              p: ({ children }) => (
+                                <p className="mb-2 font-bengali leading-relaxed">
+                                  {children}
+                                </p>
+                              ),
                               blockquote: ({ children }) => (
                                 <blockquote className="border-l-2 border-red-300 pl-3 ml-2 italic text-gray-600 mb-2">
                                   {children}
@@ -203,9 +205,21 @@ export default function WritePage() {
                                   {children}
                                 </pre>
                               ),
-                              ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
-                              ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
-                              li: ({ children }) => <li className="text-sm font-bengali">{children}</li>,
+                              ul: ({ children }) => (
+                                <ul className="list-disc list-inside mb-2 space-y-1">
+                                  {children}
+                                </ul>
+                              ),
+                              ol: ({ children }) => (
+                                <ol className="list-decimal list-inside mb-2 space-y-1">
+                                  {children}
+                                </ol>
+                              ),
+                              li: ({ children }) => (
+                                <li className="text-sm font-bengali">
+                                  {children}
+                                </li>
+                              ),
                             }}
                           >
                             {createdPost.post}
@@ -234,7 +248,7 @@ export default function WritePage() {
             )}
           </div>
         </main>
-      </div>
+      </Background>
     </ProtectedRoute>
   );
 }

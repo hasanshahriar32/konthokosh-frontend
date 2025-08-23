@@ -36,15 +36,19 @@ const PostFormHeader = ({
   isDraft = false,
 }: Props) => {
   return (
-    <Card className="bg-card/90 backdrop-blur-md rounded-2xl shadow-lg border-none">
+    <Card className="bg-card/70 dark:bg-primary/5 backdrop-blur-md rounded-2xl shadow-lg border-none">
       <CardHeader className="px-6 pt-6">
         <CardTitle className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
             <Icons.Edit className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <div className="text-lg font-semibold">{isDraft ? POST_STRINGS.editDraft : POST_STRINGS.createNewPost}</div>
-            <div className="text-sm text-muted-foreground">{POST_STRINGS.titleLabel}</div>
+            <div className="text-lg font-semibold">
+              {isDraft ? POST_STRINGS.editDraft : POST_STRINGS.createNewPost}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {POST_STRINGS.titleLabel}
+            </div>
           </div>
         </CardTitle>
       </CardHeader>

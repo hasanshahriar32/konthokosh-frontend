@@ -75,7 +75,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
   });
 
   const navLinks = useMemo(() => {
-    const initialLinks = [routes.feed, routes.write];
+    const initialLinks = [routes.feed, routes.write, routes["my-post"]];
 
     return !isSignedIn ? [routes.home, ...initialLinks] : initialLinks;
   }, [isLoaded, isSignedIn]);

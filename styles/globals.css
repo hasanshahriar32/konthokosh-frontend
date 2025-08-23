@@ -191,56 +191,31 @@
     );
 }
 
-/* -------------------------------- Headings -------------------------------- */
+/* -------------------------------- Converted Classes to Tailwind Equivalents -------------------------------- */
 
-.heading-primary {
-  @apply text-[44px] font-kalpurush font-bold text-center;
-}
+/*
+REPLACED CLASSES - Use these Tailwind classes in your HTML instead:
 
-.heading-secondary {
-  @apply text-4xl font-kalpurush font-bold mb-6 lg:mb-8;
-}
+.heading-primary -> text-[44px] font-kalpurush font-bold text-center
+.heading-secondary -> text-4xl font-kalpurush font-bold mb-6 lg:mb-8
+.heading-tertiary -> text-2xl font-kalpurush font-semibold text-foreground
 
-.heading-tertiary {
-  @apply text-2xl font-kalpurush font-semibold text-foreground;
-}
+.text-subtitle -> text-lg font-bengali text-center text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed
+.text-x18 -> font-bengali text-lg leading-relaxed
+.text-x16 -> font-bengali leading-relaxed
+.text-x14 -> font-bengali text-sm leading-relaxed
 
-/* ---------------------------------- Text ---------------------------------- */
+.hero-hover -> transition-transform duration-300 ease-in-out hover:translate-x-2.5
+.animate-fade-in-up -> animate-[fadeInUp_0.8s_ease-out]
+.animate-fade-in-left -> animate-[fadeInLeft_0.8s_ease-out]
+.animate-fade-in-right -> animate-[fadeInRight_0.8s_ease-out]
 
-.text-subtitle {
-  @apply text-lg font-bengali text-center text-muted-foreground mb-16 max-w-4xl mx-auto leading-relaxed;
-}
+.floating-text -> animate-[float_3s_ease-in-out_infinite]
+.animate-pulse-glow -> animate-[pulse-glow_4s_ease-in-out_infinite] text-primary
+.animate-heartbeat -> animate-[heartbeat_2s_ease-in-out_infinite] text-secondary
+*/
 
-.text-x18 {
-  @apply font-bengali text-lg leading-relaxed;
-}
-
-.text-x16 {
-  @apply font-bengali leading-relaxed;
-}
-
-.text-x14 {
-  @apply font-bengali text-sm leading-relaxed;
-}
-
-/* ---------- Hero Hover & Animations ---------- */
-.hero-hover {
-  transition: transform 0.3s ease-in-out;
-}
-.hero-hover:hover {
-  transform: translateX(10px);
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out;
-}
-.animate-fade-in-left {
-  animation: fadeInLeft 0.8s ease-out;
-}
-.animate-fade-in-right {
-  animation: fadeInRight 0.8s ease-out;
-}
-
+/* ---------- Custom Animations (Keep these as they define keyframes) ---------- */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -272,25 +247,6 @@
   }
 }
 
-/* ---------- Calligraphy Text ---------- */
-.calligraphy-text {
-  font-family: var(--font-kalpurush);
-  text-shadow: 2px 2px 6px var(--ring), 1px 1px 2px rgba(0, 0, 0, 0.5);
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-}
-.calligraphy-word {
-  display: inline-block;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.calligraphy-word:hover {
-  transform: scale(1.1) rotate(2deg);
-  text-shadow: 4px 4px 8px var(--ring), 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-/* ---------- Floating Text & Pulses ---------- */
-.floating-text {
-  animation: float 3s ease-in-out infinite;
-}
 @keyframes float {
   0%,
   100% {
@@ -312,10 +268,6 @@
     transform: scale(1.1);
   }
 }
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-  color: var(--primary);
-}
 
 @keyframes heartbeat {
   0%,
@@ -332,75 +284,20 @@
     transform: scale(1.15);
   }
 }
-.animate-heartbeat {
-  animation: heartbeat 2s ease-in-out infinite;
-  color: var(--secondary);
-}
 
-/* ---------- Markdown Editor (Indigo + Saffron accents) ---------- */
-.w-md-editor {
-  background-color: transparent !important;
+/* ---------- Calligraphy Text (Complex styling - keeping as class) ---------- */
+.calligraphy-text {
+  font-family: var(--font-kalpurush);
+  text-shadow: 2px 2px 6px var(--ring), 1px 1px 2px rgba(0, 0, 0, 0.5);
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
 }
-.w-md-editor.w-md-editor-focus {
-  border-color: var(--primary) !important;
-  box-shadow: 0 0 0 1px var(--primary) !important;
+.calligraphy-word {
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.w-md-editor-text-input,
-.w-md-editor-text-container,
-.w-md-editor-text,
-.w-md-editor-text-area {
-  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
-  font-size: 16px !important;
-  line-height: 1.6 !important;
-}
-.wmde-markdown {
-  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
-  line-height: 1.6 !important;
-}
-.wmde-markdown h1,
-.wmde-markdown h2,
-.wmde-markdown h3,
-.wmde-markdown h4,
-.wmde-markdown h5,
-.wmde-markdown h6 {
-  font-family: var(--font-kalpurush), ui-serif, serif !important;
-  margin-top: 1.5em;
-  margin-bottom: 0.75em;
-}
-.wmde-markdown p {
-  margin-bottom: 1em;
-}
-.wmde-markdown blockquote {
-  border-left: 4px solid var(--primary);
-  background-color: color-mix(in oklch, var(--primary) 10%, transparent);
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 0.375rem;
-}
-.wmde-markdown code {
-  background-color: var(--muted);
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-size: 0.875em;
-}
-.wmde-markdown pre {
-  background-color: var(--foreground);
-  color: var(--background);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  margin: 1rem 0;
-}
-.w-md-editor-toolbar {
-  border-bottom: 1px solid var(--border) !important;
-  background-color: var(--surface) !important;
-}
-.w-md-editor-toolbar li button {
-  color: var(--foreground) !important;
-}
-.w-md-editor-toolbar li button:hover {
-  background-color: var(--secondary) !important;
-  color: var(--secondary-foreground) !important;
+.calligraphy-word:hover {
+  transform: scale(1.1) rotate(2deg);
+  text-shadow: 4px 4px 8px var(--ring), 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 /* ---------------------------------- Clerk --------------------------------- */
@@ -421,4 +318,402 @@
 .cl-footerAction,
 .cl-footerAction__text {
   display: none !important;
+}
+
+/* ------------------------------- MDX Editor ------------------------------- */
+
+/* MDX Editor Custom Styles */
+.mdx-editor-wrapper {
+  @apply w-full;
+}
+
+.mdx-editor-wrapper .mdxeditor {
+  @apply text-foreground border-border;
+  /* bg-card/70 — semi-opaque card surface to subtly separate the editor from page */
+  background-color: color-mix(
+    in oklch,
+    var(--card) 70%,
+    transparent
+  ) !important;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar {
+  @apply bg-card border-border rounded-t-lg p-2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar button {
+  @apply text-foreground hover:bg-accent hover:text-accent-foreground rounded-md p-2 transition-colors;
+  flex-shrink: 0;
+  min-width: auto;
+  white-space: nowrap;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar button[data-state="on"] {
+  @apply bg-primary text-primary-foreground;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar select,
+.mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select {
+  @apply bg-background border border-border rounded-md px-2 py-1 text-sm;
+  flex-shrink: 0;
+  min-width: fit-content;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select button {
+  @apply bg-background border border-border text-foreground;
+}
+
+.mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-separator {
+  @apply bg-border mx-1;
+  width: 1px;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor {
+  @apply bg-background text-foreground border-0 min-h-[300px] p-4;
+  /* Use project Bengali font for editor body text */
+  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor:focus {
+  @apply outline-none;
+}
+
+/* Prose styles for content */
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose {
+  @apply text-foreground max-w-none;
+  /* Ensure prose mirrors editor font choices */
+  font-family: var(--font-bengali), ui-sans-serif, system-ui, sans-serif !important;
+  line-height: 1.6 !important;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose h1 {
+  @apply text-2xl font-bold text-foreground mb-4;
+  /* Headings use the Kalpurush display serif */
+  font-family: var(--font-kalpurush), ui-serif, serif !important;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose h2 {
+  @apply text-xl font-semibold text-foreground mb-3;
+  font-family: var(--font-kalpurush), ui-serif, serif !important;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose h3 {
+  @apply text-lg font-medium text-foreground mb-2;
+  font-family: var(--font-kalpurush), ui-serif, serif !important;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose p {
+  @apply text-foreground mb-3 leading-relaxed;
+  margin-bottom: 1em;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose blockquote {
+  @apply border-l-4 border-primary pl-4 italic text-muted-foreground my-4;
+  border-left: 4px solid var(--primary);
+  background-color: color-mix(in oklch, var(--primary) 10%, transparent);
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0.375rem;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ul,
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ol {
+  @apply text-foreground mb-3 ml-4;
+  padding-left: 1.5rem;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ul {
+  list-style-type: disc;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ol {
+  list-style-type: decimal;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ul ul {
+  list-style-type: circle;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ul ul ul {
+  list-style-type: square;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose li {
+  @apply text-foreground mb-1;
+  display: list-item;
+  margin-left: 0;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose a {
+  @apply text-primary hover:text-primary/80 underline;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose code {
+  @apply bg-muted text-foreground px-1 py-0.5 rounded text-sm;
+  background-color: var(--muted);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4;
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose pre code {
+  @apply bg-transparent p-0;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose table {
+  @apply border-collapse border border-border w-full my-4;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose th,
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose td {
+  @apply border border-border px-3 py-2 text-left;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose th {
+  @apply bg-muted font-semibold;
+}
+
+.mdx-editor-wrapper .mdxeditor-rich-text-editor .prose img {
+  @apply rounded-lg max-w-full h-auto my-4;
+}
+
+/* Placeholder styling */
+.mdx-editor-wrapper .mdxeditor-rich-text-editor[data-placeholder]::before {
+  @apply text-muted-foreground;
+}
+
+/* Dialog and popup styling */
+.mdx-editor-wrapper .mdxeditor-popup {
+  @apply bg-popover border border-border rounded-lg shadow-lg;
+}
+
+.mdx-editor-wrapper .mdxeditor-popup button {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-3 py-1;
+}
+
+.mdx-editor-wrapper .mdxeditor-popup input {
+  @apply bg-background border border-input rounded-md px-3 py-2 text-foreground;
+}
+
+/* Dark mode adjustments */
+.dark .mdx-editor-wrapper .mdxeditor {
+  /* dark:bg-primary/5 — very subtle primary tint on dark backgrounds */
+  background-color: color-mix(
+    in oklch,
+    var(--primary) 5%,
+    transparent
+  ) !important;
+  /* Ensure editor text uses the dark theme foreground */
+  color: var(--card-foreground) !important;
+}
+
+.dark .mdx-editor-wrapper .mdxeditor-toolbar {
+  @apply bg-card;
+  /* Toolbar text/icons should be visible in dark mode */
+  color: var(--card-foreground) !important;
+}
+
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor {
+  /* dark:bg-primary/5 for the editor content area as well */
+  background-color: color-mix(
+    in oklch,
+    var(--primary) 5%,
+    transparent
+  ) !important;
+  color: var(--card-foreground) !important;
+}
+
+/* Stronger specificity to override third-party inline styles */
+.dark .mdx-editor-wrapper .mdxeditor,
+.dark .mdx-editor-wrapper .mdxeditor *,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar *,
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor,
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor * {
+  color: var(--card-foreground) !important;
+}
+
+/* Ensure SVG icons inherit the text color */
+.dark .mdx-editor-wrapper .mdxeditor-toolbar svg {
+  fill: currentColor !important;
+}
+
+/* Inputs/selects in the toolbar */
+.dark .mdx-editor-wrapper .mdxeditor-toolbar select,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select button,
+.dark .mdx-editor-wrapper .mdxeditor-popup input {
+  color: var(--card-foreground) !important;
+}
+
+/* Additional dark-mode refinements for MDX editor components */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose {
+  color: var(--card-foreground);
+}
+
+/* Ensure inline code remains readable on dark backgrounds */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose code {
+  background-color: color-mix(in oklch, var(--muted) 30%, transparent);
+  color: var(--card-foreground);
+}
+
+/* Code block: use a dark card surface with light text in dark mode */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose pre {
+  background-color: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border: 1px solid color-mix(in oklch, var(--border) 60%, transparent) !important;
+}
+
+/* Blockquote should contrast against the dark background */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose blockquote {
+  border-left-color: var(--primary);
+  background-color: color-mix(in oklch, var(--primary) 8%, transparent);
+  color: var(--card-foreground);
+}
+
+/* Table header and cells in dark mode */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose th {
+  background-color: color-mix(
+    in oklch,
+    var(--muted) 20%,
+    transparent
+  ) !important;
+  color: var(--card-foreground) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor .prose td {
+  color: var(--card-foreground) !important;
+}
+
+/* Toolbar buttons and selects: ensure contrast and clear hover/active states */
+.dark .mdx-editor-wrapper .mdxeditor-toolbar button {
+  color: var(--card-foreground) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-toolbar button:hover {
+  background-color: color-mix(
+    in oklch,
+    var(--secondary) 18%,
+    transparent
+  ) !important;
+  color: var(--secondary-foreground) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-toolbar button[data-state="on"] {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-toolbar select,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select,
+.dark .mdx-editor-wrapper .mdxeditor-toolbar .mdxeditor-select button {
+  background-color: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Popups and dialogs */
+.dark .mdx-editor-wrapper .mdxeditor-popup {
+  background-color: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  border-color: var(--border) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-popup input {
+  background-color: var(--input) !important;
+  color: var(--popover-foreground) !important;
+  border-color: var(--border) !important;
+}
+.dark .mdx-editor-wrapper .mdxeditor-popup button {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+/* Placeholder text in the editor */
+.dark
+  .mdx-editor-wrapper
+  .mdxeditor-rich-text-editor[data-placeholder]::before {
+  color: color-mix(
+    in oklch,
+    var(--muted-foreground) 70%,
+    var(--card-foreground)
+  );
+}
+
+/* Scrollbar tweaks for dark mode */
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor::-webkit-scrollbar-track {
+  background-color: color-mix(in oklch, var(--card) 10%, transparent);
+}
+.dark .mdx-editor-wrapper .mdxeditor-rich-text-editor::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklch, var(--primary) 45%, transparent);
+}
+.dark
+  .mdx-editor-wrapper
+  .mdxeditor-rich-text-editor::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in oklch, var(--primary) 65%, transparent);
+}
+
+/* Focus ring adjustments in dark so the outline is visible */
+.dark .mdx-editor-wrapper:focus-within {
+  @apply ring-2;
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--primary) 30%, transparent) !important;
+}
+
+/* Focus states */
+.mdx-editor-wrapper:focus-within {
+  @apply ring-2 ring-primary/20;
+  /* Mirror @uiw/react-md-editor focus visuals */
+  box-shadow: 0 0 0 1px var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Toolbar visual tweaks to match incoming styles */
+.mdx-editor-wrapper .mdxeditor-toolbar {
+  border-bottom: 1px solid var(--border) !important;
+  background-color: var(--surface) !important;
+}
+.mdx-editor-wrapper .mdxeditor-toolbar li button {
+  color: var(--foreground) !important;
+}
+.mdx-editor-wrapper .mdxeditor-toolbar li button:hover {
+  background-color: var(--secondary) !important;
+  color: var(--secondary-foreground) !important;
+}
+
+/* Ensure focusable editor container uses primary highlight when focused */
+.mdx-editor-wrapper .mdxeditor:focus,
+.mdx-editor-wrapper .mdxeditor:focus-within {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 1px var(--primary) !important;
 }

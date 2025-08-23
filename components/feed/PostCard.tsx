@@ -26,7 +26,7 @@ type Props = {
 const PostCard = ({ post, totalCount = 0 }: Props) => {
   return (
     <article className="relative">
-      <Card className="overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 bg-primary/5 backdrop-blur-2xl border-none py-0">
+      <Card className="overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 bg-card/70 dark:bg-primary/5 backdrop-blur-2xl border-none py-0">
         <CardContent className="px-8 py-6">
           <div className="flex items-start gap-6">
             <div className="flex-shrink-0">
