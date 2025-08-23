@@ -64,7 +64,7 @@
 
 /* ---------- Dark theme tokens ---------- */
 .dark {
-  --background: oklch(14.5% 0.01 280);
+  --background: oklch(12% 0.05 240); /* Dark bluish background */
   --foreground: oklch(98% 0.02 280);
 
   --card: oklch(14.5% 0.01 280);
@@ -73,10 +73,10 @@
   --popover: oklch(14.5% 0.01 280);
   --popover-foreground: oklch(98% 0.02 280);
 
-  --primary: oklch(47.2% 0.191 276.6); /* Indigo */
+  --primary: oklch(55% 0.15 276.6); /* Lighter Indigo */
   --primary-foreground: oklch(98% 0.02 280);
 
-  --secondary: oklch(82.7% 0.166 77.6); /* Saffron */
+  --secondary: oklch(82.7% 0.166 77.6); /* Lighter Saffron */
   --secondary-foreground: oklch(14.5% 0.01 280);
 
   --muted: oklch(26% 0.01 280);

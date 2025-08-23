@@ -42,7 +42,7 @@ import {
   PenTool,
 } from "lucide-react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { useBackendApi } from "@/utils/api-client";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import Link from "next/link";

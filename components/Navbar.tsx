@@ -11,8 +11,9 @@ import {
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { ThemeToggle } from "./theme-toggle";
 
-import { paths, routes } from "@/constants";
+import { routes } from "@/constants";
 import { SITE_NAME, headerVisibleHeight } from "@/constants/header";
 import { easeInOut } from "framer-motion";
 
@@ -21,6 +22,7 @@ interface NavLinkProps {
   label: string;
   onClick?: () => void;
   isMobile?: boolean;
+  isHero?: boolean;
 }
 
 const NavLink: React.FC<NavLinkProps> = ({
@@ -28,11 +30,16 @@ const NavLink: React.FC<NavLinkProps> = ({
   label,
   onClick,
   isMobile = false,
+  isHero = false,
 }) => (
   <Link href={href} passHref>
     <span
-      className={`text-white/90 hover:text-white font-bengali transition-colors ${
+      className={`font-bengali transition-colors ${
         isMobile ? "block py-2" : ""
+      } ${
+        isHero
+          ? "text-white/90 hover:text-white"
+          : "text-[color:var(--color-foreground)] hover:opacity-90"
       }`}
       onClick={onClick}
     >
@@ -41,9 +48,13 @@ const NavLink: React.FC<NavLinkProps> = ({
   </Link>
 );
 
-const MainNav: React.FC = () => {
+type MainNavProps = {
+  isHero?: boolean;
+};
+
+const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
   const { scrollY } = useScroll();
-  const [isHero, setIsHero] = useState(true);
+  const [isInHero, setIsInHero] = useState(true);
   const [visible, setVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isLoaded, isSignedIn } = useAuth();
@@ -51,9 +62,9 @@ const MainNav: React.FC = () => {
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
     if (latest < window.innerHeight) {
-      setIsHero(true);
+      setIsInHero(true);
     } else {
-      setIsHero(false);
+      setIsInHero(false);
     }
 
     if (latest > previous && latest > headerVisibleHeight) {
@@ -66,7 +77,7 @@ const MainNav: React.FC = () => {
   const navLinks = useMemo(() => {
     const initialLinks = [routes.feed, routes.write];
 
-    return isSignedIn ? [routes.home, ...initialLinks] : initialLinks;
+    return !isSignedIn ? [routes.home, ...initialLinks] : initialLinks;
   }, [isLoaded, isSignedIn]);
 
   return (
@@ -77,15 +88,19 @@ const MainNav: React.FC = () => {
         variants={slideDownVariants}
       >
         <nav
-          className="absolute top-0 left-0 right-0 z-30"
-          style={{
-            backgroundColor: !isHero ? "rgba(0, 0, 0, 0.25)" : "transparent",
-            backdropFilter: !isHero ? "blur(8px)" : "none",
-          }}
+          className={`absolute top-0 left-0 right-0 z-30 ${
+            !isInHero ? "bg-black/25 backdrop-blur-md" : "bg-transparent"
+          }`}
         >
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="text-white font-kalpurush text-xl font-semibold">
+              <div
+                className={`font-kalpurush text-xl font-semibold ${
+                  isInHero
+                    ? "text-white"
+                    : "text-[color:var(--color-foreground)]"
+                }`}
+              >
                 {SITE_NAME}
               </div>
 
@@ -95,14 +110,22 @@ const MainNav: React.FC = () => {
                     key={link.path}
                     href={link.path}
                     label={link.title}
+                    isHero={isHero}
                   />
                 ))}
               </div>
 
               <div className="hidden md:flex items-center space-x-4">
+                <div className="flex items-center">
+                  <ThemeToggle />
+                </div>
                 <SignedOut>
                   <Button
-                    className="text-white font-bengali text-base"
+                    className={`font-bengali text-base ${
+                      isInHero
+                        ? "text-white"
+                        : "text-[color:var(--color-foreground)]"
+                    }`}
                     variant={"ghost"}
                     size={"sm"}
                     asChild
@@ -123,7 +146,11 @@ const MainNav: React.FC = () => {
 
               <Button
                 variant="ghost"
-                className="md:hidden text-white hover:bg-white/20"
+                className={`md:hidden ${
+                  isInHero
+                    ? "text-white hover:bg-white/20"
+                    : "text-[color:var(--color-foreground)] hover:bg-[color:var(--color-popover)]/10"
+                }`}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 <svg
@@ -143,7 +170,7 @@ const MainNav: React.FC = () => {
             </div>
 
             {isMobileMenuOpen && (
-              <div className="md:hidden mt-4 pb-4 border-t border-white/20">
+              <div className="md:hidden mt-4 pb-4 border-t border-border">
                 <div className="flex flex-col space-y-4 pt-4">
                   {navLinks.map((link) => (
                     <NavLink
@@ -152,8 +179,13 @@ const MainNav: React.FC = () => {
                       label={link.title}
                       onClick={() => setIsMobileMenuOpen(false)}
                       isMobile
+                      isHero={isInHero}
                     />
                   ))}
+
+                  <div className="pt-2">
+                    <ThemeToggle />
+                  </div>
 
                   <div className="border-t border-white/20 pt-4 space-y-2">
                     <SignedOut>

@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { getServerClerkTheme } from "@/utils/server-theme";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import {
@@ -43,13 +44,19 @@ export const metadata: Metadata = {
   generator: "v0.app",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = await getServerClerkTheme();
+
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        theme,
+      }}
+    >
       <html
         lang="bn"
         className={`${notoSansBengali.variable} ${kalpurush.variable} ${balooDa2.variable} ${tiroBangla.variable}`}

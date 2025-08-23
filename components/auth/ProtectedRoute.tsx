@@ -1,32 +1,13 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
-import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/common/Icons";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
+import PageLoader from "../common/PageLoader";
 
 type PageLoaderProps = {
   message?: string;
-};
-
-const PageLoader = ({ message = "লোড হচ্ছে..." }: PageLoaderProps) => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
-      <div className="text-center space-y-4">
-        <div className="flex justify-center">
-          <div className="animate-heartbeat">
-            <Icons.Shield className="h-8 w-8 text-red-600" />
-          </div>
-        </div>
-        <p
-          className="text-sm text-gray-600 font-bengali"
-          style={{ fontFamily: "var(--font-bengali)" }}
-        >
-          {message}
-        </p>
-      </div>
-    </div>
-  );
 };
 
 type ProtectedRouteProps = {
@@ -45,7 +26,7 @@ const ProtectedRoute = ({ children, fallback }: ProtectedRouteProps) => {
 
   // Show loading state while auth status is being determined
   if (!isLoaded) {
-    return <PageLoader />;
+    return <PageLoader message="লোড হচ্ছে..." />;
   }
 
   // Show fallback or default unauthorized message

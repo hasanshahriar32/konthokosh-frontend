@@ -4,7 +4,7 @@ import { useUser, useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import Link from "next/link";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/common/Icons";
