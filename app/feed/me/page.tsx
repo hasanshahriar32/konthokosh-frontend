@@ -12,6 +12,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { paths } from "@/constants";
 import {
   APPROVED_LABEL,
   DELETE_CONFIRM,
@@ -24,12 +25,15 @@ import {
   PAGE_LABEL,
   PENDING_LABEL,
   PREVIOUS,
-  WRITE_BUTTON
+  WRITE_BUTTON,
+  RETRY_BUTTON,
+  NO_MY_POSTS_YET,
 } from "@/constants/feed";
 import { MyPostsProvider, useMyPosts } from "@/context/MyPostsContext";
 import { FileText, PenTool } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { motion } from "framer-motion";
 
 const MyPostsInner: React.FC = () => {
   const {
@@ -51,6 +55,7 @@ const MyPostsInner: React.FC = () => {
 
   const [activeTab, setActiveTab] = React.useState("all");
   const [deleteLoading, setDeleteLoading] = React.useState<number | null>(null);
+  const [expanded, setExpanded] = React.useState(false);
 
   const publishedPosts = posts.filter((p) => p.isApproved);
   const pendingPosts = posts.filter((p) => !p.isApproved);
@@ -65,6 +70,25 @@ const MyPostsInner: React.FC = () => {
       (activeTab === "pending" && !post.isApproved);
     return matchesSearch && matchesTab;
   });
+
+  const labelVariants = {
+    rest: {
+      opacity: 0,
+      x: -6,
+      scaleX: 0,
+      maxWidth: 0,
+      paddingLeft: 0,
+      transition: { duration: 0.12 },
+    },
+    hover: {
+      opacity: 1,
+      x: 0,
+      scaleX: 1,
+      maxWidth: 160,
+      paddingLeft: 8,
+      transition: { duration: 0.18 },
+    },
+  } as const;
 
   const handleDelete = async (id: number) => {
     if (!confirm(DELETE_CONFIRM)) return;
@@ -142,7 +166,7 @@ const MyPostsInner: React.FC = () => {
                         void loadPosts(page, searchTerm, isApproved)
                       }
                     >
-                      আবার চেষ্টা করুন
+                      {RETRY_BUTTON}
                     </Button>
                   </div>
                 </div>
@@ -183,7 +207,7 @@ const MyPostsInner: React.FC = () => {
                       <p className="font-bengali text-gray-500 mb-4">
                         {searchTerm
                           ? NO_MY_POSTS_SEARCH
-                          : "আপনি এখনো কোনো পোস্ট তৈরি করেননি।"}
+                            : NO_MY_POSTS_YET}
                       </p>
                       <Link href="/write">
                         <Button className="bg-red-600 hover:bg-red-700 font-bengali">
@@ -221,6 +245,38 @@ const MyPostsInner: React.FC = () => {
             nextLabel={NEXT}
           />
         </main>
+
+        <Link href={paths.write} className="fixed right-6 bottom-6 z-50">
+          <motion.div
+            className="rounded-full overflow-hidden"
+            initial={false}
+            animate={expanded ? { width: 180 } : { width: 48 }}
+            transition={{ type: "spring", stiffness: 380, damping: 28 }}
+            onHoverStart={() => setExpanded(true)}
+            onHoverEnd={() => setExpanded(false)}
+          >
+            <Button
+              className="rounded-full bg-primary/90 hover:bg-primary/80 backdrop-blur-sm text-white shadow-lg flex items-center justify-center h-12 p-3 w-full"
+              aria-label="Write a new post"
+              style={{ width: "100%" }}
+              onFocus={() => setExpanded(true)}
+              onBlur={() => setExpanded(false)}
+            >
+              <div className="flex items-center">
+                <PenTool className="h-5 w-5 text-white" />
+                <motion.span
+                  className="font-bengali overflow-hidden whitespace-nowrap inline-block"
+                  variants={labelVariants}
+                  initial="rest"
+                  animate={expanded ? "hover" : "rest"}
+                  style={{ transformOrigin: "left" }}
+                >
+                  {WRITE_BUTTON}
+                </motion.span>
+              </div>
+            </Button>
+          </motion.div>
+        </Link>
       </Background>
     </ProtectedRoute>
   );

@@ -36,7 +36,7 @@ const NavLink: React.FC<NavLinkProps> = ({
 }) => (
   <Link href={href} passHref>
     <span
-      className={`font-bengali transition-colors ${
+      className={`font-bengali transition-colors font-medium ${
         isMobile ? "block py-2" : ""
       } ${
         isHero && isInHero

@@ -44,6 +44,7 @@ export const ALL_LABEL = "সব";
 export const NO_MY_POSTS = "কোনো পোস্ট পাওয়া যায়নি";
 export const NO_MY_POSTS_SEARCH =
   "আপনার অনুসন্ধান অনুযায়ী কোনো পোস্ট খুঁজে পাওয়া যায়নি।";
+export const NO_MY_POSTS_YET = "আপনি এখনো কোনো পোস্ট তৈরি করেননি।";
 export const DELETE_CONFIRM =
   "আপনি কি নিশ্চিত যে এই পোস্টটি মুছে ফেলতে চান? এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।";
 export const DELETING = "মুছছি...";
