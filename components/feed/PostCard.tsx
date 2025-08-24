@@ -1,23 +1,23 @@
 "use client";
 
 import { Icons } from "@/components/common/Icons";
+import { Badge } from "@/components/ui/badge";
+import { POST_UI } from "@/types/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  APPROVED,
-  ID_LABEL,
-  PENDING,
-  USER_FALLBACK
-} from "@/constants/feed";
+import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import Actions from "./Actions";
+import PostContent from "./PostContent";
 
 type Props = {
   post: KonthoKoshFeedPost;
-  totalCount?: number;
 };
 
-const PostCard = ({ post, totalCount = 0 }: Props) => {
+const PostCard = ({ post }: Props) => {
+  console.log(post);
+
   return (
     <article className="relative">
       <Card className="overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transition-transform transform hover:-translate-y-1 bg-card/70 dark:bg-primary/5 backdrop-blur-2xl border-none py-0">
@@ -53,19 +53,31 @@ const PostCard = ({ post, totalCount = 0 }: Props) => {
                   <div>
                     {ID_LABEL} {post.id}
                   </div>
-                  <div className="mt-1">
-                    {post.isApproved ? APPROVED : PENDING}
+                  <div className="mt-1.5 flex items-end gap-1">
+                    <Badge
+                      asChild={false}
+                      variant={post.isApproved ? "default" : "destructive"}
+                      className="text-[10px] rounded-full px-2 py-1"
+                    >
+                      {post.isApproved ? APPROVED : PENDING}
+                    </Badge>
+
+                    <Badge
+                      asChild={false}
+                      variant={post.isActive ? "secondary" : "outline"}
+                      className="text-[10px] rounded-full px-2 py-1"
+                    >
+                      {post.isActive ? POST_UI.ACTIVE : POST_UI.INACTIVE}
+                    </Badge>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <Separator className="my-4" />
-          <div className="font-bengali text-base leading-relaxed whitespace-pre-wrap break-words text-foreground">
-            {post.post}
-          </div>
-
-          {/* <Action /> */}
+          <PostContent post={post} />
+          <Separator className="my-4" />
+          <Actions />
         </CardContent>
       </Card>
     </article>

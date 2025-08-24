@@ -58,3 +58,8 @@ export type PostValidationError = {
   field: string;
   message: string;
 };
+
+export const POST_UI = {
+  ACTIVE: "সক্রিয়",
+  INACTIVE: "নিষ্ক্রিয়",
+};

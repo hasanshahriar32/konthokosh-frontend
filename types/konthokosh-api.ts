@@ -17,6 +17,7 @@ export type KonthoKoshApiResponse<T = unknown> = {
  */
 export type KonthoKoshPost = {
   id: number;
+  title: string;
   post: string;
   userId: number;
   isApproved: boolean;

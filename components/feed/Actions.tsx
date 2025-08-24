@@ -2,7 +2,7 @@ import { COMMENT, LIKE, SHARE } from "@/constants/feed";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import { Button } from "../ui/button";
 
-const Action = () => {
+const Actions = () => {
   return (
     <div className="mt-6 flex items-center gap-4">
       <Button
@@ -33,4 +33,4 @@ const Action = () => {
   );
 };
 
-export default Action;
+export default Actions;
