@@ -1,28 +1,33 @@
 "use client";
 
+import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import Background from "@/components/common/Background";
 import { Icons } from "@/components/common/Icons";
 import { PostForm } from "@/components/post/PostForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { KonthoKoshPost } from "@/types/konthokosh-api";
 import { type PostFormData } from "@/types/post";
 import {
-  useKonthoKoshApi,
   handleKonthoKoshError,
+  useKonthoKoshApi,
 } from "@/utils/konthokosh-api";
-import type { KonthoKoshPost } from "@/types/konthokosh-api";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import Navbar from "@/components/Navbar";
-import Background from "@/components/common/Background";
+import { useCallback, useEffect, useState } from "react";
 
 export default function WritePage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdPost, setCreatedPost] = useState<KonthoKoshPost | null>(null);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // 🌐 KonthoKosh API integration with automatic JWT token
@@ -48,6 +53,8 @@ export default function WritePage() {
 
         console.log("✅ Post created successfully:", newPost);
         setCreatedPost(newPost);
+        // show success dialog and schedule redirect to /feed
+        setShowSuccessDialog(true);
       } catch (error) {
         console.error("❌ Error creating post:", error);
         const friendly = handleKonthoKoshError(error);
@@ -58,6 +65,19 @@ export default function WritePage() {
     },
     [createPost]
   );
+
+  // When a post is created and dialog is shown, redirect to /feed after a short delay.
+  useEffect(() => {
+    if (!createdPost || !showSuccessDialog) return;
+
+    const t = setTimeout(() => {
+      // close dialog and navigate
+      setShowSuccessDialog(false);
+      router.push("/feed");
+    }, 2000);
+
+    return () => clearTimeout(t);
+  }, [createdPost, showSuccessDialog, router]);
 
   /**
    * Handle saving as draft (using KonthoKosh API)
@@ -135,117 +155,54 @@ export default function WritePage() {
               </Card>
             )}
 
-            {/* Created Post Result */}
-            {createdPost && (
-              <Card className="border-l-4 border-l-green-500 bg-green-50 dark:bg-green-900/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-                      <Icons.Check className="h-5 w-5 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-green-800 dark:text-green-200">
-                        পোস্ট সফলভাবে তৈরি হয়েছে
-                      </h3>
-                      <div className="text-sm text-green-700 dark:text-green-300">
+            {/* Success dialog shown when a post is created; auto-redirects to /feed */}
+            <Dialog
+              open={showSuccessDialog}
+              onOpenChange={setShowSuccessDialog}
+            >
+              <DialogContent>
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
+                    <Icons.Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div className="space-y-2">
+                    <DialogTitle>পোস্ট সফলভাবে তৈরি হয়েছে</DialogTitle>
+                    <DialogDescription>
+                      আপনার পোস্ট সফলভাবে তৈরি হয়েছে। ২ সেকেন্ড পরে আপনি ফিড
+                      পেজে সরানো হবে।
+                    </DialogDescription>
+
+                    {createdPost && (
+                      <div className="text-sm text-green-700 dark:text-green-300 mt-2">
                         <div>
                           <span className="font-medium">ID:</span>{" "}
                           {createdPost.id}
                         </div>
                         <div>
-                          <span className="font-medium">User ID:</span>{" "}
-                          {createdPost.userId}
-                        </div>
-                        <div>
                           <span className="font-medium">অনুমোদিত:</span>{" "}
                           {createdPost.isApproved ? "হ্যাঁ" : "না"}
                         </div>
-                        <div>
-                          <span className="font-medium">তৈরি:</span>{" "}
-                          {new Date(createdPost.createdAt).toLocaleString()}
-                        </div>
                       </div>
-                      <div className="mt-2 p-3 rounded bg-white/70 dark:bg-black/20 border text-sm">
-                        <div className="markdown-content prose prose-sm max-w-none">
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              h1: ({ children }) => (
-                                <h1 className="text-lg font-bold font-kalpurush mb-2">
-                                  {children}
-                                </h1>
-                              ),
-                              h2: ({ children }) => (
-                                <h2 className="text-base font-semibold font-kalpurush mb-2">
-                                  {children}
-                                </h2>
-                              ),
-                              h3: ({ children }) => (
-                                <h3 className="text-sm font-medium font-kalpurush mb-1">
-                                  {children}
-                                </h3>
-                              ),
-                              p: ({ children }) => (
-                                <p className="mb-2 font-bengali leading-relaxed">
-                                  {children}
-                                </p>
-                              ),
-                              blockquote: ({ children }) => (
-                                <blockquote className="border-l-2 border-red-300 pl-3 ml-2 italic text-gray-600 mb-2">
-                                  {children}
-                                </blockquote>
-                              ),
-                              code: ({ children }) => (
-                                <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">
-                                  {children}
-                                </code>
-                              ),
-                              pre: ({ children }) => (
-                                <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto mb-2">
-                                  {children}
-                                </pre>
-                              ),
-                              ul: ({ children }) => (
-                                <ul className="list-disc list-inside mb-2 space-y-1">
-                                  {children}
-                                </ul>
-                              ),
-                              ol: ({ children }) => (
-                                <ol className="list-decimal list-inside mb-2 space-y-1">
-                                  {children}
-                                </ol>
-                              ),
-                              li: ({ children }) => (
-                                <li className="text-sm font-bengali">
-                                  {children}
-                                </li>
-                              ),
-                            }}
-                          >
-                            {createdPost.post}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 pt-2">
-                        <Button
-                          size="sm"
-                          onClick={() => router.push("/dashboard")}
-                        >
-                          ড্যাশবোর্ডে যান
-                        </Button>
+                    )}
+
+                    <div className="flex gap-2 pt-2">
+                      <Button size="sm" onClick={() => router.push("/feed")}>
+                        এখন যান
+                      </Button>
+                      <DialogClose>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={handleReset}
                         >
-                          আরেকটি তৈরি করুন
+                          বন্ধ করুন
                         </Button>
-                      </div>
+                      </DialogClose>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </main>
       </Background>

@@ -2,21 +2,15 @@
 
 import { Icons } from "@/components/common/Icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   APPROVED,
-  COMMENT,
   ID_LABEL,
-  LIKE,
   PENDING,
-  POSTS_COUNT_SUFFIX,
-  SHARE,
-  USER_FALLBACK,
+  USER_FALLBACK
 } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
-import { Heart, MessageCircle, Share2 } from "lucide-react";
 
 type Props = {
   post: KonthoKoshFeedPost;
@@ -71,37 +65,7 @@ const PostCard = ({ post, totalCount = 0 }: Props) => {
             {post.post}
           </div>
 
-          <div className="mt-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="font-bengali rounded-full px-4 py-2 text-muted-foreground hover:bg-primary/10"
-              >
-                <Heart className="h-5 w-5 mr-2" />
-                <span>{LIKE}</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="font-bengali rounded-full px-4 py-2 text-muted-foreground hover:bg-primary/10"
-              >
-                <MessageCircle className="h-5 w-5 mr-2" />
-                <span>{COMMENT}</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="font-bengali rounded-full px-4 py-2 text-muted-foreground hover:bg-primary/10"
-              >
-                <Share2 className="h-5 w-5 mr-2" />
-                <span>{SHARE}</span>
-              </Button>
-            </div>
-            <div className="text-xs text-muted-foreground font-bengali">
-              {totalCount ? `${totalCount}${POSTS_COUNT_SUFFIX}` : ""}
-            </div>
-          </div>
+          {/* <Action /> */}
         </CardContent>
       </Card>
     </article>

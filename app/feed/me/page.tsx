@@ -1,20 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Icons } from "@/components/common/Icons";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import Navbar from "@/components/Navbar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,26 +14,34 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import { useBackendApi } from "@/utils/api-client";
+import {
+  Calendar,
+  Edit,
+  Eye,
+  FileText,
   Heart,
   MessageCircle,
-  Share2,
-  Eye,
-  Edit,
-  Trash2,
   MoreHorizontal,
-  Search,
-  Filter,
-  TrendingUp,
-  Calendar,
-  FileText,
   PenTool,
+  Search,
+  Trash2
 } from "lucide-react";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import Navbar from "@/components/Navbar";
-import { useBackendApi } from "@/utils/api-client";
-import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import Link from "next/link";
+import { useCallback, useState } from "react";
 
 export default function MyPostsPage() {
   const api = useBackendApi();
