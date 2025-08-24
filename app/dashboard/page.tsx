@@ -148,7 +148,8 @@ const DashboardPage = () => {
               className="text-gray-700 font-bengali leading-relaxed"
               style={{ fontFamily: "var(--font-bengali)" }}
             >
-              আপনার কন্টেন্ট সুরক্ষা পরিচালনা করুন এবং ব্লকচেইন প্রযুক্তির মাধ্যমে সত্যতা যাচাই করুন।
+              আপনার কন্টেন্ট সুরক্ষা পরিচালনা করুন এবং ব্লকচেইন প্রযুক্তির
+              মাধ্যমে সত্যতা যাচাই করুন।
             </p>
           </div>
 
@@ -165,7 +166,8 @@ const DashboardPage = () => {
               className="text-sm text-gray-700 mb-4 font-bengali leading-relaxed"
               style={{ fontFamily: "var(--font-bengali)" }}
             >
-              সার্ভার কনসোলে JWT টোকেন লগিং ট্রিগার করতে নিচের বোতামগুলিতে ক্লিক করুন। টোকেনের বিস্তারিত দেখতে আপনার টার্মিনাল/সার্ভার লগ চেক করুন।
+              সার্ভার কনসোলে JWT টোকেন লগিং ট্রিগার করতে নিচের বোতামগুলিতে ক্লিক
+              করুন। টোকেনের বিস্তারিত দেখতে আপনার টার্মিনাল/সার্ভার লগ চেক করুন।
             </p>
 
             <div className="flex flex-wrap gap-3 mb-4">
@@ -229,7 +231,9 @@ const DashboardPage = () => {
                   ক্লায়েন্ট-সাইড JWT টোকেন:
                 </h4>
                 <div className="bg-white/80 p-3 rounded border border-orange-200">
-                  <p className="text-xs font-mono break-all text-gray-700">{clientToken}</p>
+                  <p className="text-xs font-mono break-all text-gray-700">
+                    {clientToken}
+                  </p>
                 </div>
               </div>
             )}

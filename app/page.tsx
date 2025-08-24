@@ -75,6 +75,46 @@ export default function BengaliCulturalLandingPage() {
       <Cta />
 
       <Footer />
+      <Hero />
+
+      <Culture />
+
+      <SafePlatform />
+
+      {alternatingContentSections.map((section, index) => (
+        <AdvantageItem
+          key={index}
+          title={section.title}
+          description={section.description}
+          imageSrc={section.imageSrc}
+          imageAlt={section.imageAlt}
+          buttonText={section.button}
+          reverse={section.reverse}
+        />
+      ))}
+
+      <CommunityPower />
+
+      {featureSections.map((section, index) => (
+        <FeatureSection
+          key={index}
+          imageSrc={section.imageSrc}
+          imageAlt={section.imageAlt}
+          title={section.title}
+          description={section.description}
+          buttonText={section.button}
+          reverse={section.reverse}
+          colorScheme={section.colorScheme}
+        />
+      ))}
+
+      <Technology />
+
+      <OurPlatform />
+
+      <Cta />
+
+      <Footer />
     </div>
   );
 }

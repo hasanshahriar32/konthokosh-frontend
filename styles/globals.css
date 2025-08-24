@@ -1,10 +1,51 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 /* ---------- Light theme tokens ---------- */
+/* ---------- Light theme tokens ---------- */
 :root {
+  --background: oklch(99% 0.002 280); /* white */
+  --foreground: oklch(41% 0 0);
+  --foreground-dark: oklch(18% 0.01 280); /* near-black text */
+
+  --card: oklch(99% 0.002 280);
+  --card-foreground: oklch(41% 0 0);
+
+  --popover: oklch(99% 0.002 280);
+  --popover-foreground: oklch(41% 0 0);
+
+  /* Brand colors */
+  --primary: oklch(47.2% 0.191 276.6); /* Indigo */
+  --primary-foreground: oklch(98% 0.02 280);
+
+  --secondary: oklch(82.7% 0.166 77.6); /* Saffron */
+  --secondary-foreground: oklch(41% 0 0);
+
+  /* Support */
+  --muted: oklch(95% 0.01 280);
+  --muted-foreground: oklch(55% 0.01 280);
+
+  --accent: var(--secondary);
+  --accent-foreground: var(--secondary-foreground);
+
+  --destructive: oklch(55% 0.25 27.3);
+  --destructive-foreground: oklch(99% 0.01 280);
+
+  --border: oklch(92% 0.01 280);
+  --input: oklch(92% 0.01 280);
+  --ring: oklch(47.2% 0.191 276.6 / 0.3);
+
+  /* Charts */
+  --chart-1: oklch(65% 0.22 41.1);
+  --chart-2: oklch(58% 0.15 190);
+  --chart-3: oklch(45% 0.12 250);
+  --chart-4: oklch(78% 0.18 84);
+  --chart-5: oklch(72% 0.19 70);
+
   --background: oklch(99% 0.002 280); /* white */
   --foreground: oklch(41% 0 0);
   --foreground-dark: oklch(18% 0.01 280); /* near-black text */
@@ -60,8 +101,25 @@
   --font-kalpurush: "Kalpurush", cursive;
   --font-baloo-da-2: "Baloo Da 2", sans-serif;
   --font-tiro-bangla: "Tiro Bangla", serif;
+
+  /* Sidebar */
+  --sidebar: var(--card);
+  --sidebar-foreground: var(--card-foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--secondary-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* Fonts */
+  --font-bengali: "Bengali", sans-serif;
+  --font-kalpurush: "Kalpurush", cursive;
+  --font-baloo-da-2: "Baloo Da 2", sans-serif;
+  --font-tiro-bangla: "Tiro Bangla", serif;
 }
 
+/* ---------- Dark theme tokens ---------- */
 /* ---------- Dark theme tokens ---------- */
 .dark {
   --background: oklch(12% 0.05 240); /* Dark bluish background */
@@ -110,6 +168,7 @@
 }
 
 /* ---------- Theme mapping for Tailwind ---------- */
+/* ---------- Theme mapping for Tailwind ---------- */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -151,8 +210,13 @@
   --font-kalpurush: var(--font-kalpurush);
   --font-baloo-da-2: var(--font-baloo-da-2);
   --font-tiro-bangla: var(--font-tiro-bangla);
+  --font-bengali: var(--font-bengali);
+  --font-kalpurush: var(--font-kalpurush);
+  --font-baloo-da-2: var(--font-baloo-da-2);
+  --font-tiro-bangla: var(--font-tiro-bangla);
 }
 
+/* ---------- Base Layer ---------- */
 /* ---------- Base Layer ---------- */
 @layer base {
   * {
