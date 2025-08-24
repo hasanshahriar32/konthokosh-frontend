@@ -4,7 +4,7 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Background from "@/components/common/Background";
 import FeedLoader from "@/components/common/FeedLoader";
 import ErrorBanner from "@/components/feed/ErrorBanner";
-import { FeedProvider, useFeed } from "@/components/feed/FeedContext";
+import { FeedProvider, useFeed } from "@/context/FeedContext";
 import PostCard from "@/components/feed/PostCard";
 import SearchBar from "@/components/feed/SearchBar";
 import Navbar from "@/components/Navbar";
@@ -24,6 +24,7 @@ import {
   SEARCH_PLACEHOLDER,
   TRY_DIFFERENT_KEYWORD,
 } from "@/constants/feed";
+import FeedHeading from "@/components/feed/FeedHeading";
 
 const FeedContent: React.FC = () => {
   const {
@@ -57,12 +58,7 @@ const FeedContent: React.FC = () => {
     <Background>
       <Navbar />
       <main className="container mx-auto px-4 max-w-3xl w-full flex-1 flex flex-col justify-center items-center mt-28">
-        <header className="w-full text-center">
-          <h1 className="heading-primary tracking-tight text-primary drop-shadow-lg mb-4 md:mb-6">
-            {FEED_TITLE}
-          </h1>
-          <p className="text-subtitle">{FEED_SUBTITLE}</p>
-        </header>
+        <FeedHeading title={FEED_TITLE} subtitle={FEED_SUBTITLE} />
 
         <SearchBar
           searchInput={searchInput}
@@ -74,7 +70,11 @@ const FeedContent: React.FC = () => {
           buttonText={SEARCH_BUTTON}
         />
 
-        <ErrorBanner error={error} onRetry={() => void loadPosts(page)} retryLabel={RETRY_BUTTON} />
+        <ErrorBanner
+          error={error}
+          onRetry={() => void loadPosts(page)}
+          retryLabel={RETRY_BUTTON}
+        />
 
         <section className="w-full space-y-6 pb-8">
           {posts.length === 0 && hasLoaded && !loading && (
@@ -84,13 +84,15 @@ const FeedContent: React.FC = () => {
                   {NO_POSTS}
                   {/* keyword is in context but not exposed here; message kept generic */}
                 </p>
-                <p className="text-sm text-muted-foreground mt-2">{TRY_DIFFERENT_KEYWORD}</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {TRY_DIFFERENT_KEYWORD}
+                </p>
               </CardContent>
             </Card>
           )}
 
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} totalCount={totalCount} />
+            <PostCard key={post.id} post={post} showActions />
           ))}
         </section>
 

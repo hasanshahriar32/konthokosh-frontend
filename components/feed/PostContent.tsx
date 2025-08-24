@@ -10,7 +10,7 @@ type Props = {
   post: Post;
 };
 
-const PostContent = ({ post }: Props) => {
+const PostContent: React.FC<Props> = ({ post }) => {
   const { title, post: body, imagesId } = post;
 
   return (

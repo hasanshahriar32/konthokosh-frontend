@@ -1,7 +1,8 @@
 export const FEED_LOADING_MESSAGE = "ফিড লোড হচ্ছে...";
 
 export const FEED_TITLE = "সাম্প্রতিক পোস্ট";
-export const FEED_SUBTITLE = "নির্ধারিত সম্প্রদায় থেকে কিউরেট করা, পাঠ করুন ও মতামত দিন";
+export const FEED_SUBTITLE =
+  "নির্ধারিত সম্প্রদায় থেকে কিউরেট করা, পাঠ করুন ও মতামত দিন";
 
 export const SEARCH_PLACEHOLDER = "পোস্ট, লেখক বা কীওয়ার্ড খুঁজুন...";
 export const SEARCH_LOADING = "অনুসন্ধান...";
@@ -28,3 +29,26 @@ export const POSTS_COUNT_SUFFIX = " পোস্ট";
 export const PAGE_LABEL = "পৃষ্ঠা";
 export const PREVIOUS = "পূর্ববর্তী";
 export const NEXT = "পরবর্তী";
+
+// My posts page specific
+export const MY_POSTS_LOADING = "আপনার পোস্ট লোড হচ্ছে...";
+export const MY_POSTS_TITLE = "আমার পোস্টসমূহ";
+export const MY_POSTS_SUBTITLE =
+  "আপনার সমস্ত পোস্ট এখানে দেখানো হবে। আপনি পোস্ট সম্পাদনা, মুছে ফেলা এবং নতুন পোস্ট যোগ করতে পারবেন।";
+export const WRITE_BUTTON = "নতুন পোস্ট লিখুন";
+export const TOTAL_POSTS_LABEL = "মোট পোস্ট";
+export const APPROVED_LABEL = "অনুমোদিত";
+export const PENDING_LABEL = "অপেক্ষমাণ";
+export const ACTIVE_LABEL = "সক্রিয়";
+export const ALL_LABEL = "সব";
+export const NO_MY_POSTS = "কোনো পোস্ট পাওয়া যায়নি";
+export const NO_MY_POSTS_SEARCH =
+  "আপনার অনুসন্ধান অনুযায়ী কোনো পোস্ট খুঁজে পাওয়া যায়নি।";
+export const DELETE_CONFIRM =
+  "আপনি কি নিশ্চিত যে এই পোস্টটি মুছে ফেলতে চান? এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।";
+export const DELETING = "মুছছি...";
+export const VIEW_BUTTON = "দেখুন";
+export const EDIT_BUTTON = "সম্পাদনা";
+export const DELETE_BUTTON = "মুছে ফেলুন";
+export const DELETE_CONFIRM_TITLE = "পোস্ট মুছে ফেলুন?";
+export const CANCEL_BUTTON = "বাতিল";

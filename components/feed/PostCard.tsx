@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Icons } from "@/components/common/Icons";
 import { Badge } from "@/components/ui/badge";
 import { POST_UI } from "@/types/post";
@@ -10,13 +11,18 @@ import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
 import Actions from "./Actions";
 import PostContent from "./PostContent";
+import PostCardMenu from "./PostCardMenu";
 
 type Props = {
   post: KonthoKoshFeedPost;
+  showMenu?: boolean;
+  showActions?: boolean;
 };
 
-const PostCard = ({ post }: Props) => {
+const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
   console.log(post);
+
+  // Use the reusable PostCardMenu for item actions (view/edit/delete)
 
   return (
     <article className="relative">
@@ -49,35 +55,43 @@ const PostCard = ({ post }: Props) => {
                     {new Date(post.createdAt).toLocaleString("bn-BD")}
                   </p>
                 </div>
-                <div className="text-xs font-bengali text-muted-foreground text-right">
+                <div className="text-xs font-bengali text-muted-foreground text-right flex items-start gap-3">
                   <div>
-                    {ID_LABEL} {post.id}
-                  </div>
-                  <div className="mt-1.5 flex items-end gap-1">
-                    <Badge
-                      asChild={false}
-                      variant={post.isApproved ? "default" : "destructive"}
-                      className="text-[10px] rounded-full px-2 py-1"
-                    >
-                      {post.isApproved ? APPROVED : PENDING}
-                    </Badge>
+                    <div>
+                      {ID_LABEL} {post.id}
+                    </div>
+                    <div className="mt-1.5 flex items-end gap-1">
+                      <Badge
+                        asChild={false}
+                        variant={post.isApproved ? "default" : "destructive"}
+                        className="text-[10px] rounded-full px-2 py-1"
+                      >
+                        {post.isApproved ? APPROVED : PENDING}
+                      </Badge>
 
-                    <Badge
-                      asChild={false}
-                      variant={post.isActive ? "secondary" : "outline"}
-                      className="text-[10px] rounded-full px-2 py-1"
-                    >
-                      {post.isActive ? POST_UI.ACTIVE : POST_UI.INACTIVE}
-                    </Badge>
+                      <Badge
+                        asChild={false}
+                        variant={post.isActive ? "secondary" : "outline"}
+                        className="text-[10px] rounded-full px-2 py-1"
+                      >
+                        {post.isActive ? POST_UI.ACTIVE : POST_UI.INACTIVE}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <Separator className="my-4" />
-          <PostContent post={post} />
-          <Separator className="my-4" />
-          <Actions />
+          {/* <Separator className="my-4" /> */}
+          <div className="py-6">
+            <PostContent post={post} />
+          </div>
+          {/* <Separator className="my-4" /> */}
+
+          <div className="flex items-center justify-end gap-4">
+            {showActions && <Actions />}
+            {showMenu && <PostCardMenu postId={post.id} />}
+          </div>
         </CardContent>
       </Card>
     </article>

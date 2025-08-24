@@ -23,6 +23,7 @@ interface NavLinkProps {
   onClick?: () => void;
   isMobile?: boolean;
   isHero?: boolean;
+  isInHero?: boolean;
 }
 
 const NavLink: React.FC<NavLinkProps> = ({
@@ -31,15 +32,16 @@ const NavLink: React.FC<NavLinkProps> = ({
   onClick,
   isMobile = false,
   isHero = false,
+  isInHero = false,
 }) => (
   <Link href={href} passHref>
     <span
       className={`font-bengali transition-colors ${
         isMobile ? "block py-2" : ""
       } ${
-        isHero
+        isHero && isInHero
           ? "text-white/90 hover:text-white"
-          : "text-[color:var(--color-foreground)] hover:opacity-90"
+          : "text-foreground hover:opacity-90"
       }`}
       onClick={onClick}
     >
@@ -88,8 +90,8 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
         variants={slideDownVariants}
       >
         <nav
-          className={`absolute top-0 left-0 right-0 z-30 ${
-            !isInHero ? "bg-black/15 backdrop-blur-md" : "bg-transparent"
+          className={`absolute top-0 left-0 right-0 z-30 backdrop-blur-sm ${
+            isHero && isInHero ? "bg-transparent" : "bg-background/70 shadow-xs"
           }`}
         >
           <div className="container mx-auto px-4 py-4">
@@ -97,7 +99,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
               <Link
                 href={routes.home.path}
                 className={`font-kalpurush text-xl font-semibold ${
-                  isHero ? "text-white" : "text-[color:var(--color-foreground)]"
+                  isHero && isInHero ? "text-white" : "text-foreground"
                 }`}
               >
                 {SITE_NAME}
@@ -110,6 +112,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
                     href={link.path}
                     label={link.title}
                     isHero={isHero}
+                    isInHero={isInHero}
                   />
                 ))}
               </div>
@@ -121,9 +124,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
                 <SignedOut>
                   <Button
                     className={`font-bengali text-base ${
-                      isInHero
-                        ? "text-white"
-                        : "text-[color:var(--color-foreground)]"
+                      isInHero ? "text-white" : "text-foreground"
                     }`}
                     variant={"ghost"}
                     size={"sm"}
@@ -148,7 +149,7 @@ const MainNav: React.FC<MainNavProps> = ({ isHero = false }) => {
                 className={`md:hidden ${
                   isInHero
                     ? "text-white hover:bg-white/20"
-                    : "text-[color:var(--color-foreground)] hover:bg-[color:var(--color-popover)]/10"
+                    : "text-foreground hover:bg-popover/10"
                 }`}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
