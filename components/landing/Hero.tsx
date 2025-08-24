@@ -16,7 +16,7 @@ const Hero: React.FC = () => {
   return (
     <section className="relative w-full h-[72vw] max-h-[90vh] md:h-[54vw] md:max-h-screen overflow-hidden">
       <Suspense fallback={<></>}>
-        <Navbar />
+        <Navbar isHero />
       </Suspense>
 
       <div

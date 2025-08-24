@@ -1,0 +1,141 @@
+"use client";
+
+import { API_FEED } from "@/constants/api";
+import {
+  ERROR_LOAD_FAILED,
+  ERROR_NETWORK,
+} from "@/constants/feed";
+import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import { useBackendApi } from "@/utils/api-client";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+type MyPostsContextType = {
+  posts: KonthoKoshFeedPost[];
+  page: number;
+  setPage: (n: number) => void;
+  searchTerm: string;
+  setSearchTerm: (s: string) => void;
+  loading: boolean;
+  error: string;
+  totalPages: number;
+  totalCount: number;
+  hasLoaded: boolean;
+  isApproved: boolean | null;
+  setIsApproved: (v: boolean | null) => void;
+  loadPosts: (pageNum?: number, searchKeyword?: string, approvalStatus?: boolean | null) => Promise<void>;
+  deletePost: (postId: number) => Promise<void>;
+};
+
+const MyPostsContext = createContext<MyPostsContextType | undefined>(undefined);
+
+export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const api = useBackendApi();
+
+  const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [isApproved, setIsApproved] = useState<boolean | null>(null);
+
+  const loadPosts = useCallback(
+    async (pageNum: number = 1, searchKeyword: string = "", approvalStatus: boolean | null = null) => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const params: Record<string, string | number | boolean> = {
+          page: pageNum,
+          size: 10,
+          myPosts: true,
+        };
+
+        if (searchKeyword) params.keyword = searchKeyword;
+        if (approvalStatus !== null) params.isApproved = approvalStatus;
+
+        const response = await api.get(API_FEED.GET, { params });
+
+        const data = response.data as {
+          success: boolean;
+          data: {
+            data: KonthoKoshFeedPost[];
+            pagination: { totalPages: number; totalCount: number };
+          };
+        };
+
+        if (data.success && data.data) {
+          setPosts(data.data.data);
+          setTotalPages(data.data.pagination.totalPages);
+          setTotalCount(data.data.pagination.totalCount);
+        } else {
+          setError(ERROR_LOAD_FAILED);
+        }
+      } catch (err) {
+        console.error("loadPosts error", err);
+        setError(ERROR_NETWORK);
+      } finally {
+        setLoading(false);
+        setHasLoaded(true);
+      }
+    },
+    [api]
+  );
+
+  const deletePost = useCallback(
+    async (postId: number) => {
+      try {
+        const response = await api.delete(`${API_FEED.GET}/${postId}`);
+        if (response.status === 200 || response.status === 204) {
+          setPosts((p) => p.filter((x) => x.id !== postId));
+          setTotalCount((c) => Math.max(0, c - 1));
+        } else {
+          setError("Failed to delete post");
+        }
+      } catch (err) {
+        console.error("deletePost error", err);
+        setError("Failed to delete post");
+      }
+    },
+    [api]
+  );
+
+  useEffect(() => {
+    if (!hasLoaded) loadPosts(1);
+  }, [hasLoaded, loadPosts]);
+
+  const value: MyPostsContextType = {
+    posts,
+    page,
+    setPage,
+    searchTerm,
+    setSearchTerm,
+    loading,
+    error,
+    totalPages,
+    totalCount,
+    hasLoaded,
+    isApproved,
+    setIsApproved,
+    loadPosts,
+    deletePost,
+  };
+
+  return <MyPostsContext.Provider value={value}>{children}</MyPostsContext.Provider>;
+};
+
+export const useMyPosts = (): MyPostsContextType => {
+  const ctx = useContext(MyPostsContext);
+  if (!ctx) throw new Error("useMyPosts must be used within MyPostsProvider");
+  return ctx;
+};
+
+export default MyPostsContext;
