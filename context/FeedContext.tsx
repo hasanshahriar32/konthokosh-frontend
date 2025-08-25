@@ -1,8 +1,8 @@
 "use client";
 
-import { API_FEED } from "@/constants/api";
+import { API_ENDPOINTS } from "@/constants/api";
 import { ERROR_LOAD_FAILED, ERROR_NETWORK } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import type { KonthoKoshFeedPost } from "@/types/api";
 import { useBackendApi } from "@/utils/api-client";
 import React, {
   createContext,
@@ -53,7 +53,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
       setError("");
 
       try {
-        const response = await api.get(API_FEED.GET, {
+        const response = await api.get(API_ENDPOINTS.posts.getAll, {
           params: {
             page: pageNum,
             size: 10,

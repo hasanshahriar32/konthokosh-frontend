@@ -14,7 +14,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { KonthoKoshPost } from "@/types/konthokosh-api";
+import type { KonthoKoshPost } from "@/types/api";
 import { type PostFormData } from "@/types/post";
 import {
   handleKonthoKoshError,

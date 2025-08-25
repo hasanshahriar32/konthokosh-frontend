@@ -83,3 +83,9 @@ export type KonthoKoshPagedPostsResponse = KonthoKoshApiResponse<{
   data: KonthoKoshFeedPost[];
   pagination: Pagination;
 }>;
+
+/* -------------------------------- On Chain -------------------------------- */
+
+export type SubmitRequest = {
+  id: number;
+};

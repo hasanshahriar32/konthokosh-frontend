@@ -1,11 +1,8 @@
 "use client";
 
-import { API_FEED } from "@/constants/api";
-import {
-  ERROR_LOAD_FAILED,
-  ERROR_NETWORK,
-} from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import { API_ENDPOINTS } from "@/constants/api";
+import { ERROR_LOAD_FAILED, ERROR_NETWORK } from "@/constants/feed";
+import type { KonthoKoshFeedPost } from "@/types/api";
 import { useBackendApi } from "@/utils/api-client";
 import React, {
   createContext,
@@ -28,13 +25,19 @@ type MyPostsContextType = {
   hasLoaded: boolean;
   isApproved: boolean | null;
   setIsApproved: (v: boolean | null) => void;
-  loadPosts: (pageNum?: number, searchKeyword?: string, approvalStatus?: boolean | null) => Promise<void>;
+  loadPosts: (
+    pageNum?: number,
+    searchKeyword?: string,
+    approvalStatus?: boolean | null
+  ) => Promise<void>;
   deletePost: (postId: number) => Promise<void>;
 };
 
 const MyPostsContext = createContext<MyPostsContextType | undefined>(undefined);
 
-export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const api = useBackendApi();
 
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
@@ -48,7 +51,11 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isApproved, setIsApproved] = useState<boolean | null>(null);
 
   const loadPosts = useCallback(
-    async (pageNum: number = 1, searchKeyword: string = "", approvalStatus: boolean | null = null) => {
+    async (
+      pageNum: number = 1,
+      searchKeyword: string = "",
+      approvalStatus: boolean | null = null
+    ) => {
       setLoading(true);
       setError("");
 
@@ -62,7 +69,7 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (searchKeyword) params.keyword = searchKeyword;
         if (approvalStatus !== null) params.isApproved = approvalStatus;
 
-        const response = await api.get(API_FEED.GET, { params });
+        const response = await api.get(API_ENDPOINTS.posts.getAll, { params });
 
         const data = response.data as {
           success: boolean;
@@ -93,7 +100,7 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const deletePost = useCallback(
     async (postId: number) => {
       try {
-        const response = await api.delete(`${API_FEED.GET}/${postId}`);
+        const response = await api.delete(API_ENDPOINTS.posts.delete(postId));
         if (response.status === 200 || response.status === 204) {
           setPosts((p) => p.filter((x) => x.id !== postId));
           setTotalCount((c) => Math.max(0, c - 1));
@@ -129,7 +136,9 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     deletePost,
   };
 
-  return <MyPostsContext.Provider value={value}>{children}</MyPostsContext.Provider>;
+  return (
+    <MyPostsContext.Provider value={value}>{children}</MyPostsContext.Provider>
+  );
 };
 
 export const useMyPosts = (): MyPostsContextType => {

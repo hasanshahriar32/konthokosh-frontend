@@ -84,5 +84,15 @@
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
+  },
+  "findUnusedExports": {
+    "exclude": [
+      "./**/*.stories.@(js|jsx|ts|tsx)",
+      "./**/*.test.@(js|jsx|ts|tsx)",
+      "./.next/**/*",
+      "./**/page.tsx",
+      "./**/layout.tsx",
+      "./components/ui/**/*"
+    ]
   }
 }

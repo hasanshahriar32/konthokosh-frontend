@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import type { KonthoKoshFeedPost } from "@/types/api";
 import Actions from "./Actions";
 import PostContent from "./PostContent";
 import PostCardMenu from "./PostCardMenu";

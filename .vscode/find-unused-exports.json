@@ -1,0 +1,34 @@
+{
+  "ignore": {
+    "files": [
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/auth/AuthPage.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/auth/ProtectedRoute.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/common/FeedLoader.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/common/PageLoader.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/ErrorBanner.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/FeedHeading.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/MyPostsFilter.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/MyPostsStats.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/Pagination.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/PostCard.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/feed/SearchBar.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/AdvantageItem.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/CommunityPower.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/Cta.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/Culture.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/FeatureSection.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/Footer.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/Hero.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/OurPlatform.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/SafePlatform.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/landing/Technology.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/post/PostForm.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/components/theme-provider.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/constants/feed.ts",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/context/FeedContext.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/context/MyPostsContext.tsx",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/lib/utils.ts",
+      "d:/Codes/Projects/Hackathon/BCOLBD/konthokosh-frontend/middleware.ts"
+    ]
+  }
+}

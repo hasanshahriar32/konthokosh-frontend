@@ -1,30 +1,27 @@
-import { useBackendApi, ApiError } from "@/utils/api-client";
-import { useCallback, useMemo } from "react";
+import { API_ENDPOINTS } from "@/constants/api";
 import type {
-  KonthoKoshApiResponse,
-  KonthoKoshPost,
   CreatePostRequest,
   CreatePostResponseData,
-  KonthoKoshPagedPostsResponse,
+  KonthoKoshApiResponse,
   KonthoKoshFeedPost,
-} from "@/types/konthokosh-api";
+  KonthoKoshPagedPostsResponse,
+  KonthoKoshPost,
+} from "@/types";
+import { ApiError, useBackendApi } from "@/utils/api-client";
+import { useCallback, useMemo } from "react";
 
 /**
- * 🌐 KonthoKosh API Service
- *
- * This service handles all interactions with the KonthoKosh Railway backend API
- * JWT tokens are automatically added to all requests via the API client
+ * Provides KonthoKosh API methods for posts.
+ * @returns API methods for posts.
  */
 export const useKonthoKoshApi = () => {
-  // 🔐 Uses automatic JWT token from Clerk
   const api = useBackendApi();
 
   /**
-   * 📝 Create a new post
-   *
-   * @param postContent - The post content
-   * @param imagesId - Optional array of image IDs
-   * @returns Promise with the created post data
+   * Creates a new post.
+   * @param postContent - The post content.
+   * @param imagesId - Optional array of image IDs.
+   * @returns The created post.
    */
   const createPost = useCallback(
     async (
@@ -32,22 +29,15 @@ export const useKonthoKoshApi = () => {
       imagesId?: number[]
     ): Promise<KonthoKoshPost> => {
       try {
-        console.log("🚀 Creating post on KonthoKosh API...");
-
         const requestBody: CreatePostRequest = {
           post: postContent,
           ...(imagesId && imagesId.length > 0 && { imagesId }),
         };
 
-        // 🔐 JWT token automatically added by the API client
-        const response = await api.post<KonthoKoshApiResponse<CreatePostResponseData>>(
-          "/api/v1/posts",
-          requestBody
-        );
+        const response = await api.post<
+          KonthoKoshApiResponse<CreatePostResponseData>
+        >(API_ENDPOINTS.posts.create, requestBody);
 
-        console.log("✅ KonthoKosh API Response:", response);
-
-        // Check if the API response indicates success
         if (!response.data.success || response.data.statusCode !== 201) {
           throw new ApiError(
             response.data.message || "Failed to create post",
@@ -56,7 +46,7 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        if (!response.data.data || !response.data.data.post) {
+        if (!response.data.data?.post) {
           throw new ApiError(
             "No post data returned",
             response.status,
@@ -64,12 +54,8 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        console.log("✅ Post created successfully:", response.data.data.post);
         return response.data.data.post;
       } catch (error) {
-        console.error("❌ Failed to create post on KonthoKosh:", error);
-
-        // Handle specific API errors
         if (error instanceof ApiError) {
           if (error.status === 400) {
             throw new Error("Invalid post content. Please check your input.");
@@ -79,7 +65,6 @@ export const useKonthoKoshApi = () => {
           }
           throw new Error(error.message || "Failed to create post");
         }
-
         throw new Error("Network error. Please try again.");
       }
     },
@@ -87,14 +72,13 @@ export const useKonthoKoshApi = () => {
   );
 
   /**
-   * 📋 Get user's posts (if needed later)
+   * Fetches all posts of the current user.
+   * @returns Array of user's posts.
    */
   const getUserPosts = useCallback(async (): Promise<KonthoKoshPost[]> => {
     try {
-      console.log("📋 Fetching user posts from KonthoKosh API...");
-
       const response = await api.get<KonthoKoshApiResponse<KonthoKoshPost[]>>(
-        "/api/v1/posts"
+        API_ENDPOINTS.posts.getAll
       );
 
       if (!response.data.success) {
@@ -107,11 +91,15 @@ export const useKonthoKoshApi = () => {
 
       return response.data.data || [];
     } catch (error) {
-      console.error("❌ Failed to fetch posts from KonthoKosh:", error);
       throw error;
     }
   }, [api]);
 
+  /**
+   * Fetches feed posts with pagination and optional keyword.
+   * @param params - Pagination and filter params.
+   * @returns Posts and pagination info.
+   */
   const getFeedPosts = useCallback(
     async (
       params: { page?: number; size?: number; keyword?: string } = {}
@@ -127,7 +115,7 @@ export const useKonthoKoshApi = () => {
       const { page = 1, size = 10, keyword } = params;
       try {
         const response = await api.get<KonthoKoshPagedPostsResponse>(
-          "/api/v1/posts",
+          API_ENDPOINTS.posts.getAll,
           {
             params: {
               page,
@@ -148,7 +136,6 @@ export const useKonthoKoshApi = () => {
         const { data, pagination } = response.data.data;
         return { posts: data, pagination };
       } catch (error) {
-        console.error("❌ Failed to fetch feed posts:", error);
         if (error instanceof ApiError) {
           throw new Error(error.message);
         }
@@ -170,13 +157,11 @@ export const useKonthoKoshApi = () => {
 };
 
 /**
- * 🛠️ Helper function to handle KonthoKosh API errors
+ * Returns a user-friendly error message for KonthoKosh API errors.
+ * @param error - The error object.
+ * @returns Error message string.
  */
 export const handleKonthoKoshError = (error: unknown): string => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
   if (error instanceof ApiError) {
     switch (error.status) {
       case 400:
@@ -193,6 +178,6 @@ export const handleKonthoKoshError = (error: unknown): string => {
         return error.message || "An unexpected error occurred.";
     }
   }
-
+  if (error instanceof Error) return error.message;
   return "An unknown error occurred.";
 };
