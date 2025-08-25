@@ -10,22 +10,38 @@ type Props = {
   onSaveDraft?: () => Promise<void> | void;
   isSubmitting?: boolean;
   isDraft?: boolean;
-  title: string;
-  content: string;
+  title: string | undefined;
+  post: string;
 };
 
-const PostFormActions = ({ onSubmit, onSaveDraft, isSubmitting = false, isDraft = false, title, content }: Props) => {
+const PostFormActions = ({
+  onSubmit,
+  onSaveDraft,
+  isSubmitting = false,
+  isDraft = false,
+  title,
+  post: content,
+}: Props) => {
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-end items-center w-full">
       <div className="flex-1" />
       {onSaveDraft && (
-        <Button variant="outline" onClick={onSaveDraft} disabled={isSubmitting} className="order-2 sm:order-1 rounded-full px-6 py-2 shadow-sm">
+        <Button
+          variant="outline"
+          onClick={onSaveDraft}
+          disabled={isSubmitting}
+          className="order-2 sm:order-1 rounded-full px-6 py-2 shadow-sm"
+        >
           <Icons.Save className="mr-2 h-4 w-4" />
           {POST_STRINGS.saveDraft}
         </Button>
       )}
 
-      <Button onClick={onSubmit} disabled={isSubmitting || !title.trim() || !content.trim()} className="order-1 sm:order-2 rounded-full px-6 py-2 shadow-md">
+      <Button
+        onClick={onSubmit}
+        disabled={isSubmitting || !title?.trim() || !content.trim()}
+        className="order-1 sm:order-2 rounded-full px-6 py-2 shadow-md"
+      >
         {isSubmitting ? (
           <>
             <div className="animate-heartbeat mr-2">

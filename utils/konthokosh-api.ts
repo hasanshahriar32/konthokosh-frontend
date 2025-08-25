@@ -1,11 +1,13 @@
 import { API_ENDPOINTS } from "@/constants/api";
 import type {
+  BlockchainProcessResponse,
   CreatePostRequest,
   CreatePostResponseData,
   KonthoKoshApiResponse,
   KonthoKoshFeedPost,
   KonthoKoshPagedPostsResponse,
   KonthoKoshPost,
+  OnChainSubmitResponse,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
 import { useCallback, useMemo } from "react";
@@ -24,19 +26,11 @@ export const useKonthoKoshApi = () => {
    * @returns The created post.
    */
   const createPost = useCallback(
-    async (
-      postContent: string,
-      imagesId?: number[]
-    ): Promise<KonthoKoshPost> => {
+    async (data: CreatePostRequest): Promise<KonthoKoshPost> => {
       try {
-        const requestBody: CreatePostRequest = {
-          post: postContent,
-          ...(imagesId && imagesId.length > 0 && { imagesId }),
-        };
-
         const response = await api.post<
           KonthoKoshApiResponse<CreatePostResponseData>
-        >(API_ENDPOINTS.posts.create, requestBody);
+        >(API_ENDPOINTS.posts.create, data);
 
         if (!response.data.success || response.data.statusCode !== 201) {
           throw new ApiError(
@@ -145,14 +139,90 @@ export const useKonthoKoshApi = () => {
     [api]
   );
 
+  /**
+   * Submit a resource (by id) to the blockchain endpoint.
+   * @param id - resource id to submit
+   * @returns transaction info from the blockchain service
+   */
+  const submitOnChain = useCallback(
+    async (id: string | number): Promise<OnChainSubmitResponse> => {
+      try {
+        const response = await api.post<
+          KonthoKoshApiResponse<OnChainSubmitResponse>
+        >(API_ENDPOINTS.blockchain.submit(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to submit to blockchain",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to submit to blockchain");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Trigger processing of an IPFS resource on the blockchain service.
+   * @param id - resource id to process
+   * @returns processing result (ipfs hash and status)
+   */
+  const processIpfs = useCallback(
+    async (id: string | number): Promise<BlockchainProcessResponse> => {
+      try {
+        const response = await api.post<
+          KonthoKoshApiResponse<BlockchainProcessResponse>
+        >(API_ENDPOINTS.blockchain.process(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to process IPFS resource",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to process IPFS resource");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
   return useMemo(
     () => ({
       createPost,
       getUserPosts,
       getFeedPosts,
+      submitToBlockchain: submitOnChain,
+      processIpfs,
       api,
     }),
-    [createPost, getUserPosts, getFeedPosts, api]
+    [createPost, getUserPosts, getFeedPosts, submitOnChain, processIpfs, api]
   );
 };
 

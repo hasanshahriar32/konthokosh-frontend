@@ -2,17 +2,26 @@
 
 import { Icons } from "@/components/common/Icons";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { POST_STRINGS } from "@/constants/post";
+import type { PostTag } from "@/types/post";
+import { POST_TAGS } from "@/types/post";
 import type React from "react";
 
 type Props = {
   title: string;
   onTitleChange: (v: string) => void;
   errors: Record<string, string>;
-  tags: string[];
+  tags: PostTag[];
   tagInput: string;
   setTagInput: (v: string) => void;
   onAddTag: (tag: string) => void;
@@ -94,14 +103,24 @@ const PostFormHeader = ({
               </Badge>
             ))}
           </div>
-          <Input
-            id="tags"
-            placeholder={POST_STRINGS.tagsPlaceholder}
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyDown={onTagInputKeyDown}
-            onBlur={onTagBlur}
-          />
+          <div>
+            <Select
+              onValueChange={(v) => {
+                onAddTag(v);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={POST_STRINGS.tagsPlaceholder} />
+              </SelectTrigger>
+              <SelectContent className="max-h-52">
+                {POST_TAGS.filter((t) => !tags.includes(t)).map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <p className="text-xs text-muted-foreground">
             {POST_STRINGS.tagsHelp}
           </p>

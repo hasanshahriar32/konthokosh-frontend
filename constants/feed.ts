@@ -41,6 +41,7 @@ export const APPROVED_LABEL = "অনুমোদিত";
 export const PENDING_LABEL = "অপেক্ষমাণ";
 export const ACTIVE_LABEL = "সক্রিয়";
 export const ALL_LABEL = "সব";
+export const INACTIVE_LABEL = "নিষ্ক্রিয়";
 export const NO_MY_POSTS = "কোনো পোস্ট পাওয়া যায়নি";
 export const NO_MY_POSTS_SEARCH =
   "আপনার অনুসন্ধান অনুযায়ী কোনো পোস্ট খুঁজে পাওয়া যায়নি।";

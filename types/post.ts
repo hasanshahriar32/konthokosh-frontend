@@ -1,65 +1,24 @@
-/**
- * 📝 Post-related type definitions
- */
+export enum PostTag {
+  রোমান্স = "রোমান্স",
+  কবিতা = "কবিতা",
+  গল্প = "গল্প",
+  উপন্যাস = "উপন্যাস",
+  ভ্রমণ = "ভ্রমণ",
+  ইতিহাস = "ইতিহাস",
+  বিজ্ঞান = "বিজ্ঞান",
+  শিশুসাহিত্য = "শিশুসাহিত্য",
+  হাস্যরস = "হাস্যরস",
+  রহস্য = "রহস্য",
+  থ্রিলার = "থ্রিলার",
+  দর্শন = "দর্শন",
+  ধর্ম = "ধর্ম",
+  জীবনী = "জীবনী",
+  প্রবন্ধ = "প্রবন্ধ",
+  নাটক = "নাটক",
+  সমালোচনা = "সমালোচনা",
+  অনুবাদ = "অনুবাদ",
+  সমসাময়িক = "সমসাময়িক",
+  ক্লাসিক = "ক্লাসিক",
+}
 
-export type PostStatus =
-  | "draft"
-  | "published"
-  | "analyzing"
-  | "verified"
-  | "rejected";
-
-export type PostVisibility = "public" | "private" | "unlisted";
-
-export type PostData = {
-  id?: string;
-  title: string;
-  content: string;
-  tags: string[];
-  visibility: PostVisibility;
-  status: PostStatus;
-  authorId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  originalityScore?: number;
-  blockchainHash?: string;
-  verificationStatus?: "pending" | "verified" | "failed";
-};
-
-export type PostFormData = {
-  title: string;
-  content: string;
-  tags: string[];
-  visibility: PostVisibility;
-};
-
-export type OriginalityReport = {
-  score: number;
-  similarPosts: SimilarPost[];
-  isOriginal: boolean;
-  confidence: number;
-  analysisDetails?: {
-    plagiarismPercentage: number;
-    uniqueContent: number;
-    sourcesFound: number;
-  };
-};
-
-export type SimilarPost = {
-  id: string;
-  title: string;
-  author: string;
-  similarity: number;
-  source?: string;
-  url?: string;
-};
-
-export type PostValidationError = {
-  field: string;
-  message: string;
-};
-
-export const POST_UI = {
-  ACTIVE: "সক্রিয়",
-  INACTIVE: "নিষ্ক্রিয়",
-};
+export const POST_TAGS = Object.values(PostTag) as PostTag[];

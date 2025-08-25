@@ -3,11 +3,10 @@
 import React from "react";
 import { Icons } from "@/components/common/Icons";
 import { Badge } from "@/components/ui/badge";
-import { POST_UI } from "@/types/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
+import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK, ACTIVE_LABEL, INACTIVE_LABEL } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/api";
 import Actions from "./Actions";
 import PostContent from "./PostContent";
@@ -74,7 +73,7 @@ const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
                         variant={post.isActive ? "secondary" : "outline"}
                         className="text-[10px] rounded-full px-2 py-1"
                       >
-                        {post.isActive ? POST_UI.ACTIVE : POST_UI.INACTIVE}
+                        {post.isActive ? ACTIVE_LABEL : INACTIVE_LABEL}
                       </Badge>
                     </div>
                   </div>

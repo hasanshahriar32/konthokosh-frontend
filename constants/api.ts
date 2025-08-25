@@ -1,23 +1,25 @@
+const API_PREFIX = "/api/v1";
+
 export const API_ENDPOINTS = {
   posts: {
-    create: "/api/posts",
-    getAll: "/api/posts",
-    getById: (id: string | number) => `/api/posts/${id}`,
-    update: (id: string | number) => `/api/posts/${id}`,
-    delete: (id: string | number) => `/api/posts/${id}`,
-    analyze: (id: string | number) => `/api/posts/${id}/analyze`,
+    create: `${API_PREFIX}/posts`,
+    getAll: `${API_PREFIX}/posts`,
+    getById: (id: string | number) => `${API_PREFIX}/posts/${id}`,
+    update: (id: string | number) => `${API_PREFIX}/posts/${id}`,
+    delete: (id: string | number) => `${API_PREFIX}/posts/${id}`,
+    analyze: (id: string | number) => `${API_PREFIX}/posts/${id}/analyze`,
   },
   originality: {
-    check: "/api/originality/check",
-    report: (id: string | number) => `/api/originality/report/${id}`,
+    check: `${API_PREFIX}/originality/check`,
+    report: (id: string | number) => `${API_PREFIX}/originality/report/${id}`,
   },
   blockchain: {
-    submit: (id: string | number) => `/api/blockchain/submit/${id}`,
-    process: (id: string | number) => `/api/blockchain/process-ipfs/${id}`,
+    submit: (id: string | number) => `${API_PREFIX}/blockchain/submit/${id}`,
+    process: (id: string | number) => `${API_PREFIX}/blockchain/process-ipfs/${id}`,
   },
   user: {
-    profile: "/api/user/profile",
-    posts: "/api/user/posts",
-    analytics: "/api/user/analytics",
+    profile: `${API_PREFIX}/user/profile`,
+    posts: `${API_PREFIX}/user/posts`,
+    analytics: `${API_PREFIX}/user/analytics`,
   },
 } as const;

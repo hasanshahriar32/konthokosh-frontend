@@ -5,17 +5,11 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Background from "@/components/common/Background";
 import { Icons } from "@/components/common/Icons";
 import { PostForm } from "@/components/post/PostForm";
+import { PostSuccessDialog } from "@/components/post/PostSuccessDialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import type { KonthoKoshPost } from "@/types/api";
-import { type PostFormData } from "@/types/post";
+import ErrorMessage from "@/components/common/ErrorMessage";
+import { editorStrings } from "@/constants/editor";
+import type { CreatePostRequest, KonthoKoshPost } from "@/types/api";
 import {
   handleKonthoKoshError,
   useKonthoKoshApi,
@@ -37,26 +31,23 @@ export default function WritePage() {
    * Handle form submission (Direct KonthoKosh API)
    */
   const handleSubmit = useCallback(
-    async (data: PostFormData) => {
+    async (data: CreatePostRequest) => {
       setIsSubmitting(true);
       setErrorMessage("");
       setCreatedPost(null);
 
       try {
-        console.log("🚀 Creating post on KonthoKosh API...");
-
-        // Combine title and content for the API
-        const postContent = `${data.title}\n\n${data.content}`;
+        console.log(editorStrings.creatingPostLog);
 
         // 🌐 Create post using KonthoKosh API with automatic JWT token
-        const newPost = await createPost(postContent);
+        const newPost = await createPost(data);
 
-        console.log("✅ Post created successfully:", newPost);
+        console.log(editorStrings.postCreatedLogPrefix, newPost);
         setCreatedPost(newPost);
         // show success dialog and schedule redirect to /feed
         setShowSuccessDialog(true);
       } catch (error) {
-        console.error("❌ Error creating post:", error);
+        console.error(editorStrings.errorCreatingLog, error);
         const friendly = handleKonthoKoshError(error);
         setErrorMessage(friendly);
       } finally {
@@ -73,7 +64,7 @@ export default function WritePage() {
     const t = setTimeout(() => {
       // close dialog and navigate
       setShowSuccessDialog(false);
-      router.push("/feed");
+      // router.push("/feed");
     }, 2000);
 
     return () => clearTimeout(t);
@@ -83,22 +74,19 @@ export default function WritePage() {
    * Handle saving as draft (using KonthoKosh API)
    */
   const handleSaveDraft = useCallback(
-    async (data: PostFormData) => {
+    async (data: CreatePostRequest) => {
       try {
-        console.log("💾 Saving draft to KonthoKosh API...");
-
-        // Combine title and content for the API, mark as draft
-        const draftContent = `[DRAFT] ${data.title}\n\n${data.content}`;
+        console.log(editorStrings.savingDraftLog);
 
         // 🌐 Save draft using KonthoKosh API with automatic JWT token
-        const savedDraft = await createPost(draftContent);
+        const savedDraft = await createPost(data);
 
-        console.log("✅ Draft saved successfully:", savedDraft);
-        alert("Draft saved successfully to KonthoKosh!");
+        console.log(editorStrings.draftSavedLogPrefix, savedDraft);
+        alert(editorStrings.draftSavedAlert);
       } catch (error) {
-        console.error("❌ Error saving draft:", error);
+        console.error(editorStrings.errorSavingDraftLog, error);
         const errorMessage = handleKonthoKoshError(error);
-        alert(`Failed to save draft: ${errorMessage}`);
+        alert(`${editorStrings.errorSaveDraftAlertPrefix}${errorMessage}`);
       }
     },
     [createPost]
@@ -126,83 +114,22 @@ export default function WritePage() {
               />
             </div>
 
-            {/* Error Message */}
-            {errorMessage && (
-              <Card className="border-l-4 border-l-red-500 bg-red-50 dark:bg-red-900/20">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40">
-                      <Icons.X className="h-5 w-5 text-red-600 dark:text-red-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-red-800 dark:text-red-200">
-                        পোস্ট তৈরি করতে ব্যর্থ
-                      </h3>
-                      <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-                        {errorMessage}
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="mt-3"
-                        onClick={handleReset}
-                      >
-                        আবার চেষ্টা করুন
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Error Message (reusable) */}
+            <ErrorMessage
+              open={Boolean(errorMessage)}
+              title={editorStrings.postCreateFailedTitle}
+              message={errorMessage}
+              onClose={() => setErrorMessage("")}
+              tryAgainLabel={editorStrings.tryAgain}
+            />
 
             {/* Success dialog shown when a post is created; auto-redirects to /feed */}
-            <Dialog
+            <PostSuccessDialog
               open={showSuccessDialog}
               onOpenChange={setShowSuccessDialog}
-            >
-              <DialogContent>
-                <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-                    <Icons.Check className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div className="space-y-2">
-                    <DialogTitle>পোস্ট সফলভাবে তৈরি হয়েছে</DialogTitle>
-                    <DialogDescription>
-                      আপনার পোস্ট সফলভাবে তৈরি হয়েছে। ২ সেকেন্ড পরে আপনি ফিড
-                      পেজে সরানো হবে।
-                    </DialogDescription>
-
-                    {createdPost && (
-                      <div className="text-sm text-green-700 dark:text-green-300 mt-2">
-                        <div>
-                          <span className="font-medium">ID:</span>{" "}
-                          {createdPost.id}
-                        </div>
-                        <div>
-                          <span className="font-medium">অনুমোদিত:</span>{" "}
-                          {createdPost.isApproved ? "হ্যাঁ" : "না"}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex gap-2 pt-2">
-                      <Button size="sm" onClick={() => router.push("/feed")}>
-                        এখন যান
-                      </Button>
-                      <DialogClose>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleReset}
-                        >
-                          বন্ধ করুন
-                        </Button>
-                      </DialogClose>
-                    </div>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+              createdPost={createdPost}
+              onReset={handleReset}
+            />
           </div>
         </main>
       </Background>
