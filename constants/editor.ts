@@ -22,6 +22,16 @@ export const editorStrings = {
   no: "না",
   goNow: "এখন যান",
   close: "বন্ধ করুন",
+  // general status dialog
+  statusTitle: "প্রক্রিয়ার অবস্থা",
+  statusDescription: "আপনার পোস্টের বর্তমান অবস্থা এবং লেনদেনের তথ্য এখানে দেখানো হবে।",
+  statusLabel: "স্ট্যাটাস",
+  // per-step status labels
+  statusSubmittingLabel: "জমা দেওয়া হচ্ছে",
+  statusOnchainLabel: "অন-চেইন প্রক্রিয়াজাত",
+  statusCompletedLabel: "সম্পূর্ণ হয়েছে",
+  statusErrorLabel: "ত্রুটি ঘটেছে",
+  statusNotSubmittedLabel: "চেইনে জমা দেওয়া হয়নি",
   // similarity / error UI labels
   similarityAnalysis: "সাদৃশ্য বিশ্লেষণ",
   similarityResultsDescription: "এই পোস্ট জমা দেওয়ার জন্য সাদৃশ্য চেকের ফলাফল।",
