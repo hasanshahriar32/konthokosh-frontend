@@ -269,6 +269,10 @@
   @apply text-2xl font-kalpurush font-semibold text-foreground;
 }
 
+.heading-quaternary {
+  @apply text-xl font-kalpurush font-semibold text-foreground;
+}
+
 /* ---------------------------------- Text ---------------------------------- */
 
 .text-subtitle {

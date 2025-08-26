@@ -1,28 +1,51 @@
 "use client";
 
-import React from "react";
 import { Icons } from "@/components/common/Icons";
-import { Badge } from "@/components/ui/badge";
-import { POST_UI } from "@/types/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/konthokosh-api";
+import {
+  ACTIVE_LABEL,
+  APPROVED,
+  ID_LABEL,
+  INACTIVE_LABEL,
+  PENDING,
+  USER_FALLBACK,
+} from "@/constants/feed";
+import type { KonthoKoshFeedPost } from "@/types/post";
 import Actions from "./Actions";
-import PostContent from "./PostContent";
 import PostCardMenu from "./PostCardMenu";
+import PostContent from "./PostContent";
+import { Sparkle, Sparkles } from "lucide-react";
+import PostExplainSummaryPopover from "./PostExplainSummaryPopover";
 
 type Props = {
   post: KonthoKoshFeedPost;
   showMenu?: boolean;
   showActions?: boolean;
+  onTagClick?: (tag: string) => void;
 };
 
-const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
-  console.log(post);
+const PostCard = ({
+  post,
+  showMenu = false,
+  showActions = false,
+  onTagClick,
+}: Props) => {
 
-  // Use the reusable PostCardMenu for item actions (view/edit/delete)
+  // normalize tags from different payload shapes (array, comma string, generatedTags)
+  const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
+  const normalizedTags: string[] = (() => {
+    if (!rawTags) return [];
+    if (typeof rawTags === "string") {
+      return rawTags
+        .split(",")
+        .map((t: string) => t.trim())
+        .filter(Boolean);
+    }
+    if (Array.isArray(rawTags)) return rawTags.map((t) => String(t));
+    return [];
+  })();
 
   return (
     <article className="relative">
@@ -74,7 +97,7 @@ const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
                         variant={post.isActive ? "secondary" : "outline"}
                         className="text-[10px] rounded-full px-2 py-1"
                       >
-                        {post.isActive ? POST_UI.ACTIVE : POST_UI.INACTIVE}
+                        {post.isActive ? ACTIVE_LABEL : INACTIVE_LABEL}
                       </Badge>
                     </div>
                   </div>
@@ -88,9 +111,27 @@ const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
           </div>
           {/* <Separator className="my-4" /> */}
 
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center justify-between gap-4">
+            <PostExplainSummaryPopover postId={post.id} />
+
+            {normalizedTags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {normalizedTags.map((t) => (
+                  <Badge
+                    key={t}
+                    asChild={false}
+                    className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90 cursor-pointer"
+                    onClick={() => onTagClick && onTagClick(t)}
+                  >
+                    {t}
+                  </Badge>
+                ))}
+              </div>
+            )}
             {showActions && <Actions />}
-            {showMenu && <PostCardMenu postId={post.id} />}
+            {showMenu && (
+              <PostCardMenu postId={post.id} isPending={!post.isApproved} />
+            )}
           </div>
         </CardContent>
       </Card>

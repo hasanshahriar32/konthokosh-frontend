@@ -1,53 +1,43 @@
-import { useBackendApi, ApiError } from "@/utils/api-client";
-import { useCallback, useMemo } from "react";
+import { API_ENDPOINTS } from "@/constants/api";
 import type {
-  KonthoKoshApiResponse,
-  KonthoKoshPost,
+  BlockchainProcessResponse,
   CreatePostRequest,
   CreatePostResponseData,
-  KonthoKoshPagedPostsResponse,
+  FeedPostsParams,
+  KonthoKoshApiResponse,
   KonthoKoshFeedPost,
-} from "@/types/konthokosh-api";
+  KonthoKoshPagedPostsResponse,
+  OnChainSubmitResponse,
+  PostErrorResponse,
+  PostSummaryResponse,
+  PostExplainResponse,
+  PostResponse,
+} from "@/types";
+import { ApiError, useBackendApi } from "@/utils/api-client";
+import { useCallback, useMemo } from "react";
 
 /**
- * 🌐 KonthoKosh API Service
- *
- * This service handles all interactions with the KonthoKosh Railway backend API
- * JWT tokens are automatically added to all requests via the API client
+ * Provides KonthoKosh API methods for posts.
+ * @returns API methods for posts.
  */
 export const useKonthoKoshApi = () => {
-  // 🔐 Uses automatic JWT token from Clerk
   const api = useBackendApi();
 
   /**
-   * 📝 Create a new post
-   *
-   * @param postContent - The post content
-   * @param imagesId - Optional array of image IDs
-   * @returns Promise with the created post data
+   * Creates a new post.
+   * @param postContent - The post content.
+   * @param imagesId - Optional array of image IDs.
+   * @returns The created post.
    */
   const createPost = useCallback(
     async (
-      postContent: string,
-      imagesId?: number[]
-    ): Promise<KonthoKoshPost> => {
+      data: CreatePostRequest
+    ): Promise<PostResponse | PostErrorResponse> => {
       try {
-        console.log("🚀 Creating post on KonthoKosh API...");
+        const response = await api.post<
+          KonthoKoshApiResponse<CreatePostResponseData>
+        >(API_ENDPOINTS.posts.create, data);
 
-        const requestBody: CreatePostRequest = {
-          post: postContent,
-          ...(imagesId && imagesId.length > 0 && { imagesId }),
-        };
-
-        // 🔐 JWT token automatically added by the API client
-        const response = await api.post<KonthoKoshApiResponse<CreatePostResponseData>>(
-          "/api/v1/posts",
-          requestBody
-        );
-
-        console.log("✅ KonthoKosh API Response:", response);
-
-        // Check if the API response indicates success
         if (!response.data.success || response.data.statusCode !== 201) {
           throw new ApiError(
             response.data.message || "Failed to create post",
@@ -56,7 +46,7 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        if (!response.data.data || !response.data.data.post) {
+        if (!response.data.data?.post) {
           throw new ApiError(
             "No post data returned",
             response.status,
@@ -64,13 +54,15 @@ export const useKonthoKoshApi = () => {
           );
         }
 
-        console.log("✅ Post created successfully:", response.data.data.post);
         return response.data.data.post;
       } catch (error) {
-        console.error("❌ Failed to create post on KonthoKosh:", error);
-
-        // Handle specific API errors
         if (error instanceof ApiError) {
+          const responseData = (
+            error.response as { data?: unknown } | undefined
+          )?.data;
+          if (error.status === 409) {
+            return responseData as PostErrorResponse;
+          }
           if (error.status === 400) {
             throw new Error("Invalid post content. Please check your input.");
           }
@@ -79,7 +71,6 @@ export const useKonthoKoshApi = () => {
           }
           throw new Error(error.message || "Failed to create post");
         }
-
         throw new Error("Network error. Please try again.");
       }
     },
@@ -87,14 +78,13 @@ export const useKonthoKoshApi = () => {
   );
 
   /**
-   * 📋 Get user's posts (if needed later)
+   * Fetches all posts of the current user.
+   * @returns Array of user's posts.
    */
-  const getUserPosts = useCallback(async (): Promise<KonthoKoshPost[]> => {
+  const getUserPosts = useCallback(async (): Promise<PostResponse[]> => {
     try {
-      console.log("📋 Fetching user posts from KonthoKosh API...");
-
-      const response = await api.get<KonthoKoshApiResponse<KonthoKoshPost[]>>(
-        "/api/v1/posts"
+      const response = await api.get<KonthoKoshApiResponse<PostResponse[]>>(
+        API_ENDPOINTS.posts.getAll
       );
 
       if (!response.data.success) {
@@ -107,14 +97,19 @@ export const useKonthoKoshApi = () => {
 
       return response.data.data || [];
     } catch (error) {
-      console.error("❌ Failed to fetch posts from KonthoKosh:", error);
       throw error;
     }
   }, [api]);
 
+  /**
+   * Fetches feed posts with pagination and optional keyword.
+   * @param params - Pagination and filter params.
+   * @returns Posts and pagination info.
+   */
+
   const getFeedPosts = useCallback(
     async (
-      params: { page?: number; size?: number; keyword?: string } = {}
+      params: FeedPostsParams = {}
     ): Promise<{
       posts: KonthoKoshFeedPost[];
       pagination: {
@@ -124,16 +119,37 @@ export const useKonthoKoshApi = () => {
         totalPages: number;
       };
     }> => {
-      const { page = 1, size = 10, keyword } = params;
+      const { page = 1, size = 10, tags } = params;
       try {
+        const requestParams: Record<string, unknown> = {
+          ...params,
+          page,
+          size,
+        };
+
+        if (Array.isArray(tags)) {
+          requestParams.tags = tags.join(",");
+        }
+
+        const qsParams: Record<string, string | number | boolean> = {};
+        Object.entries(requestParams).forEach(([k, v]) => {
+          if (v === undefined || v === null) return;
+          if (
+            typeof v === "string" ||
+            typeof v === "number" ||
+            typeof v === "boolean"
+          ) {
+            qsParams[k] = v;
+            return;
+          }
+          // fallback: stringify other types (e.g., objects)
+          qsParams[k] = String(v);
+        });
+
         const response = await api.get<KonthoKoshPagedPostsResponse>(
-          "/api/v1/posts",
+          API_ENDPOINTS.posts.getAll,
           {
-            params: {
-              page,
-              size,
-              ...(keyword ? { keyword } : {}),
-            },
+            params: qsParams,
           }
         );
 
@@ -148,9 +164,156 @@ export const useKonthoKoshApi = () => {
         const { data, pagination } = response.data.data;
         return { posts: data, pagination };
       } catch (error) {
-        console.error("❌ Failed to fetch feed posts:", error);
         if (error instanceof ApiError) {
           throw new Error(error.message);
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Submit a resource (by id) to the blockchain endpoint.
+   * @param id - resource id to submit
+   * @returns transaction info from the blockchain service
+   */
+  const submitOnChain = useCallback(
+    async (id: string | number): Promise<OnChainSubmitResponse> => {
+      try {
+        const response = await api.post<
+          KonthoKoshApiResponse<OnChainSubmitResponse>
+        >(API_ENDPOINTS.blockchain.submit(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to submit to blockchain",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to submit to blockchain");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Trigger processing of an IPFS resource on the blockchain service.
+   * @param id - resource id to process
+   * @returns processing result (ipfs hash and status)
+   */
+  const processIpfs = useCallback(
+    async (id: string | number): Promise<BlockchainProcessResponse> => {
+      try {
+        const response = await api.post<
+          KonthoKoshApiResponse<BlockchainProcessResponse>
+        >(API_ENDPOINTS.blockchain.process(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to process IPFS resource",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to process IPFS resource");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Fetches a machine-generated summary for a post.
+   * @param id - Post id
+   * @returns Summary payload with post metadata
+   */
+  const getPostSummary = useCallback(
+    async (id: string | number): Promise<PostSummaryResponse> => {
+      try {
+        const response = await api.get<
+          KonthoKoshApiResponse<PostSummaryResponse>
+        >(API_ENDPOINTS.posts.summary(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch post summary",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to fetch post summary");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Fetches an explanation for a post.
+   * @param id - Post id
+   * @returns Explanation payload with post metadata
+   */
+  const getPostExplain = useCallback(
+    async (id: string | number): Promise<PostExplainResponse> => {
+      try {
+        const response = await api.get<
+          KonthoKoshApiResponse<PostExplainResponse>
+        >(API_ENDPOINTS.posts.explain(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch post explanation",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to fetch post explanation");
         }
         throw new Error("Network error. Please try again.");
       }
@@ -163,36 +326,49 @@ export const useKonthoKoshApi = () => {
       createPost,
       getUserPosts,
       getFeedPosts,
+      submitToBlockchain: submitOnChain,
+      processIpfs,
+      getPostSummary,
+      getPostExplain,
       api,
     }),
-    [createPost, getUserPosts, getFeedPosts, api]
+    [
+      createPost,
+      getUserPosts,
+      getFeedPosts,
+      submitOnChain,
+      processIpfs,
+      getPostSummary,
+      getPostExplain,
+      api,
+    ]
   );
 };
 
 /**
- * 🛠️ Helper function to handle KonthoKosh API errors
+ * Returns a user-friendly error message for KonthoKosh API errors.
+ * @param error - The error object.
+ * @returns Error message string.
  */
 export const handleKonthoKoshError = (error: unknown): string => {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
   if (error instanceof ApiError) {
     switch (error.status) {
       case 400:
-        return "Invalid request. Please check your input.";
+        return "অবৈধ অনুরোধ। অনুগ্রহ করে আপনার ইনপুট পরীক্ষা করুন।";
       case 401:
-        return "Authentication failed. Please log in again.";
+        return "প্রমাণীকরণ ব্যর্থ হয়েছে। অনুগ্রহ করে পুনরায় লগইন করুন।";
       case 403:
-        return "You do not have permission to perform this action.";
+        return "এই কার্যটি করার আপনার অনুমতি নেই।";
+      case 409:
+        return "বিরোধ ঘটেছে। অনুগ্রহ করে বিরোধ মেটান এবং পুনরায় চেষ্টা করুন।";
       case 429:
-        return "Too many requests. Please try again later.";
+        return "অনেক অনুরোধ এসেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।";
       case 500:
-        return "Server error. Please try again later.";
+        return "সার্ভার ত্রুটি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।";
       default:
-        return error.message || "An unexpected error occurred.";
+        return "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।";
     }
   }
-
+  if (error instanceof Error) return error.message;
   return "An unknown error occurred.";
 };

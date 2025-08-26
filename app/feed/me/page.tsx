@@ -5,6 +5,7 @@ import Background from "@/components/common/Background";
 import { Icons } from "@/components/common/Icons";
 import FeedHeading from "@/components/feed/FeedHeading";
 import MyPostsFilter from "@/components/feed/MyPostsFilter";
+import FeedLoader from "@/components/common/FeedLoader";
 import MyPostsStats from "@/components/feed/MyPostsStats";
 import Pagination from "@/components/feed/Pagination";
 import PostCard from "@/components/feed/PostCard";
@@ -102,20 +103,12 @@ const MyPostsInner: React.FC = () => {
 
   if (loading && !hasLoaded) {
     return (
-      <ProtectedRoute>
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50">
-          <div className="relative">
-            <div className="h-16 bg-gradient-to-r from-red-600 to-orange-600"></div>
-            <Navbar />
-          </div>
-          <div className="flex items-center justify-center min-h-[50vh]">
-            <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
-              <p className="font-bengali text-gray-600">{MY_POSTS_LOADING}</p>
-            </div>
-          </div>
+      <div className="w-full bg-background grid grid-cols-[auto,1fr]">
+        <Navbar />
+        <div className="flex flex-1 items-center justify-center mt-16">
+          <FeedLoader message={MY_POSTS_LOADING} skeletons={3} />
         </div>
-      </ProtectedRoute>
+      </div>
     );
   }
 
@@ -133,7 +126,7 @@ const MyPostsInner: React.FC = () => {
 
         <main className="container mx-auto px-4 pb-8 max-w-7xl">
           <MyPostsStats
-            totalCount={totalCount}
+            totalCount={posts.length}
             publishedPosts={publishedPosts}
             pendingPosts={pendingPosts}
             posts={posts}
@@ -205,9 +198,7 @@ const MyPostsInner: React.FC = () => {
                         {NO_MY_POSTS}
                       </h3>
                       <p className="font-bengali text-gray-500 mb-4">
-                        {searchTerm
-                          ? NO_MY_POSTS_SEARCH
-                            : NO_MY_POSTS_YET}
+                        {searchTerm ? NO_MY_POSTS_SEARCH : NO_MY_POSTS_YET}
                       </p>
                       <Link href="/write">
                         <Button className="bg-red-600 hover:bg-red-700 font-bengali">

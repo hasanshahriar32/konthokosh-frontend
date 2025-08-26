@@ -4,14 +4,15 @@ import { PostFormActions } from "@/components/post/PostFormActions";
 import { PostFormEditor } from "@/components/post/PostFormEditor";
 import { PostFormHeader } from "@/components/post/PostFormHeader";
 import { POST_STRINGS } from "@/constants/post";
-import { type PostFormData } from "@/types/post";
+import { CreatePostRequest } from "@/types";
+import { PostTag } from "@/types/post";
 import type React from "react";
 import { useCallback, useState } from "react";
 
 type PostFormProps = {
-  initialData?: Partial<PostFormData>;
-  onSubmit: (data: PostFormData) => Promise<void>;
-  onSaveDraft?: (data: PostFormData) => Promise<void>;
+  initialData?: Partial<CreatePostRequest>;
+  onSubmit: (data: CreatePostRequest) => Promise<void>;
+  onSaveDraft?: (data: CreatePostRequest) => Promise<void>;
   isSubmitting?: boolean;
   isDraft?: boolean;
 };
@@ -23,11 +24,10 @@ const PostForm = ({
   isSubmitting = false,
   isDraft = false,
 }: PostFormProps) => {
-  const [formData, setFormData] = useState<PostFormData>({
+  const [formData, setFormData] = useState<CreatePostRequest>({
     title: initialData.title || "",
-    content: initialData.content || "",
+    post: initialData.post || "",
     tags: initialData.tags || [],
-    visibility: initialData.visibility || "public",
   });
 
   const [tagInput, setTagInput] = useState("");
@@ -36,16 +36,12 @@ const PostForm = ({
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) {
-      newErrors.title = POST_STRINGS.titleRequired;
+    if (!formData?.post || !formData.post.trim()) {
+      newErrors.post = POST_STRINGS.postRequired;
     }
 
-    if (!formData.content.trim()) {
-      newErrors.content = POST_STRINGS.contentRequired;
-    }
-
-    if (formData.title.length > 200) {
-      newErrors.title = POST_STRINGS.titleTooLong;
+    if (!formData?.tags || formData.tags.length === 0) {
+      formData.tags = [];
     }
 
     setErrors(newErrors);
@@ -74,24 +70,37 @@ const PostForm = ({
     }
   }, [formData, onSaveDraft]);
 
-  const handleAddTag = useCallback(
-    (tag: string) => {
-      const trimmedTag = tag.trim().toLowerCase();
-      if (trimmedTag && !formData.tags.includes(trimmedTag)) {
-        setFormData((prev) => ({
-          ...prev,
-          tags: [...prev.tags, trimmedTag],
-        }));
-      }
+  const handleAddTag = useCallback((tag: string) => {
+    const trimmed = tag.trim();
+    if (!trimmed) {
       setTagInput("");
-    },
-    [formData.tags]
-  );
+      return;
+    }
+
+    // Validate against PostTag enum values
+    const match = (Object.values(PostTag) as string[]).find((t) => t === trimmed);
+    if (!match) {
+      // invalid tag - ignore or could set an error/toast
+      setTagInput("");
+      return;
+    }
+
+    setFormData((prev) => {
+      const prevTags = (prev.tags ?? []) as PostTag[];
+      if (prevTags.includes(match as PostTag)) return prev;
+      return {
+        ...prev,
+        tags: [...prevTags, match as PostTag],
+      };
+    });
+
+    setTagInput("");
+  }, []);
 
   const handleRemoveTag = useCallback((tagToRemove: string) => {
     setFormData((prev) => ({
       ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+      tags: prev.tags?.filter((tag) => tag !== tagToRemove) ?? [],
     }));
   }, []);
 
@@ -105,31 +114,32 @@ const PostForm = ({
     [tagInput, handleAddTag]
   );
 
-  const handleContentChange = useCallback(
+  const handlePostChange = useCallback(
     (markdown: string) => {
       setFormData((prev) => ({
         ...prev,
-        content: markdown,
+        post: markdown,
       }));
 
-      // Clear content error when user starts typing
-      if (errors.content && markdown.trim()) {
+      // Clear post error when user starts typing
+      if (errors.post && markdown.trim()) {
         setErrors((prev) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { content, ...rest } = prev;
+          const { post, ...rest } = prev;
           return rest;
         });
       }
     },
-    [errors.content]
+    [errors.post]
   );
+
   return (
     <div className="space-y-6">
       <PostFormHeader
-        title={formData.title}
+        title={formData?.title || ""}
         onTitleChange={(v) => setFormData((prev) => ({ ...prev, title: v }))}
         errors={errors}
-        tags={formData.tags}
+        tags={formData?.tags || []}
         tagInput={tagInput}
         setTagInput={setTagInput}
         onAddTag={handleAddTag}
@@ -140,8 +150,8 @@ const PostForm = ({
       />
 
       <PostFormEditor
-        content={formData.content}
-        onChange={handleContentChange}
+        post={formData.post}
+        onChange={handlePostChange}
         errors={errors}
       />
 
@@ -150,8 +160,8 @@ const PostForm = ({
         onSaveDraft={onSaveDraft ? handleSaveDraft : undefined}
         isSubmitting={isSubmitting}
         isDraft={isDraft}
-        title={formData.title}
-        content={formData.content}
+        title={formData?.title || ""}
+        post={formData.post}
       />
     </div>
   );

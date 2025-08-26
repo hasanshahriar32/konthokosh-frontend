@@ -40,10 +40,10 @@ const StatItem = ({
         {icon}
       </div>
       <div className="min-w-0 flex flex-col gap-1.5">
-        <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 truncate">
+        <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 truncate">
           {value}
         </p>
-        <p className="font-bengali text-sm text-slate-500 truncate">{label}</p>
+        <p className="font-bengali text-sm text-slate-500 dark:text-slate-300 truncate">{label}</p>
       </div>
     </div>
   );
@@ -61,33 +61,33 @@ const MyPostsStats = ({
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center sm:items-stretch justify-between gap-4 p-4">
             <StatItem
-              icon={<FileText className="h-6 w-6 text-sky-600" />}
-              fromClass="from-sky-50"
-              toClass="to-sky-100"
+              icon={<FileText className="h-6 w-6 text-sky-600 dark:text-sky-200" />}
+              fromClass="from-sky-50 dark:from-sky-700"
+              toClass="to-sky-100 dark:to-sky-800"
               label={TOTAL_POSTS_LABEL}
               value={totalCount}
             />
 
             <StatItem
-              icon={<Eye className="h-6 w-6 text-emerald-600" />}
-              fromClass="from-emerald-50"
-              toClass="to-emerald-100"
+              icon={<Eye className="h-6 w-6 text-emerald-600 dark:text-emerald-200" />}
+              fromClass="from-emerald-50 dark:from-emerald-700"
+              toClass="to-emerald-100 dark:to-emerald-800"
               label={APPROVED_LABEL}
               value={publishedPosts.length}
             />
 
             <StatItem
-              icon={<Heart className="h-6 w-6 text-amber-600" />}
-              fromClass="from-amber-50"
-              toClass="to-amber-100"
+              icon={<Heart className="h-6 w-6 text-amber-600 dark:text-amber-300" />}
+              fromClass="from-amber-50 dark:from-amber-700"
+              toClass="to-amber-100 dark:to-amber-800"
               label={PENDING_LABEL}
               value={pendingPosts.length}
             />
 
             <StatItem
-              icon={<MessageCircle className="h-6 w-6 text-violet-600" />}
-              fromClass="from-violet-50"
-              toClass="to-violet-100"
+              icon={<MessageCircle className="h-6 w-6 text-violet-600 dark:text-violet-300" />}
+              fromClass="from-violet-50 dark:from-violet-700"
+              toClass="to-violet-100 dark:to-violet-800"
               label={ACTIVE_LABEL}
               value={posts.filter((p) => p.isActive).length}
             />
