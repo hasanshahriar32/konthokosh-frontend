@@ -11,6 +11,8 @@ import {
   PostErrorResponse,
   type CreatePostRequest,
   type PostResponse,
+  type OnChainSubmitResponse,
+  type BlockchainProcessResponse,
 } from "@/types/api";
 import {
   handleKonthoKoshError,
@@ -30,7 +32,15 @@ export default function WritePage() {
     useState<boolean>(false);
   const [isErrorDialogOpen, setIsErrorDialogOpen] = useState<boolean>(false);
 
-  const { createPost } = useKonthoKoshApi();
+  const { createPost, submitToBlockchain, processIpfs } = useKonthoKoshApi();
+
+  const [onChainSubmitResp, setOnChainSubmitResp] =
+    useState<OnChainSubmitResponse | null>(null);
+  const [onChainProcessResp, setOnChainProcessResp] =
+    useState<BlockchainProcessResponse | null>(null);
+  const [onChainStatusMessage, setOnChainStatusMessage] = useState<string>("");
+  const [isOnChainProcessing, setIsOnChainProcessing] =
+    useState<boolean>(false);
 
   /**
    * Handle form submission (Direct KonthoKosh API)
@@ -46,8 +56,36 @@ export default function WritePage() {
 
         setCreatedPost(newPost);
 
-        if ("post" in newPost) setIsSuccessDialogOpen(true);
-        else {
+        // Success when we receive an object with `id`
+        if (newPost && "id" in newPost) {
+          setIsSuccessDialogOpen(true);
+
+          // Start on-chain flow: submit then process serially.
+          setIsOnChainProcessing(true);
+          setOnChainStatusMessage("Submitting to blockchain...");
+          try {
+            const submitResp = await submitToBlockchain(newPost.id);
+            setOnChainSubmitResp(submitResp);
+            setOnChainStatusMessage(
+              "Processing IPFS and verifying on-chain..."
+            );
+
+            try {
+              // Use the blockchain entry id returned by submit response
+              const processResp = await processIpfs(newPost.id);
+              setOnChainProcessResp(processResp);
+              setOnChainStatusMessage("On-chain processing completed.");
+            } catch (procErr) {
+              const friendly = handleKonthoKoshError(procErr);
+              setOnChainStatusMessage(friendly);
+            }
+          } catch (submitErr) {
+            const friendly = handleKonthoKoshError(submitErr);
+            setOnChainStatusMessage(friendly);
+          } finally {
+            setIsOnChainProcessing(false);
+          }
+        } else {
           setIsErrorDialogOpen(true);
           setErrorMessage(
             handleKonthoKoshError({
@@ -62,7 +100,7 @@ export default function WritePage() {
         setIsSubmitting(false);
       }
     },
-    [createPost]
+    [createPost, submitToBlockchain, processIpfs]
   );
 
   /**
@@ -89,7 +127,6 @@ export default function WritePage() {
 
         <main className="container mx-auto px-4 py-8 max-w-4xl mt-28">
           <div className="space-y-8">
-            {/* Post Form */}
             <div>
               <PostForm
                 onSubmit={handleSubmit}
@@ -102,6 +139,11 @@ export default function WritePage() {
               isOpen={isSuccessDialogOpen}
               onOpenChange={setIsSuccessDialogOpen}
               createdPost={createdPost as PostResponse}
+              onChainSubmit={onChainSubmitResp}
+              onChainProcess={onChainProcessResp}
+              onChainStatusMessage={onChainStatusMessage}
+              isOnChainProcessing={isOnChainProcessing}
+              isSubmitting={isSubmitting}
             />
 
             <ErrorMessage
