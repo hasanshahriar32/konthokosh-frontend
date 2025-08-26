@@ -22,4 +22,14 @@ export const editorStrings = {
   no: "না",
   goNow: "এখন যান",
   close: "বন্ধ করুন",
+  // similarity / error UI labels
+  similarityAnalysis: "সাদৃশ্য বিশ্লেষণ",
+  similarityResultsDescription: "এই পোস্ট জমা দেওয়ার জন্য সাদৃশ্য চেকের ফলাফল।",
+  similarityLabel: "সাদৃশ্য",
+  scoreLabel: "স্কোর:",
+  thresholdLabel: "সীমা",
+  totalMatchesLabel: "মোট ম্যাচ",
+  mostSimilarPostLabel: "সবচেয়ে মিল পাওয়া পোস্ট",
+  topMatchLabel: "শীর্ষ ম্যাচ",
+  otherMatchesLabel: "অন্যান্য ম্যাচ",
 };

@@ -10,42 +10,18 @@ import {
 } from "@/components/ui/dialog";
 import { paths } from "@/constants";
 import { editorStrings } from "@/constants/editor";
-import type { KonthoKoshPost } from "@/types/api";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { PostResponse } from "@/types/api";
+import Link from "next/link";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type Props = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  createdPost: KonthoKoshPost | null;
-  onReset: () => void;
+  isOpen: boolean;
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  createdPost: PostResponse | null;
 };
 
-export const PostSuccessDialog = ({
-  open,
-  onOpenChange,
-  createdPost,
-  onReset,
-}: Props) => {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const PostSuccessDialog = ({ isOpen, onOpenChange, createdPost }: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (open) setIsOpen(true);
-  }, [open]);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    onOpenChange(false);
-    onReset();
-  };
-
-  const handleGoNow = () => {
-    router.push(paths.feed);
-    setIsOpen(false);
-    onOpenChange(false);
-  };
 
   const handleCopyId = async () => {
     if (createdPost?.id == null) return;
@@ -59,13 +35,7 @@ export const PostSuccessDialog = ({
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(val: boolean) => {
-        setIsOpen(val);
-        onOpenChange(val);
-      }}
-    >
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
         className="w-full max-w-lg p-6 rounded-2xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm shadow-2xl border border-gray-100/60 dark:border-slate-700/40"
@@ -120,18 +90,16 @@ export const PostSuccessDialog = ({
               </div>
             )}
 
-            <div className="mt-5 flex items-center gap-3">
-              <Button
-                size="sm"
-                onClick={handleGoNow}
-                className="rounded-full px-4"
-              >
-                {editorStrings.goNow}
+            <div className="mt-5 flex items-center justify-end gap-3">
+              <Button size="xs" className="rounded-full px-4" asChild>
+                <Link href={paths["my-post"]}>{editorStrings.goNow}</Link>
               </Button>
               <Button
-                size="sm"
+                size="xs"
                 variant="outline"
-                onClick={handleClose}
+                onClick={() => {
+                  onOpenChange(false);
+                }}
                 className="rounded-full px-4"
               >
                 {editorStrings.close}
@@ -143,3 +111,5 @@ export const PostSuccessDialog = ({
     </Dialog>
   );
 };
+
+export default PostSuccessDialog;

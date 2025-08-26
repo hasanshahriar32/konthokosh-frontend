@@ -6,8 +6,9 @@ import type {
   KonthoKoshApiResponse,
   KonthoKoshFeedPost,
   KonthoKoshPagedPostsResponse,
-  KonthoKoshPost,
+  PostResponse,
   OnChainSubmitResponse,
+  PostErrorResponse,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
 import { useCallback, useMemo } from "react";
@@ -26,7 +27,9 @@ export const useKonthoKoshApi = () => {
    * @returns The created post.
    */
   const createPost = useCallback(
-    async (data: CreatePostRequest): Promise<KonthoKoshPost> => {
+    async (
+      data: CreatePostRequest
+    ): Promise<PostResponse | PostErrorResponse> => {
       try {
         const response = await api.post<
           KonthoKoshApiResponse<CreatePostResponseData>
@@ -51,6 +54,12 @@ export const useKonthoKoshApi = () => {
         return response.data.data.post;
       } catch (error) {
         if (error instanceof ApiError) {
+          const responseData = (
+            error.response as { data?: unknown } | undefined
+          )?.data;
+          if (error.status === 409) {
+            return responseData as PostErrorResponse;
+          }
           if (error.status === 400) {
             throw new Error("Invalid post content. Please check your input.");
           }
@@ -69,9 +78,9 @@ export const useKonthoKoshApi = () => {
    * Fetches all posts of the current user.
    * @returns Array of user's posts.
    */
-  const getUserPosts = useCallback(async (): Promise<KonthoKoshPost[]> => {
+  const getUserPosts = useCallback(async (): Promise<PostResponse[]> => {
     try {
-      const response = await api.get<KonthoKoshApiResponse<KonthoKoshPost[]>>(
+      const response = await api.get<KonthoKoshApiResponse<PostResponse[]>>(
         API_ENDPOINTS.posts.getAll
       );
 
@@ -235,17 +244,19 @@ export const handleKonthoKoshError = (error: unknown): string => {
   if (error instanceof ApiError) {
     switch (error.status) {
       case 400:
-        return "Invalid request. Please check your input.";
+        return "অবৈধ অনুরোধ। অনুগ্রহ করে আপনার ইনপুট পরীক্ষা করুন।";
       case 401:
-        return "Authentication failed. Please log in again.";
+        return "প্রমাণীকরণ ব্যর্থ হয়েছে। অনুগ্রহ করে পুনরায় লগইন করুন।";
       case 403:
-        return "You do not have permission to perform this action.";
+        return "এই কার্যটি করার আপনার অনুমতি নেই।";
+      case 409:
+        return "বিরোধ ঘটেছে। অনুগ্রহ করে বিরোধ মেটান এবং পুনরায় চেষ্টা করুন।";
       case 429:
-        return "Too many requests. Please try again later.";
+        return "অনেক অনুরোধ এসেছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।";
       case 500:
-        return "Server error. Please try again later.";
+        return "সার্ভার ত্রুটি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।";
       default:
-        return error.message || "An unexpected error occurred.";
+        return "একটি অপ্রত্যাশিত ত্রুটি ঘটেছে।";
     }
   }
   if (error instanceof Error) return error.message;

@@ -1,3 +1,5 @@
+import type { PostTag } from "./post";
+
 export type KonthoKoshApiResponse<T = unknown> = {
   statusCode: number;
   success: boolean;
@@ -6,9 +8,19 @@ export type KonthoKoshApiResponse<T = unknown> = {
 };
 
 /**
+ * Create post request body
+ */
+
+export type CreatePostRequest = {
+  title?: string;
+  tags?: PostTag[];
+  post: string;
+};
+
+/**
  * Post data structure from KonthoKosh API
  */
-export type KonthoKoshPost = {
+export type PostResponse = {
   id: number;
   title: string;
   post: string;
@@ -19,17 +31,6 @@ export type KonthoKoshPost = {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-};
-
-/**
- * Create post request body
- */
-import type { PostTag } from "./post";
-
-export type CreatePostRequest = {
-  title?: string;
-  tags?: PostTag[];
-  post: string;
 };
 
 /**
@@ -47,7 +48,7 @@ export type CreatePostAIEnhancements = {
 };
 
 export type CreatePostResponseData = {
-  post: KonthoKoshPost;
+  post: PostResponse;
   similarPosts: SimilarPost[];
   ragEnabled: boolean;
   similarPostsCount: number;
@@ -62,7 +63,7 @@ export type KonthoKoshError = {
   statusCode: number;
   success: false;
   message: string;
-  data: null;
+  data: null | PostErrorResponse;
 };
 
 /**
@@ -78,7 +79,7 @@ export type Pagination = {
 /**
  * Feed post structure including user info and string-based image ids
  */
-export type KonthoKoshFeedPost = Omit<KonthoKoshPost, "imagesId"> & {
+export type KonthoKoshFeedPost = Omit<PostResponse, "imagesId"> & {
   imagesId?: string[];
   userFirstName?: string;
   userLastName?: string;
@@ -109,7 +110,7 @@ export type MatchedPostSummary = {
   createdAt: string;
 };
 
-export type SimilarityCheckResponse = {
+export type PostErrorResponse = {
   similarityScore: number;
   similarityPercentage: string;
   threshold: number;
