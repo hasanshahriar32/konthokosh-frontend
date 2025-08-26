@@ -3,16 +3,15 @@
 import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Background from "@/components/common/Background";
-import ErrorMessage from "@/components/post/ErrorMessageDialog";
 import { PostForm } from "@/components/post/PostForm";
 import PostStatusDialog from "@/components/post/PostStatusDialog";
 import { editorStrings } from "@/constants/editor";
 import {
   PostErrorResponse,
-  type CreatePostRequest,
-  type PostResponse,
-  type OnChainSubmitResponse,
   type BlockchainProcessResponse,
+  type CreatePostRequest,
+  type OnChainSubmitResponse,
+  type PostResponse,
 } from "@/types/api";
 import {
   handleKonthoKoshError,

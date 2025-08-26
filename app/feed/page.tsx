@@ -4,7 +4,7 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Background from "@/components/common/Background";
 import FeedLoader from "@/components/common/FeedLoader";
 import ErrorBanner from "@/components/feed/ErrorBanner";
-import { FeedProvider, useFeed } from "@/context/FeedContext";
+import FeedHeading from "@/components/feed/FeedHeading";
 import PostCard from "@/components/feed/PostCard";
 import SearchBar from "@/components/feed/SearchBar";
 import Navbar from "@/components/Navbar";
@@ -24,7 +24,7 @@ import {
   SEARCH_PLACEHOLDER,
   TRY_DIFFERENT_KEYWORD,
 } from "@/constants/feed";
-import FeedHeading from "@/components/feed/FeedHeading";
+import { FeedProvider, useFeed } from "@/context/FeedContext";
 
 const FeedContent: React.FC = () => {
   const {
@@ -35,7 +35,6 @@ const FeedContent: React.FC = () => {
     loading,
     error,
     totalPages,
-    totalCount,
     hasLoaded,
     handleSearch,
     handlePrevPage,
