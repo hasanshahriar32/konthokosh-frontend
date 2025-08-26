@@ -155,7 +155,12 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" onClick={handleCopyId}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleCopyId}
+                      disabled={isProcessing}
+                    >
                       {copied ? "Copied" : "Copy ID"}
                     </Button>
                   </div>
@@ -388,14 +393,21 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
           )}
 
           <div className="mt-5 flex items-center justify-end gap-3">
-            <Button size="xs" className="rounded-full px-4" asChild>
-              <Link href={paths["my-post"]}>{editorStrings.goNow}</Link>
-            </Button>
+            {isProcessing ? (
+              <Button size="xs" className="rounded-full px-4 opacity-50" disabled>
+                {editorStrings.goNow}
+              </Button>
+            ) : (
+              <Button size="xs" className="rounded-full px-4" asChild>
+                <Link href={paths["my-post"]}>{editorStrings.goNow}</Link>
+              </Button>
+            )}
             <Button
               size="xs"
               variant="outline"
               onClick={() => onOpenChange(false)}
               className="rounded-full px-4"
+              disabled={isProcessing}
             >
               {editorStrings.close}
             </Button>
