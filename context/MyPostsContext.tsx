@@ -3,7 +3,7 @@
 import { API_ENDPOINTS } from "@/constants/api";
 import { ERROR_LOAD_FAILED, ERROR_NETWORK } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/api";
-import { useBackendApi } from "@/utils/api-client";
+import { useKonthoKoshApi } from "@/utils/konthokosh-api";
 import React, {
   createContext,
   useCallback,
@@ -38,7 +38,7 @@ const MyPostsContext = createContext<MyPostsContextType | undefined>(undefined);
 export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const api = useBackendApi();
+  const { getFeedPosts, api } = useKonthoKoshApi();
 
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
   const [page, setPage] = useState(1);
@@ -69,20 +69,12 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
         if (searchKeyword) params.keyword = searchKeyword;
         if (approvalStatus !== null) params.isApproved = approvalStatus;
 
-        const response = await api.get(API_ENDPOINTS.posts.getAll, { params });
+        const { posts: fetchedPosts, pagination } = await getFeedPosts(params);
 
-        const data = response.data as {
-          success: boolean;
-          data: {
-            data: KonthoKoshFeedPost[];
-            pagination: { totalPages: number; totalCount: number };
-          };
-        };
-
-        if (data.success && data.data) {
-          setPosts(data.data.data);
-          setTotalPages(data.data.pagination.totalPages);
-          setTotalCount(data.data.pagination.totalCount);
+        if (Array.isArray(fetchedPosts)) {
+          setPosts(fetchedPosts);
+          setTotalPages(pagination.totalPages);
+          setTotalCount(pagination.totalCount);
         } else {
           setError(ERROR_LOAD_FAILED);
         }
@@ -94,13 +86,13 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
         setHasLoaded(true);
       }
     },
-    [api]
+  [getFeedPosts, api]
   );
 
   const deletePost = useCallback(
     async (postId: number) => {
       try {
-        const response = await api.delete(API_ENDPOINTS.posts.delete(postId));
+      const response = await api.delete(API_ENDPOINTS.posts.delete(postId));
         if (response.status === 200 || response.status === 204) {
           setPosts((p) => p.filter((x) => x.id !== postId));
           setTotalCount((c) => Math.max(0, c - 1));

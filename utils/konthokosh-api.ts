@@ -3,12 +3,13 @@ import type {
   BlockchainProcessResponse,
   CreatePostRequest,
   CreatePostResponseData,
+  FeedPostsParams,
   KonthoKoshApiResponse,
   KonthoKoshFeedPost,
   KonthoKoshPagedPostsResponse,
-  PostResponse,
   OnChainSubmitResponse,
   PostErrorResponse,
+  PostResponse,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
 import { useCallback, useMemo } from "react";
@@ -103,9 +104,10 @@ export const useKonthoKoshApi = () => {
    * @param params - Pagination and filter params.
    * @returns Posts and pagination info.
    */
+
   const getFeedPosts = useCallback(
     async (
-      params: { page?: number; size?: number; keyword?: string } = {}
+      params: FeedPostsParams = {}
     ): Promise<{
       posts: KonthoKoshFeedPost[];
       pagination: {
@@ -115,16 +117,39 @@ export const useKonthoKoshApi = () => {
         totalPages: number;
       };
     }> => {
-      const { page = 1, size = 10, keyword } = params;
+      const { page = 1, size = 10, tags } = params;
       try {
+        // Normalize tags: backend supports tags=one,two or tags[]=one&tags[]=two
+        // We'll send a comma-separated string when `tags` is an array.
+        const requestParams: Record<string, unknown> = {
+          ...params,
+          page,
+          size,
+        };
+
+        if (Array.isArray(tags)) {
+          requestParams.tags = tags.join(",");
+        }
+
+        const qsParams: Record<string, string | number | boolean> = {};
+        Object.entries(requestParams).forEach(([k, v]) => {
+          if (v === undefined || v === null) return;
+          if (
+            typeof v === "string" ||
+            typeof v === "number" ||
+            typeof v === "boolean"
+          ) {
+            qsParams[k] = v;
+            return;
+          }
+          // fallback: stringify other types (e.g., objects)
+          qsParams[k] = String(v);
+        });
+
         const response = await api.get<KonthoKoshPagedPostsResponse>(
           API_ENDPOINTS.posts.getAll,
           {
-            params: {
-              page,
-              size,
-              ...(keyword ? { keyword } : {}),
-            },
+            params: qsParams,
           }
         );
 

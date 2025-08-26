@@ -1,13 +1,12 @@
-import Image from "next/image";
-import { useState, useMemo } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
-import { Button } from "../ui/button";
-import { Badge } from "@/components/ui/badge";
+import { SHOW_LESS, SHOW_MORE } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/api";
 import type { PostTag } from "@/types/post";
-import { SHOW_LESS, SHOW_MORE } from "@/constants/feed";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
+import { Button } from "../ui/button";
 
 type Props = {
   post: KonthoKoshFeedPost & { tags?: (string | PostTag)[] | string };
@@ -30,6 +29,7 @@ const PostContent: React.FC<Props> = ({ post }) => {
     const p = needs ? l.slice(0, LINES_PREVIEW).join("\n") : txt;
     return { lines: l, needsToggle: needs, preview: p };
   }, [normalizedBody]);
+
   return (
     <div className="text-foreground">
       <h3 className="heading-quaternary mb-3">{title}</h3>
@@ -55,16 +55,18 @@ const PostContent: React.FC<Props> = ({ post }) => {
 
       {imagesId && imagesId.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {imagesId.map((image) => (
-            <Image
-              key={image}
-              src={image}
-              alt={`Image ${image}`}
-              width={500}
-              height={300}
-              className="rounded-md"
-            />
-          ))}
+          {imagesId
+            .map((image) => (
+              <Image
+                key={image.key}
+                src={image.publicUrl}
+                alt={`Image ${image}`}
+                width={0}
+                height={0}
+                sizes="full"
+                className="rounded-md w-full max-h-80 object-cover"
+              />
+            ))}
         </div>
       )}
     </div>

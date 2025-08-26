@@ -7,6 +7,15 @@ export type KonthoKoshApiResponse<T = unknown> = {
   data: T | null;
 };
 
+export type FeedPostsParams = {
+  page?: number;
+  size?: number;
+  keyword?: string;
+  isApproved?: boolean;
+  myPosts?: boolean;
+  tags?: string | string[];
+};
+
 /**
  * Create post request body
  */
@@ -20,13 +29,20 @@ export type CreatePostRequest = {
 /**
  * Post data structure from KonthoKosh API
  */
+
+export type ImageObject = {
+  key: string;
+  publicUrl: string;
+  type: "modern";
+};
+
 export type PostResponse = {
   id: number;
   title: string;
   post: string;
   userId: number;
   isApproved: boolean;
-  imagesId: number[];
+  imagesId: ImageObject[];
   isActive: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -80,7 +96,7 @@ export type Pagination = {
  * Feed post structure including user info and string-based image ids
  */
 export type KonthoKoshFeedPost = Omit<PostResponse, "imagesId"> & {
-  imagesId?: string[];
+  imagesId?: ImageObject[];
   userFirstName?: string;
   userLastName?: string;
   userImageUrl?: string;

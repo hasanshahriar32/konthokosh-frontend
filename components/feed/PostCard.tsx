@@ -21,9 +21,10 @@ type Props = {
   post: KonthoKoshFeedPost;
   showMenu?: boolean;
   showActions?: boolean;
+  onTagClick?: (tag: string) => void;
 };
 
-const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
+const PostCard = ({ post, showMenu = false, showActions = false, onTagClick }: Props) => {
   // normalize tags from different payload shapes (array, comma string, generatedTags)
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
@@ -109,7 +110,8 @@ const PostCard = ({ post, showMenu = false, showActions = false }: Props) => {
                   <Badge
                     key={t}
                     asChild={false}
-                    className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90"
+                    className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90 cursor-pointer"
+                    onClick={() => onTagClick && onTagClick(t)}
                   >
                     {t}
                   </Badge>

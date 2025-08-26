@@ -30,8 +30,10 @@ const FeedContent: React.FC = () => {
   const {
     posts,
     page,
-    searchInput,
-    setSearchInput,
+  searchInput,
+  setSearchInput,
+  selectedTag,
+  setSelectedTag,
     loading,
     error,
     totalPages,
@@ -62,6 +64,8 @@ const FeedContent: React.FC = () => {
         <SearchBar
           searchInput={searchInput}
           setSearchInput={setSearchInput}
+          selectedTag={selectedTag}
+          setSelectedTag={setSelectedTag}
           onSearch={handleSearch}
           loading={loading}
           placeholder={SEARCH_PLACEHOLDER}
@@ -91,7 +95,15 @@ const FeedContent: React.FC = () => {
           )}
 
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} showActions />
+            <PostCard
+              key={post.id}
+              post={post}
+              showActions
+              onTagClick={(t) => {
+                setSelectedTag && setSelectedTag(t);
+                void loadPosts(1, searchInput, t);
+              }}
+            />
           ))}
         </section>
 

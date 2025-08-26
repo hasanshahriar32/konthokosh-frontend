@@ -3,7 +3,7 @@
 import { API_ENDPOINTS } from "@/constants/api";
 import { ERROR_LOAD_FAILED, ERROR_NETWORK } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/api";
-import { useBackendApi } from "@/utils/api-client";
+import { useKonthoKoshApi } from "@/utils/konthokosh-api";
 import React, {
   createContext,
   useCallback,
@@ -17,6 +17,8 @@ type FeedContextType = {
   page: number;
   setPage: (n: number) => void;
   keyword: string;
+  selectedTag: string;
+  setSelectedTag: (t: string) => void;
   searchInput: string;
   setSearchInput: (s: string) => void;
   loading: boolean;
@@ -27,7 +29,8 @@ type FeedContextType = {
   handleSearch: (e: React.FormEvent) => void;
   handlePrevPage: () => void;
   handleNextPage: () => void;
-  loadPosts: (pageNum: number, searchKeyword?: string) => Promise<void>;
+  loadPosts: (pageNum: number, searchKeyword?: string, tag?: string) => Promise<void>;
+  handleTagFilter: (tag: string) => void;
 };
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
@@ -35,11 +38,12 @@ const FeedContext = createContext<FeedContextType | undefined>(undefined);
 export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const api = useBackendApi();
+  const { getFeedPosts } = useKonthoKoshApi();
 
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -48,34 +52,22 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const loadPosts = useCallback(
-    async (pageNum: number, searchKeyword: string = "") => {
+  async (pageNum: number, searchKeyword: string = "", tag: string = "") => {
       setLoading(true);
       setError("");
 
       try {
-        const response = await api.get(API_ENDPOINTS.posts.getAll, {
-          params: {
-            page: pageNum,
-            size: 10,
-            ...(searchKeyword ? { keyword: searchKeyword } : {}),
-          },
+        const { posts: fetchedPosts, pagination } = await getFeedPosts({
+          page: pageNum,
+          size: 10,
+      ...(searchKeyword ? { keyword: searchKeyword } : {}),
+  ...(tag ? { tags: tag } : {}),
         });
 
-        const data = response.data as {
-          success: boolean;
-          data: {
-            data: KonthoKoshFeedPost[];
-            pagination: {
-              totalPages: number;
-              totalCount: number;
-            };
-          };
-        };
-
-        if (data.success && data.data) {
-          setPosts(data.data.data);
-          setTotalPages(data.data.pagination.totalPages);
-          setTotalCount(data.data.pagination.totalCount);
+        if (Array.isArray(fetchedPosts)) {
+          setPosts(fetchedPosts);
+          setTotalPages(pagination.totalPages);
+          setTotalCount(pagination.totalCount);
         } else {
           setError(ERROR_LOAD_FAILED);
         }
@@ -86,7 +78,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
         setHasLoaded(true);
       }
     },
-    [api]
+  [getFeedPosts]
   );
 
   useEffect(() => {
@@ -97,14 +89,14 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     e.preventDefault();
     setKeyword(searchInput);
     setPage(1);
-    void loadPosts(1, searchInput);
+  void loadPosts(1, searchInput, selectedTag);
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
       const newPage = page - 1;
       setPage(newPage);
-      void loadPosts(newPage, keyword);
+  void loadPosts(newPage, keyword, selectedTag);
     }
   };
 
@@ -112,8 +104,15 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     if (page < totalPages) {
       const newPage = page + 1;
       setPage(newPage);
-      void loadPosts(newPage, keyword);
+      void loadPosts(newPage, keyword, selectedTag);
     }
+  };
+
+  const handleTagFilter = (tag: string) => {
+    setSelectedTag(tag);
+    setPage(1);
+    // keep current keyword when filtering by tag
+    void loadPosts(1, keyword, tag);
   };
 
   const value: FeedContextType = {
@@ -121,6 +120,8 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     page,
     setPage,
     keyword,
+  selectedTag,
+  setSelectedTag,
     searchInput,
     setSearchInput,
     loading,
@@ -132,6 +133,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     handlePrevPage,
     handleNextPage,
     loadPosts,
+  handleTagFilter,
   };
 
   return <FeedContext.Provider value={value}>{children}</FeedContext.Provider>;
