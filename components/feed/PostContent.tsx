@@ -1,6 +1,6 @@
 import { SHOW_LESS, SHOW_MORE } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/api";
-import type { PostTag } from "@/types/post";
+import type { KonthoKoshFeedPost } from "@/types";
+import type { PostTag } from "@/types";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";

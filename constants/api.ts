@@ -8,6 +8,8 @@ export const API_ENDPOINTS = {
     update: (id: string | number) => `${API_PREFIX}/posts/${id}`,
     delete: (id: string | number) => `${API_PREFIX}/posts/${id}`,
     analyze: (id: string | number) => `${API_PREFIX}/posts/${id}/analyze`,
+    summary: (id: string | number) => `${API_PREFIX}/posts/summary/${id}`,
+    explain: (id: string | number) => `${API_PREFIX}/posts/explain/${id}`,
   },
   originality: {
     check: `${API_PREFIX}/originality/check`,
@@ -15,7 +17,8 @@ export const API_ENDPOINTS = {
   },
   blockchain: {
     submit: (id: string | number) => `${API_PREFIX}/blockchain/submit/${id}`,
-    process: (id: string | number) => `${API_PREFIX}/blockchain/process-ipfs/${id}`,
+    process: (id: string | number) =>
+      `${API_PREFIX}/blockchain/process-ipfs/${id}`,
   },
   user: {
     profile: `${API_PREFIX}/user/profile`,

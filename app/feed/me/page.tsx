@@ -126,7 +126,7 @@ const MyPostsInner: React.FC = () => {
 
         <main className="container mx-auto px-4 pb-8 max-w-7xl">
           <MyPostsStats
-            totalCount={totalCount}
+            totalCount={posts.length}
             publishedPosts={publishedPosts}
             pendingPosts={pendingPosts}
             posts={posts}

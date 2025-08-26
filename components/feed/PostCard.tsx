@@ -12,10 +12,12 @@ import {
   PENDING,
   USER_FALLBACK,
 } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/api";
+import type { KonthoKoshFeedPost } from "@/types/post";
 import Actions from "./Actions";
 import PostCardMenu from "./PostCardMenu";
 import PostContent from "./PostContent";
+import { Sparkle, Sparkles } from "lucide-react";
+import PostExplainSummaryPopover from "./PostExplainSummaryPopover";
 
 type Props = {
   post: KonthoKoshFeedPost;
@@ -24,7 +26,13 @@ type Props = {
   onTagClick?: (tag: string) => void;
 };
 
-const PostCard = ({ post, showMenu = false, showActions = false, onTagClick }: Props) => {
+const PostCard = ({
+  post,
+  showMenu = false,
+  showActions = false,
+  onTagClick,
+}: Props) => {
+
   // normalize tags from different payload shapes (array, comma string, generatedTags)
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
@@ -104,6 +112,8 @@ const PostCard = ({ post, showMenu = false, showActions = false, onTagClick }: P
           {/* <Separator className="my-4" /> */}
 
           <div className="flex items-center justify-between gap-4">
+            <PostExplainSummaryPopover postId={post.id} />
+
             {normalizedTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {normalizedTags.map((t) => (

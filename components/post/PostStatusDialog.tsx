@@ -15,7 +15,7 @@ import type {
   OnChainSubmitResponse,
   BlockchainProcessResponse,
   PostErrorResponse,
-} from "@/types/api";
+} from "@/types/post";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useState, useMemo, type FC } from "react";
 import { Badge } from "../ui/badge";

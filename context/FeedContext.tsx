@@ -2,7 +2,7 @@
 
 import { API_ENDPOINTS } from "@/constants/api";
 import { ERROR_LOAD_FAILED, ERROR_NETWORK } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types/api";
+import type { KonthoKoshFeedPost } from "@/types/post";
 import { useKonthoKoshApi } from "@/utils/konthokosh-api";
 import React, {
   createContext,

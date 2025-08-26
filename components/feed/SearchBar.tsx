@@ -10,7 +10,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { POST_TAGS } from "@/types/post";
+import { POST_TAGS } from "@/types";
 import type { FC } from "react";
 
 type Props = {
@@ -38,7 +38,7 @@ const SearchBar: FC<Props> = ({
 }) => {
   return (
     <section className="w-full mb-8 flex justify-center">
-      <form onSubmit={onSearch} className="w-full max-w-xl">
+      <form onSubmit={onSearch} className="w-full max-w-3xl">
         <div className="relative flex items-center gap-4">
           {/* Tag selector */}
           <div className="absolute left-0 top-1/2 -translate-y-1/2">

@@ -30,30 +30,14 @@ export const POST_STRINGS = {
   publishPost: "পোস্ট প্রকাশ করুন",
 
   characters: "অক্ষর",
+  // Popover / explain & summary strings
+  popover: {
+    summaryTitle: "সারসংক্ষেপ",
+    explainTitle: "ব্যাখ্যা করুন",
+    loading: "লোড হচ্ছে...",
+    error: "ত্রুটি ঘটেছে",
+    nothing: "কিছু নেই।",
+  headerTitle: "সারসংক্ষেপ ও ব্যাখ্যা",
+  headerSubtitle: "পোস্টের মূল ধারণা বা ব্যাখ্যা দ্রুত দেখুন",
+  },
 };
-
-// export const VISIBILITY_OPTIONS: {
-//   value: PostVisibility;
-//   label: string;
-//   description: string;
-//   icon: keyof typeof import("@/components/common/Icons").Icons;
-// }[] = [
-//   {
-//     value: "public",
-//     label: "সবার জন্য",
-//     description: "যেকোনো ব্যক্তি এই পোস্ট দেখতে পারবে",
-//     icon: "Globe",
-//   },
-//   {
-//     value: "unlisted",
-//     label: "লিঙ্ক যুক্ত",
-//     description: "শুধু লিঙ্ক থাকা লোকেরা দেখতে পারবে",
-//     icon: "Link",
-//   },
-//   {
-//     value: "private",
-//     label: "বেসরকারি",
-//     description: "শুধু আপনি এই পোস্টটি দেখতে পারবেন",
-//     icon: "Lock",
-//   },
-// ];

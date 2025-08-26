@@ -12,7 +12,7 @@ import {
   type CreatePostRequest,
   type OnChainSubmitResponse,
   type PostResponse,
-} from "@/types/api";
+} from "@/types/post";
 import {
   handleKonthoKoshError,
   useKonthoKoshApi,

@@ -9,6 +9,8 @@ import type {
   KonthoKoshPagedPostsResponse,
   OnChainSubmitResponse,
   PostErrorResponse,
+  PostSummaryResponse,
+  PostExplainResponse,
   PostResponse,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
@@ -119,8 +121,6 @@ export const useKonthoKoshApi = () => {
     }> => {
       const { page = 1, size = 10, tags } = params;
       try {
-        // Normalize tags: backend supports tags=one,two or tags[]=one&tags[]=two
-        // We'll send a comma-separated string when `tags` is an array.
         const requestParams: Record<string, unknown> = {
           ...params,
           page,
@@ -247,6 +247,80 @@ export const useKonthoKoshApi = () => {
     [api]
   );
 
+  /**
+   * Fetches a machine-generated summary for a post.
+   * @param id - Post id
+   * @returns Summary payload with post metadata
+   */
+  const getPostSummary = useCallback(
+    async (id: string | number): Promise<PostSummaryResponse> => {
+      try {
+        const response = await api.get<
+          KonthoKoshApiResponse<PostSummaryResponse>
+        >(API_ENDPOINTS.posts.summary(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch post summary",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to fetch post summary");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Fetches an explanation for a post.
+   * @param id - Post id
+   * @returns Explanation payload with post metadata
+   */
+  const getPostExplain = useCallback(
+    async (id: string | number): Promise<PostExplainResponse> => {
+      try {
+        const response = await api.get<
+          KonthoKoshApiResponse<PostExplainResponse>
+        >(API_ENDPOINTS.posts.explain(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch post explanation",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to fetch post explanation");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
   return useMemo(
     () => ({
       createPost,
@@ -254,9 +328,20 @@ export const useKonthoKoshApi = () => {
       getFeedPosts,
       submitToBlockchain: submitOnChain,
       processIpfs,
+      getPostSummary,
+      getPostExplain,
       api,
     }),
-    [createPost, getUserPosts, getFeedPosts, submitOnChain, processIpfs, api]
+    [
+      createPost,
+      getUserPosts,
+      getFeedPosts,
+      submitOnChain,
+      processIpfs,
+      getPostSummary,
+      getPostExplain,
+      api,
+    ]
   );
 };
 
