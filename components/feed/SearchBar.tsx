@@ -65,7 +65,7 @@ const SearchBar: FC<Props> = ({
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder={placeholder}
-            className="pl-28 pr-36 py-4 h-full rounded-full shadow-lg font-bengali text-base border-none focus:ring-2 focus:ring-primary bg-card/80 backdrop-blur-md text-foreground"
+            className="px-16 py-4 h-full rounded-full shadow-lg font-bengali text-base border-none focus:ring-2 focus:ring-primary bg-card/80 backdrop-blur-md text-foreground"
           />
           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
             <Icons.Search className="h-5 w-5" />
