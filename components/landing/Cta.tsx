@@ -1,6 +1,7 @@
-import React from "react";
-import { Button } from "../ui/button";
+import { paths } from "@/constants";
 import { cta, quote } from "@/constants/landing";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 const Cta = () => {
   return (
@@ -20,8 +21,9 @@ const Cta = () => {
                 color: "oklch(41% 0 0 / 0.9)",
               }}
               className="font-bengali px-8 py-4 text-lg !text-white hover:scale-105 transition-transform duration-200 rounded-full border-none"
+              asChild
             >
-              {cta.registerButton}
+              <Link href={paths.auth}>{cta.registerButton}</Link>
             </Button>
             <Button
               variant="outline"
