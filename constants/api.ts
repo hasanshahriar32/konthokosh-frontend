@@ -25,4 +25,13 @@ export const API_ENDPOINTS = {
     posts: `${API_PREFIX}/user/posts`,
     analytics: `${API_PREFIX}/user/analytics`,
   },
+  comments: {
+    create: `${API_PREFIX}/comments`,
+    getAll: `${API_PREFIX}/comments`,
+    getById: (id: string | number) => `${API_PREFIX}/comments/${id}`,
+    update: (id: string | number) => `${API_PREFIX}/comments/${id}`,
+    delete: (id: string | number) => `${API_PREFIX}/comments/${id}`,
+    forPost: (postId: string | number) => `${API_PREFIX}/posts/${postId}/comments`,
+    replies: (id: string | number) => `${API_PREFIX}/comments/${id}/replies`,
+  },
 } as const;

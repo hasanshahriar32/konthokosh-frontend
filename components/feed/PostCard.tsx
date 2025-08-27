@@ -128,7 +128,9 @@ const PostCard = ({
                 ))}
               </div>
             )}
-            {showActions && <Actions />}
+            {showActions && (
+              <Actions postId={post.id} initialCommentsCount={(post as any).commentsCount ?? 0} />
+            )}
             {showMenu && (
               <PostCardMenu postId={post.id} isPending={!post.isApproved} />
             )}

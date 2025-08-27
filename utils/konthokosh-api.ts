@@ -1,17 +1,24 @@
 import { API_ENDPOINTS } from "@/constants/api";
 import type {
   BlockchainProcessResponse,
+  Comment,
+  CreateCommentRequest,
+  CreateCommentResponse,
+  CreatedComment,
   CreatePostRequest,
   CreatePostResponseData,
   FeedPostsParams,
+  GetCommentResponse,
   KonthoKoshApiResponse,
   KonthoKoshFeedPost,
   KonthoKoshPagedPostsResponse,
   OnChainSubmitResponse,
+  PagedCommentsResponse,
   PostErrorResponse,
-  PostSummaryResponse,
   PostExplainResponse,
   PostResponse,
+  PostSummaryResponse,
+  UpdateCommentRequest,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
 import { useCallback, useMemo } from "react";
@@ -321,6 +328,234 @@ export const useKonthoKoshApi = () => {
     [api]
   );
 
+  /* ------------------------------ Comments ------------------------------ */
+
+  const createComment = useCallback(
+    async (data: CreateCommentRequest): Promise<CreatedComment> => {
+      try {
+        const response = await api.post<CreateCommentResponse>(
+          API_ENDPOINTS.comments.create,
+          data
+        );
+
+        if (!response.data.success || response.data.statusCode !== 201) {
+          throw new ApiError(
+            response.data.message || "Failed to create comment",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        if (!response.data.data) {
+          throw new ApiError(
+            "No comment returned",
+            response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400)
+            throw new Error(
+              "অবৈধ মন্তব্য। অনুগ্রহ করে আপনার ইনপুট পরীক্ষা করুন।"
+            );
+          if (error.status === 401)
+            throw new Error(
+              "প্রমাণীকরণ ব্যর্থ হয়েছে। অনুগ্রহ করে পুনরায় লগইন করুন।"
+            );
+          throw new Error(error.message || "Failed to create comment");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const getComments = useCallback(
+    async (
+      params: Record<string, string | number | boolean> = {}
+    ): Promise<{
+      comments: Comment[];
+      pagination?: {
+        page: number;
+        size: number;
+        totalCount: number;
+        totalPages: number;
+      };
+    }> => {
+      try {
+        const response = await api.get<PagedCommentsResponse>(
+          API_ENDPOINTS.comments.getAll,
+          { params }
+        );
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch comments",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        const payload = response.data.data as any;
+        if (Array.isArray(payload.data)) {
+          return { comments: payload.data, pagination: payload.pagination };
+        }
+
+        if (Array.isArray(response.data.data as unknown)) {
+          return { comments: response.data.data as unknown as Comment[] };
+        }
+
+        return { comments: [] };
+      } catch (error) {
+        if (error instanceof ApiError) throw new Error(error.message);
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const getCommentsForPost = useCallback(
+    async (
+      postId: string | number,
+      params: Record<string, string | number | boolean> = {}
+    ) => {
+      try {
+        const response = await api.get<PagedCommentsResponse>(
+          API_ENDPOINTS.comments.forPost(postId),
+          { params }
+        );
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch comments for post",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        const payload = response.data.data as unknown as any;
+        return { comments: payload.data || [], pagination: payload.pagination };
+      } catch (error) {
+        if (error instanceof ApiError) throw new Error(error.message);
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const getCommentById = useCallback(
+    async (id: string | number): Promise<Comment> => {
+      try {
+        const response = await api.get<GetCommentResponse>(
+          API_ENDPOINTS.comments.getById(id)
+        );
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch comment",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) throw new Error(error.message);
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const updateComment = useCallback(
+    async (
+      id: string | number,
+      data: UpdateCommentRequest
+    ): Promise<Comment> => {
+      try {
+        const response = await api.put<
+          KonthoKoshApiResponse<GetCommentResponse>
+        >(API_ENDPOINTS.comments.update(id), data);
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to update comment",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return (response.data.data as any).comment;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400)
+            throw new Error(
+              "অবৈধ অনুরোধ। অনুগ্রহ করে আপনার ইনপুট পরীক্ষা করুন।"
+            );
+          if (error.status === 401)
+            throw new Error(
+              "প্রমাণীকরণ ব্যর্থ হয়েছে। অনুগ্রহ করে পুনরায় লগইন করুন।"
+            );
+          throw new Error(error.message || "Failed to update comment");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const deleteComment = useCallback(
+    async (id: string | number): Promise<boolean> => {
+      try {
+        const response = await api.delete<KonthoKoshApiResponse<null>>(
+          API_ENDPOINTS.comments.delete(id)
+        );
+
+        if (!response.data.success) {
+          throw new ApiError(
+            response.data.message || "Failed to delete comment",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return true;
+      } catch (error) {
+        if (error instanceof ApiError) throw new Error(error.message);
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  const getReplies = useCallback(
+    async (id: string | number): Promise<Comment[]> => {
+      try {
+        const response = await api.get<PagedCommentsResponse>(
+          API_ENDPOINTS.comments.replies(id)
+        );
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch replies",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        const payload = response.data.data.data;
+        return payload || [];
+      } catch (error) {
+        if (error instanceof ApiError) throw new Error(error.message);
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
   return useMemo(
     () => ({
       createPost,
@@ -330,6 +565,14 @@ export const useKonthoKoshApi = () => {
       processIpfs,
       getPostSummary,
       getPostExplain,
+      // comments
+      createComment,
+      getComments,
+      getCommentsForPost,
+      getCommentById,
+      updateComment,
+      deleteComment,
+      getReplies,
       api,
     }),
     [
@@ -340,6 +583,14 @@ export const useKonthoKoshApi = () => {
       processIpfs,
       getPostSummary,
       getPostExplain,
+      // comments
+      createComment,
+      getComments,
+      getCommentsForPost,
+      getCommentById,
+      updateComment,
+      deleteComment,
+      getReplies,
       api,
     ]
   );

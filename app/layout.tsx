@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { getServerClerkTheme } from "@/utils/server-theme";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
@@ -69,7 +70,8 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange={false}
           >
-            {children}
+            <>{children}</>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
