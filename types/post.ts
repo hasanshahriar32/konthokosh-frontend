@@ -1,3 +1,5 @@
+import { UserFeed } from "./user";
+
 export enum PostTag {
   রোমান্স = "রোমান্স",
   কবিতা = "কবিতা",
@@ -128,9 +130,7 @@ export type Pagination = {
  */
 export type KonthoKoshFeedPost = Omit<PostResponse, "imagesId"> & {
   imagesId?: CoverImage[];
-  userFirstName?: string;
-  userLastName?: string;
-  userImageUrl?: string;
+  user: UserFeed;
 };
 
 /**

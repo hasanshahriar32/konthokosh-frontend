@@ -16,7 +16,6 @@ import type { KonthoKoshFeedPost } from "@/types/post";
 import Actions from "./Actions";
 import PostCardMenu from "./PostCardMenu";
 import PostContent from "./PostContent";
-import { Sparkle, Sparkles } from "lucide-react";
 import PostExplainSummaryPopover from "./PostExplainSummaryPopover";
 
 type Props = {
@@ -32,7 +31,6 @@ const PostCard = ({
   showActions = false,
   onTagClick,
 }: Props) => {
-
   // normalize tags from different payload shapes (array, comma string, generatedTags)
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
@@ -54,10 +52,10 @@ const PostCard = ({
           <div className="flex items-start gap-6">
             <div className="flex-shrink-0">
               <Avatar className="h-12 w-12 bg-secondary overflow-hidden shadow-md">
-                {post.userImageUrl ? (
+                {post.user.imageUrl ? (
                   <AvatarImage
-                    src={post.userImageUrl}
-                    alt={post.userFirstName || USER_FALLBACK}
+                    src={post.user.imageUrl}
+                    alt={post.user.username || USER_FALLBACK}
                   />
                 ) : (
                   <AvatarFallback className="flex items-center justify-center">
@@ -71,8 +69,11 @@ const PostCard = ({
               <div className="flex items-center justify-between gap-4 mb-2">
                 <div>
                   <h3 className="text-lg md:text-xl font-kalpurush font-bold text-foreground">
-                    {post.userFirstName || USER_FALLBACK}{" "}
-                    {post.userLastName || ""}
+                    {post.user.firstName || post.user.lastName
+                      ? `${post.user.firstName ? post.user.firstName : ""} ${
+                          post.user.lastName ? post.user.lastName : ""
+                        }`
+                      : post.user.username || USER_FALLBACK}
                   </h3>
                   <p className="text-xs mt-1 font-bengali text-muted-foreground">
                     {new Date(post.createdAt).toLocaleString("bn-BD")}
@@ -129,7 +130,10 @@ const PostCard = ({
               </div>
             )}
             {showActions && (
-              <Actions postId={post.id} initialCommentsCount={(post as any).commentsCount ?? 0} />
+              <Actions
+                postId={post.id}
+                initialCommentsCount={(post as any).commentsCount ?? 0}
+              />
             )}
             {showMenu && (
               <PostCardMenu postId={post.id} isPending={!post.isApproved} />
