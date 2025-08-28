@@ -10,6 +10,7 @@ import React, {
   useContext,
   useEffect,
   useState,
+  useMemo,
 } from "react";
 
 type MyPostsContextType = {
@@ -18,6 +19,11 @@ type MyPostsContextType = {
   setPage: (n: number) => void;
   searchTerm: string;
   setSearchTerm: (s: string) => void;
+  activeTab: string;
+  setActiveTab: (s: string) => void;
+  publishedPosts: KonthoKoshFeedPost[];
+  pendingPosts: KonthoKoshFeedPost[];
+  filteredPosts: KonthoKoshFeedPost[];
   loading: boolean;
   error: string;
   totalPages: number;
@@ -49,6 +55,7 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [totalCount, setTotalCount] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isApproved, setIsApproved] = useState<boolean | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("all");
 
   const loadPosts = useCallback(
     async (
@@ -86,13 +93,13 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
         setHasLoaded(true);
       }
     },
-  [getFeedPosts, api]
+    [getFeedPosts, api]
   );
 
   const deletePost = useCallback(
     async (postId: number) => {
       try {
-      const response = await api.delete(API_ENDPOINTS.posts.delete(postId));
+        const response = await api.delete(API_ENDPOINTS.posts.delete(postId));
         if (response.status === 200 || response.status === 204) {
           setPosts((p) => p.filter((x) => x.id !== postId));
           setTotalCount((c) => Math.max(0, c - 1));
@@ -107,6 +114,28 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
     [api]
   );
 
+  const publishedPosts = useMemo(
+    () => posts.filter((p) => p.isApproved),
+    [posts]
+  );
+
+  const pendingPosts = useMemo(
+    () => posts.filter((p) => !p.isApproved),
+    [posts]
+  );
+
+  const filteredPosts = useMemo(() => {
+    const term = (searchTerm || "").toLowerCase();
+    return posts.filter((post) => {
+      const matchesSearch = post?.post?.toLowerCase()?.includes(term);
+      const matchesTab =
+        activeTab === "all" ||
+        (activeTab === "published" && post.isApproved) ||
+        (activeTab === "pending" && !post.isApproved);
+      return matchesSearch && matchesTab;
+    });
+  }, [posts, searchTerm, activeTab]);
+
   useEffect(() => {
     if (!hasLoaded) loadPosts(1);
   }, [hasLoaded, loadPosts]);
@@ -117,6 +146,11 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
     setPage,
     searchTerm,
     setSearchTerm,
+    activeTab,
+    setActiveTab,
+    publishedPosts,
+    pendingPosts,
+    filteredPosts,
     loading,
     error,
     totalPages,

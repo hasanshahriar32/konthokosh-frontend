@@ -36,6 +36,7 @@ export const MY_POSTS_TITLE = "আমার পোস্টসমূহ";
 export const MY_POSTS_SUBTITLE =
   "আপনার সমস্ত পোস্ট এখানে দেখানো হবে। আপনি পোস্ট সম্পাদনা, মুছে ফেলা এবং নতুন পোস্ট যোগ করতে পারবেন।";
 export const WRITE_BUTTON = "নতুন পোস্ট লিখুন";
+export const ALL_POSTS = "সব পোস্ট";
 export const TOTAL_POSTS_LABEL = "মোট পোস্ট";
 export const APPROVED_LABEL = "অনুমোদিত";
 export const PENDING_LABEL = "অপেক্ষমাণ";
@@ -54,7 +55,8 @@ export const EDIT_BUTTON = "সম্পাদনা";
 export const DELETE_BUTTON = "মুছে ফেলুন";
 export const PROCESS_BUTTON = "প্রক্রিয়া";
 export const PROCESS_SUBMITTING = "ব্লকচেইনে জমা দেওয়া হচ্ছে...";
-export const PROCESS_IPFS_PROCESSING = "IPFS প্রক্রিয়াজাত করা এবং অন-চেইন যাচাই করা হচ্ছে...";
+export const PROCESS_IPFS_PROCESSING =
+  "IPFS প্রক্রিয়াজাত করা এবং অন-চেইন যাচাই করা হচ্ছে...";
 export const PROCESS_COMPLETED = "অন-চেইন প্রক্রিয়া সম্পন্ন হয়েছে।";
 export const PROCESS_SUCCESS = "সফলভাবে সম্পন্ন হয়েছে।";
 export const PROCESS_IN_PROGRESS = "প্রক্রিয়া চলছে...";
