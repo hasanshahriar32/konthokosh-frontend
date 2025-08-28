@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     analyze: (id: string | number) => `${API_PREFIX}/posts/${id}/analyze`,
     summary: (id: string | number) => `${API_PREFIX}/posts/summary/${id}`,
     explain: (id: string | number) => `${API_PREFIX}/posts/explain/${id}`,
+    covers: (id: string | number) => `${API_PREFIX}/posts/covers/${id}`,
   },
   originality: {
     check: `${API_PREFIX}/originality/check`,
@@ -31,7 +32,8 @@ export const API_ENDPOINTS = {
     getById: (id: string | number) => `${API_PREFIX}/comments/${id}`,
     update: (id: string | number) => `${API_PREFIX}/comments/${id}`,
     delete: (id: string | number) => `${API_PREFIX}/comments/${id}`,
-    forPost: (postId: string | number) => `${API_PREFIX}/posts/${postId}/comments`,
+    forPost: (postId: string | number) =>
+      `${API_PREFIX}/posts/${postId}/comments`,
     replies: (id: string | number) => `${API_PREFIX}/comments/${id}/replies`,
   },
 } as const;

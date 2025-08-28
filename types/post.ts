@@ -1,3 +1,5 @@
+import { UserFeed } from "./user";
+
 export enum PostTag {
   রোমান্স = "রোমান্স",
   কবিতা = "কবিতা",
@@ -53,19 +55,13 @@ export type CreatePostRequest = {
  * Post data structure from KonthoKosh API
  */
 
-export type ImageObject = {
-  key: string;
-  publicUrl: string;
-  type: "modern";
-};
-
 export type PostResponse = {
   id: number;
   title: string;
   post: string;
   userId: number;
   isApproved: boolean;
-  imagesId: ImageObject[];
+  imagesId: CoverImage[];
   isActive: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -96,6 +92,20 @@ export type CreatePostResponseData = {
 };
 
 /**
+ * Request body for updating a post (PUT /posts/{id}).
+ * All fields are optional — caller may update one or more fields.
+ */
+export type UpdatePostRequest = {
+  title?: string;
+  images?: CoverImage[];
+};
+
+/**
+ * Response for a successful update request — returns the updated post.
+ */
+export type UpdatePostResponse = PostResponse;
+
+/**
  * Error response structure
  */
 export type KonthoKoshError = {
@@ -119,10 +129,8 @@ export type Pagination = {
  * Feed post structure including user info and string-based image ids
  */
 export type KonthoKoshFeedPost = Omit<PostResponse, "imagesId"> & {
-  imagesId?: ImageObject[];
-  userFirstName?: string;
-  userLastName?: string;
-  userImageUrl?: string;
+  imagesId?: CoverImage[];
+  user: UserFeed;
 };
 
 /**
@@ -263,4 +271,14 @@ export type PostExplainResponse = {
       lastName: string;
     };
   };
+};
+
+export type CoverImage = {
+  key: string;
+  publicUrl: string;
+  type: string;
+};
+
+export type PostCoversPayload = {
+  images: CoverImage[];
 };

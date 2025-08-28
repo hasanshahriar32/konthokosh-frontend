@@ -118,7 +118,6 @@ const CommentsDialog = ({
 
   useMemo(() => {
     if (open) loadComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, page]);
 
   return (
@@ -130,7 +129,7 @@ const CommentsDialog = ({
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="!w-full !max-w-[50vw] bg-background/90 backdrop-blur-lg">
+      <DialogContent className="!w-full !max-w-[50vw] bg-background/85 backdrop-blur-lg">
         <DialogHeader className="flex items-start justify-between gap-4">
           <div>
             <DialogTitle className="text-lg font-semibold">
