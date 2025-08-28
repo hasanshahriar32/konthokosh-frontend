@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { paths } from "@/constants";
 import { editorStrings } from "@/constants/editor";
+import { POST_STRINGS } from "@/constants/post";
 import type {
   PostResponse,
   OnChainSubmitResponse,
   BlockchainProcessResponse,
   PostErrorResponse,
+  CoverImage,
 } from "@/types/post";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useState, useMemo, type FC } from "react";
@@ -26,6 +28,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import Spinner from "../ui/spinner";
 
 type SubmitStatus = "idle" | "submitting" | "onchain" | "completed" | "error";
 
@@ -37,6 +40,10 @@ export type UnifiedDialogProps = {
   onChainProcess?: BlockchainProcessResponse | null;
   statusMessage?: string;
   status: SubmitStatus;
+  generatedCovers?: CoverImage[] | null;
+  selectedCoverKeys?: string[];
+  onToggleCoverKey?: (key: string) => void;
+  onApplyCovers?: () => Promise<void> | void;
 };
 
 const PostStatusDialog: FC<UnifiedDialogProps> = ({
@@ -47,6 +54,10 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
   onChainProcess,
   statusMessage,
   status,
+  generatedCovers = null,
+  selectedCoverKeys = [],
+  onToggleCoverKey,
+  onApplyCovers,
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -100,32 +111,8 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
 
             {/* Top-level spinner when submitting or processing on-chain */}
             {isProcessing ? (
-              <div
-                className="ml-4 flex items-center"
-                role="status"
-                aria-live="polite"
-              >
-                <svg
-                  className="h-5 w-5 animate-spin text-slate-600 dark:text-slate-300"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    className="opacity-25"
-                  />
-                  <path
-                    fill="currentColor"
-                    className="opacity-75"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  />
-                </svg>
+              <div className="ml-4 flex items-center" role="status" aria-live="polite">
+                <Spinner size="md" className="text-slate-600 dark:text-slate-300" ariaLabel={POST_STRINGS.popover.loading} />
               </div>
             ) : null}
           </div>
@@ -155,13 +142,8 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleCopyId}
-                      disabled={isProcessing}
-                    >
-                      {copied ? "Copied" : "Copy ID"}
+                    <Button size="sm" variant="ghost" onClick={handleCopyId} disabled={isProcessing}>
+                      {copied ? POST_STRINGS.copied : POST_STRINGS.copyId}
                     </Button>
                   </div>
                 </div>
@@ -175,115 +157,95 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
               <div className="text-sm text-slate-700 dark:text-slate-300">
                 <div className="font-medium">
                   {status === "submitting"
-                    ? editorStrings.statusSubmittingLabel
+                    ? POST_STRINGS.statuses.submittingLabel
                     : status === "onchain"
-                    ? editorStrings.statusOnchainLabel
+                    ? POST_STRINGS.statuses.onchainLabel
                     : status === "completed"
-                    ? editorStrings.statusCompletedLabel
+                    ? POST_STRINGS.statuses.completedLabel
                     : status === "error"
-                    ? editorStrings.statusErrorLabel
-                    : editorStrings.statusNotSubmittedLabel}
+                    ? POST_STRINGS.statuses.errorLabel
+                    : POST_STRINGS.statuses.notSubmittedLabel}
                 </div>
                 <div className="mt-1">
                   {status === "submitting" ? (
-                    <div
-                      className="flex items-center gap-2"
-                      role="status"
-                      aria-live="polite"
-                    >
-                      <svg
-                        className="h-4 w-4 animate-spin text-slate-700 dark:text-slate-300"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                      </svg>
-                      <span>Submitting post... {statusMessage ?? ""}</span>
+                    <div className="flex items-center gap-2" role="status" aria-live="polite">
+                      <Spinner size="sm" className="text-slate-700 dark:text-slate-300" ariaLabel={POST_STRINGS.steps.creation.loadingMessage} />
+                      <span>{POST_STRINGS.steps.creation.loadingMessage} {statusMessage ?? ""}</span>
                     </div>
                   ) : status === "onchain" ? (
-                    <div
-                      className="flex items-center gap-2"
-                      role="status"
-                      aria-live="polite"
-                    >
-                      <svg
-                        className="h-4 w-4 animate-spin text-slate-700 dark:text-slate-300"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                        />
-                      </svg>
-                      <span>Processing on-chain: {statusMessage ?? "..."}</span>
+                    <div className="flex items-center gap-2" role="status" aria-live="polite">
+                      <Spinner size="sm" className="text-slate-700 dark:text-slate-300" ariaLabel={POST_STRINGS.steps.submitToChain.loadingMessage} />
+                      <span>{POST_STRINGS.steps.submitToChain.loadingMessage} {statusMessage ?? "..."}</span>
                     </div>
                   ) : status === "error" ? (
-                    <span className="text-rose-600">
-                      {statusMessage ?? "An error occurred."}
-                    </span>
+                    <span className="text-rose-600">{statusMessage ?? POST_STRINGS.statuses.errorLabel}</span>
                   ) : status === "completed" ? (
-                    <span>{statusMessage ?? "Completed."}</span>
+                    <span>{statusMessage ?? POST_STRINGS.statuses.completedLabel}</span>
                   ) : (
-                    <span>Not submitted to blockchain.</span>
+                    <span>{POST_STRINGS.statuses.notSubmittedLabel}</span>
                   )}
                 </div>
 
-                {onChainSubmit && (
+        {onChainSubmit && (
                   <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
                     <div>
-                      <span className="font-medium">Txn:</span>{" "}
-                      <span className="ml-1 block max-w-full break-all text-xs">
-                        {onChainSubmit.transactionHash}
-                      </span>
+          <span className="font-medium">Txn:</span>{" "}
+          <span className="ml-1 block max-w-full break-all text-xs">{onChainSubmit.transactionHash}</span>
                     </div>
                     <div>
-                      <span className="font-medium">OnChain ID:</span>{" "}
-                      <span className="ml-1 block max-w-full break-all text-xs">
-                        {onChainSubmit.onChainId}
-                      </span>
+          <span className="font-medium">OnChain ID:</span>{" "}
+          <span className="ml-1 block max-w-full break-all text-xs">{onChainSubmit.onChainId}</span>
                     </div>
                   </div>
                 )}
 
-                {onChainProcess && (
+        {onChainProcess && (
                   <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
                     <div>
-                      <span className="font-medium">IPFS:</span>{" "}
-                      <span className="ml-1 block max-w-full break-all text-xs">
-                        {onChainProcess.ipfsHash}
-                      </span>
+          <span className="font-medium">IPFS:</span>{" "}
+          <span className="ml-1 block max-w-full break-all text-xs">{onChainProcess.ipfsHash}</span>
                     </div>
                     <div>
-                      <span className="font-medium">Similarity:</span>{" "}
-                      <span className="ml-1">
-                        {onChainProcess.similarityScore}
-                      </span>
+          <span className="font-medium">Similarity:</span>{" "}
+          <span className="ml-1">{onChainProcess.similarityScore}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Generated covers preview & selection */}
+                {generatedCovers && generatedCovers.length > 0 && (
+                  <div className="mt-4">
+                    <div className="text-xs text-muted-foreground mb-2">{POST_STRINGS.generatedCoversLabel}</div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {generatedCovers.map((c) => {
+                        const selected = selectedCoverKeys?.includes(c.key);
+                        return (
+                          <div
+                            key={c.key}
+                            className={`relative rounded-md overflow-hidden border p-1 bg-white/70 dark:bg-slate-900/60 ${
+                              selected ? "ring-2 ring-indigo-500" : ""
+                            }`}
+                          >
+                            <img
+                              src={c.publicUrl}
+                              alt={c.key}
+                              className="w-full h-28 object-cover rounded"
+                            />
+                            <label className="absolute top-2 left-2 bg-white/80 dark:bg-slate-800/70 rounded-full p-1">
+                              <input
+                                type="checkbox"
+                                checked={selected}
+                                onChange={() => onToggleCoverKey?.(c.key)}
+                              />
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-3 flex items-center justify-end gap-2">
+                      <Button size="xs" disabled={!selectedCoverKeys || selectedCoverKeys.length === 0} onClick={() => onApplyCovers?.()}>
+                        {POST_STRINGS.applySelectedCovers}
+                      </Button>
                     </div>
                   </div>
                 )}

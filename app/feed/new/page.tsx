@@ -6,10 +6,12 @@ import Background from "@/components/common/Background";
 import { PostForm } from "@/components/post/PostForm";
 import PostStatusDialog from "@/components/post/PostStatusDialog";
 import { editorStrings } from "@/constants/editor";
+import { POST_STRINGS } from "@/constants/post";
 import {
   PostErrorResponse,
   type BlockchainProcessResponse,
   type CreatePostRequest,
+  type CoverImage,
   type OnChainSubmitResponse,
   type PostResponse,
 } from "@/types/post";
@@ -33,12 +35,16 @@ export default function WritePage() {
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] =
     useState<boolean>(false);
 
-  const { createPost, submitToBlockchain, processIpfs } = useKonthoKoshApi();
+  const { createPost, submitToBlockchain, processIpfs, getPostCovers, updatePost } =
+    useKonthoKoshApi();
 
   const [onChainSubmitResp, setOnChainSubmitResp] =
     useState<OnChainSubmitResponse | null>(null);
   const [onChainProcessResp, setOnChainProcessResp] =
     useState<BlockchainProcessResponse | null>(null);
+  const [generatedCovers, setGeneratedCovers] =
+    useState<CoverImage[] | null>(null);
+  const [selectedCoverKeys, setSelectedCoverKeys] = useState<string[]>([]);
   const [onChainStatusMessage, setOnChainStatusMessage] = useState<string>("");
 
   /**
@@ -61,27 +67,38 @@ export default function WritePage() {
         if (newPost && "id" in newPost) {
           // start on-chain flow
           setStatus("onchain");
-          setOnChainStatusMessage("Submitting to blockchain...");
+          setOnChainStatusMessage(POST_STRINGS.steps.submitToChain.loadingMessage);
           try {
             const submitResp = await submitToBlockchain(newPost.id);
             setOnChainSubmitResp(submitResp);
-            setOnChainStatusMessage(
-              "Processing IPFS and verifying on-chain..."
-            );
+            setOnChainStatusMessage(POST_STRINGS.steps.chainProcessing.loadingMessage);
 
             try {
               const processResp = await processIpfs(newPost.id);
               setOnChainProcessResp(processResp);
-              setOnChainStatusMessage("On-chain processing completed.");
-              setStatus("completed");
+              setOnChainStatusMessage(POST_STRINGS.steps.chainProcessing.successMessage);
+
+              // fetch generated covers
+              try {
+                const covers = await getPostCovers(newPost.id);
+                setGeneratedCovers(covers.images ?? []);
+                setSelectedCoverKeys([]);
+                setOnChainStatusMessage(POST_STRINGS.generatedCoversLabel + " - " + POST_STRINGS.steps.imageGeneration.successMessage);
+                setStatus("completed");
+              } catch (coverErr) {
+                // if fetching covers fails, continue but inform user
+                const friendly = handleKonthoKoshError(coverErr);
+                setOnChainStatusMessage(friendly || POST_STRINGS.steps.imageGeneration.errorMessage);
+                setStatus("completed");
+              }
             } catch (procErr) {
               const friendly = handleKonthoKoshError(procErr);
-              setOnChainStatusMessage(friendly);
+              setOnChainStatusMessage(friendly || POST_STRINGS.steps.chainProcessing.errorMessage);
               setStatus("error");
             }
           } catch (submitErr) {
             const friendly = handleKonthoKoshError(submitErr);
-            setOnChainStatusMessage(friendly);
+            setOnChainStatusMessage(friendly || POST_STRINGS.steps.submitToChain.errorMessage);
             setStatus("error");
           }
         } else {
@@ -89,8 +106,8 @@ export default function WritePage() {
           setStatus("error");
         }
       } catch (error) {
-        const friendly = handleKonthoKoshError(error);
-        setErrorMessage(friendly);
+  const friendly = handleKonthoKoshError(error);
+  setErrorMessage(friendly || POST_STRINGS.steps.creation.errorMessage);
         setStatus("error");
       }
     },
@@ -136,6 +153,29 @@ export default function WritePage() {
     []
   );
 
+  const handleToggleCoverKey = useCallback((key: string) => {
+    setSelectedCoverKeys((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }, []);
+
+  const handleApplyCovers = useCallback(async () => {
+    if (!createdPost || !("id" in createdPost)) return;
+    if (!selectedCoverKeys || selectedCoverKeys.length === 0) return;
+
+      try {
+      await updatePost(createdPost.id, {
+        images: (generatedCovers ?? []).filter((c) =>
+          selectedCoverKeys.includes(c.key)
+        ),
+      });
+      setOnChainStatusMessage("Covers applied successfully.");
+    } catch (err) {
+      const friendly = handleKonthoKoshError(err);
+      setOnChainStatusMessage(friendly);
+    }
+  }, [createdPost, selectedCoverKeys, generatedCovers, updatePost]);
+
   return (
     <ProtectedRoute>
       <Background>
@@ -159,6 +199,10 @@ export default function WritePage() {
               onChainProcess={onChainProcessResp}
               status={status}
               statusMessage={onChainStatusMessage || errorMessage}
+              generatedCovers={generatedCovers}
+              selectedCoverKeys={selectedCoverKeys}
+              onToggleCoverKey={handleToggleCoverKey}
+              onApplyCovers={handleApplyCovers}
             />
           </div>
         </main>

@@ -14,10 +14,13 @@ import type {
   KonthoKoshPagedPostsResponse,
   OnChainSubmitResponse,
   PagedCommentsResponse,
+  PostCoversPayload,
   PostErrorResponse,
   PostExplainResponse,
   PostResponse,
   PostSummaryResponse,
+  UpdatePostRequest,
+  UpdatePostResponse,
   UpdateCommentRequest,
 } from "@/types";
 import { ApiError, useBackendApi } from "@/utils/api-client";
@@ -328,6 +331,84 @@ export const useKonthoKoshApi = () => {
     [api]
   );
 
+  /**
+   * Fetches AI-generated cover images for a post.
+   * @param id - Post id
+   * @returns Payload containing generated images
+   */
+  const getPostCovers = useCallback(
+    async (id: string | number): Promise<PostCoversPayload> => {
+      try {
+        const response = await api.get<
+          KonthoKoshApiResponse<PostCoversPayload>
+        >(API_ENDPOINTS.posts.covers(id));
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to fetch post covers",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the id.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          throw new Error(error.message || "Failed to fetch post covers");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
+  /**
+   * Update an existing post.
+   * @param id - Post id
+   * @param data - Fields to update
+   * @returns The updated post
+   */
+  const updatePost = useCallback(
+    async (id: string | number, data: UpdatePostRequest): Promise<PostResponse> => {
+      try {
+        const response = await api.put<
+          KonthoKoshApiResponse<UpdatePostResponse>
+        >(API_ENDPOINTS.posts.update(id), data);
+
+        if (!response.data.success || !response.data.data) {
+          throw new ApiError(
+            response.data.message || "Failed to update post",
+            response.data.statusCode || response.status,
+            response.data
+          );
+        }
+
+        return response.data.data;
+      } catch (error) {
+        if (error instanceof ApiError) {
+          if (error.status === 400) {
+            throw new Error("Invalid request. Please check the input.");
+          }
+          if (error.status === 401) {
+            throw new Error("Authentication failed. Please log in again.");
+          }
+          if (error.status === 404) {
+            throw new Error("Post not found.");
+          }
+          throw new Error(error.message || "Failed to update post");
+        }
+        throw new Error("Network error. Please try again.");
+      }
+    },
+    [api]
+  );
+
   /* ------------------------------ Comments ------------------------------ */
 
   const createComment = useCallback(
@@ -561,10 +642,12 @@ export const useKonthoKoshApi = () => {
       createPost,
       getUserPosts,
       getFeedPosts,
+      updatePost,
       submitToBlockchain: submitOnChain,
       processIpfs,
       getPostSummary,
       getPostExplain,
+      getPostCovers,
       // comments
       createComment,
       getComments,
@@ -579,10 +662,12 @@ export const useKonthoKoshApi = () => {
       createPost,
       getUserPosts,
       getFeedPosts,
+      updatePost,
       submitOnChain,
       processIpfs,
       getPostSummary,
       getPostExplain,
+      getPostCovers,
       // comments
       createComment,
       getComments,

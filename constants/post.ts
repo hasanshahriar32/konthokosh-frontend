@@ -23,13 +23,78 @@ export const POST_STRINGS = {
   postSupport: "Markdown, ছবি, টেবিল, কোড ব্লক সহ বিভিন্ন কনটেন্ট সমর্থিত",
 
   saveDraft: "ড্রাফট হিসেবে সংরক্ষণ করুন",
-
-  creating: "তৈরি করা হচ্ছে...",
-  publishing: "প্রকাশ করা হচ্ছে...",
   createPost: "পোস্ট তৈরি করুন",
   publishPost: "পোস্ট প্রকাশ করুন",
 
+  // inline action states used by buttons
+  creating: "তৈরি করা হচ্ছে...",
+  publishing: "প্রকাশ করা হচ্ছে...",
+
   characters: "অক্ষর",
+
+  // Status / dialog related strings (Bangla)
+  statusTitle: "প্রক্রিয়ার অবস্থা",
+  statusDescription: "আপনার পোস্টের বর্তমান অবস্থা এবং লেনদেনের তথ্য এখানে দেখানো হবে।",
+  idLabel: "আইডি:",
+  approvedLabel: "অনুমোদিত:",
+  yes: "হ্যাঁ",
+  no: "না",
+  goNow: "এখন যান",
+  close: "বন্ধ করুন",
+
+  // Per-step labels and messages (distinguishable)
+  statuses: {
+    submittingLabel: "সাবমিশন (সার্ভারে পোস্ট তৈরি)",
+    onchainLabel: "চেইনে জমা ও প্রক্রিয়াজাত",
+    completedLabel: "সম্পূর্ণ হয়েছে",
+    errorLabel: "ত্রুটি ঘটেছে",
+    notSubmittedLabel: "চেইনে জমা দেওয়া হয়নি",
+  },
+
+  steps: {
+    // step: post creation on KonthoKosh API
+    creation: {
+      label: "পোস্ট তৈরি করা হচ্ছে",
+      loadingMessage: "KonthoKosh সার্ভারে পোস্ট তৈরি করা হচ্ছে...",
+      successMessage: "পোস্ট সফলভাবে তৈরি হয়েছে।",
+      errorMessage: "পোস্ট তৈরি করতে সমস্যা হয়েছে।",
+    },
+
+    // step: submit to blockchain (transaction submission)
+    submitToChain: {
+      label: "চেইনে জমা দেওয়া হচ্ছে",
+      loadingMessage: "চেইনে জমা দেওয়া হচ্ছে...",
+      successMessage: "ট্রানজ্যাকশন জমা হয়েছে।",
+      errorMessage: "চেইনে জমা দেওয়ার সময় ত্রুটি।",
+    },
+
+    // step: blockchain / IPFS processing and verification
+    chainProcessing: {
+      label: "চেইন প্রক্রিয়াজাত",
+      loadingMessage: "IPFS এবং চেইন যাচাই করা হচ্ছে...",
+      successMessage: "চেইন প্রক্রিয়াজাত সম্পন্ন হয়েছে।",
+      errorMessage: "চেইন প্রক্রিয়াজাতে ত্রুটি ঘটেছে।",
+    },
+
+    // step: image (cover) generation
+    imageGeneration: {
+      label: "কভার ইমেজ তৈরি",
+      loadingMessage: "কভার ইমেজ তৈরি করা হচ্ছে...",
+      successMessage: "কভার ইমেজ তৈরি হয়েছে।",
+      errorMessage: "কভার ইমেজ তৈরি করতে সমস্যা হয়েছে।",
+    },
+  },
+
+  // Small UI bits used in dialog
+  copyId: "আইডি কপি করুন",
+  copied: "কপি করা হয়েছে",
+  txnLabel: "লেনদেন:",
+  onChainIdLabel: "অন-চেইন আইডি:",
+  ipfsLabel: "IPFS:",
+  similarityLabel: "সাদৃশ্য",
+  generatedCoversLabel: "তৈরি করা কভার ইমেজগুলি",
+  applySelectedCovers: "নির্বাচিত কভার প্রয়োগ করুন",
+
   // Popover / explain & summary strings
   popover: {
     summaryTitle: "সারসংক্ষেপ",
@@ -37,7 +102,10 @@ export const POST_STRINGS = {
     loading: "লোড হচ্ছে...",
     error: "ত্রুটি ঘটেছে",
     nothing: "কিছু নেই।",
-  headerTitle: "সারসংক্ষেপ ও ব্যাখ্যা",
-  headerSubtitle: "পোস্টের মূল ধারণা বা ব্যাখ্যা দ্রুত দেখুন",
+    headerTitle: "সারসংক্ষেপ ও ব্যাখ্যা",
+    headerSubtitle: "পোস্টের মূল ধারণা বা ব্যাখ্যা দ্রুত দেখুন",
   },
+
+  // Covers applied
+  coversAppliedSuccess: "কভার সফলভাবে প্রয়োগ করা হয়েছে।",
 };
