@@ -108,4 +108,15 @@ export const POST_STRINGS = {
 
   // Covers applied
   coversAppliedSuccess: "কভার সফলভাবে প্রয়োগ করা হয়েছে।",
+
+  // UI strings for post load / empty states
+  noPostsAvailable: "কোনো পোস্ট পাওয়া যায়নি",
+  loadErrorFallback: "পোস্ট লোড করা যায়নি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
+  goToTop: "উপরে যান",
+  // Additional localized UI strings used across post-related components
+  noPostsTitle: "আপনার কোন পোস্ট নেই",
+  noPostsSearch: "আপনার অনুসন্ধানের সাথে মেলে এমন কোনো পোস্ট পাওয়া যায়নি।",
+  noPostsYet: "এখনও কোনো পোস্ট তৈরি করা হয়নি — প্রথম লেখক হোন!",
+  writeButton: "লিখুন",
+  browseCommunity: "কমিউনিটির পোস্ট দেখুন",
 };

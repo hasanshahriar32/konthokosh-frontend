@@ -17,6 +17,8 @@ import Actions from "./Actions";
 import PostCardMenu from "./PostCardMenu";
 import PostContent from "./PostContent";
 import PostExplainSummaryPopover from "./PostExplainSummaryPopover";
+import ClientPlayer from "../post/ClientPlayer";
+import TextToSpeech from "../post/TextToSpeech";
 
 type Props = {
   post: KonthoKoshFeedPost;
@@ -31,7 +33,6 @@ const PostCard = ({
   showActions = false,
   onTagClick,
 }: Props) => {
-  // normalize tags from different payload shapes (array, comma string, generatedTags)
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
     if (!rawTags) return [];
@@ -113,7 +114,10 @@ const PostCard = ({
           {/* <Separator className="my-4" /> */}
 
           <div className="flex items-center justify-between gap-4">
-            <PostExplainSummaryPopover postId={post.id} />
+            <div className="flex items-center gap-4">
+              <PostExplainSummaryPopover postId={post.id} />
+              <TextToSpeech text={post.post} />
+            </div>
 
             {normalizedTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
