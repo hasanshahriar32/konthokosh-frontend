@@ -21,7 +21,7 @@ const Actions = ({ postId, initialCommentsCount = 0 }: Props) => {
 
   return (
     <div className="flex flex-col items-end gap-2">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-1.5">
         <Button
           variant="ghost"
           size="sm"
