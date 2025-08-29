@@ -51,8 +51,13 @@ const PostForm = ({
   const handleSubmit = useCallback(async () => {
     if (!validateForm()) return;
 
+    const payload: CreatePostRequest = { post: formData.post };
+    if (formData.title && formData.title.trim())
+      payload.title = formData.title.trim();
+    if (formData.tags && formData.tags.length > 0) payload.tags = formData.tags;
+
     try {
-      await onSubmit(formData);
+      await onSubmit(payload);
     } catch (error) {
       console.error("Error submitting post:", error);
       // Handle error (show toast, etc.)
@@ -62,8 +67,13 @@ const PostForm = ({
   const handleSaveDraft = useCallback(async () => {
     if (!onSaveDraft) return;
 
+    const payload: CreatePostRequest = { post: formData.post };
+    if (formData.title && formData.title.trim())
+      payload.title = formData.title.trim();
+    if (formData.tags && formData.tags.length > 0) payload.tags = formData.tags;
+
     try {
-      await onSaveDraft(formData);
+      await onSaveDraft(payload);
     } catch (error) {
       console.error("Error saving draft:", error);
       // Handle error (show toast, etc.)
@@ -78,7 +88,9 @@ const PostForm = ({
     }
 
     // Validate against PostTag enum values
-    const match = (Object.values(PostTag) as string[]).find((t) => t === trimmed);
+    const match = (Object.values(PostTag) as string[]).find(
+      (t) => t === trimmed
+    );
     if (!match) {
       // invalid tag - ignore or could set an error/toast
       setTagInput("");

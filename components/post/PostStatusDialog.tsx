@@ -111,8 +111,16 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
 
             {/* Top-level spinner when submitting or processing on-chain */}
             {isProcessing ? (
-              <div className="ml-4 flex items-center" role="status" aria-live="polite">
-                <Spinner size="md" className="text-slate-600 dark:text-slate-300" ariaLabel={POST_STRINGS.popover.loading} />
+              <div
+                className="ml-4 flex items-center"
+                role="status"
+                aria-live="polite"
+              >
+                <Spinner
+                  size="md"
+                  className="text-slate-600 dark:text-slate-300"
+                  ariaLabel={POST_STRINGS.popover.loading}
+                />
               </div>
             ) : null}
           </div>
@@ -142,7 +150,12 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="ghost" onClick={handleCopyId} disabled={isProcessing}>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleCopyId}
+                      disabled={isProcessing}
+                    >
                       {copied ? POST_STRINGS.copied : POST_STRINGS.copyId}
                     </Button>
                   </div>
@@ -168,46 +181,82 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                 </div>
                 <div className="mt-1">
                   {status === "submitting" ? (
-                    <div className="flex items-center gap-2" role="status" aria-live="polite">
-                      <Spinner size="sm" className="text-slate-700 dark:text-slate-300" ariaLabel={POST_STRINGS.steps.creation.loadingMessage} />
-                      <span>{POST_STRINGS.steps.creation.loadingMessage} {statusMessage ?? ""}</span>
+                    <div
+                      className="flex items-center gap-2"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <Spinner
+                        size="sm"
+                        className="text-slate-700 dark:text-slate-300"
+                        ariaLabel={POST_STRINGS.steps.creation.loadingMessage}
+                      />
+                      <span>
+                        {POST_STRINGS.steps.creation.loadingMessage}{" "}
+                        {statusMessage ?? ""}
+                      </span>
                     </div>
                   ) : status === "onchain" ? (
-                    <div className="flex items-center gap-2" role="status" aria-live="polite">
-                      <Spinner size="sm" className="text-slate-700 dark:text-slate-300" ariaLabel={POST_STRINGS.steps.submitToChain.loadingMessage} />
-                      <span>{POST_STRINGS.steps.submitToChain.loadingMessage} {statusMessage ?? "..."}</span>
+                    <div
+                      className="flex items-center gap-2"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <Spinner
+                        size="sm"
+                        className="text-slate-700 dark:text-slate-300"
+                        ariaLabel={
+                          POST_STRINGS.steps.submitToChain.loadingMessage
+                        }
+                      />
+                      <span>
+                        {POST_STRINGS.steps.submitToChain.loadingMessage}{" "}
+                        {statusMessage ?? "..."}
+                      </span>
                     </div>
                   ) : status === "error" ? (
-                    <span className="text-rose-600">{statusMessage ?? POST_STRINGS.statuses.errorLabel}</span>
+                    <span className="text-rose-600">
+                      {statusMessage ?? POST_STRINGS.statuses.errorLabel}
+                    </span>
                   ) : status === "completed" ? (
-                    <span>{statusMessage ?? POST_STRINGS.statuses.completedLabel}</span>
+                    <span>
+                      {statusMessage ?? POST_STRINGS.statuses.completedLabel}
+                    </span>
                   ) : (
                     <span>{POST_STRINGS.statuses.notSubmittedLabel}</span>
                   )}
                 </div>
 
-        {onChainSubmit && (
+                {onChainSubmit && (
                   <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
                     <div>
-          <span className="font-medium">Txn:</span>{" "}
-          <span className="ml-1 block max-w-full break-all text-xs">{onChainSubmit.transactionHash}</span>
+                      <span className="font-medium">Txn:</span>{" "}
+                      <span className="ml-1 block max-w-full break-all text-xs">
+                        {onChainSubmit.transactionHash}
+                      </span>
                     </div>
                     <div>
-          <span className="font-medium">OnChain ID:</span>{" "}
-          <span className="ml-1 block max-w-full break-all text-xs">{onChainSubmit.onChainId}</span>
+                      <span className="font-medium">OnChain ID:</span>{" "}
+                      <span className="ml-1 block max-w-full break-all text-xs">
+                        {onChainSubmit.onChainId}
+                      </span>
                     </div>
                   </div>
                 )}
 
-        {onChainProcess && (
+                {onChainProcess && (
                   <div className="mt-2 text-xs text-slate-600 dark:text-slate-400">
                     <div>
-          <span className="font-medium">IPFS:</span>{" "}
-          <span className="ml-1 block max-w-full break-all text-xs">{onChainProcess.ipfsHash}</span>
+                      <span className="font-medium">IPFS:</span>{" "}
+                      <span className="ml-1 block max-w-full break-all text-xs">
+                        {onChainProcess.ipfsHash}
+                      </span>
                     </div>
                     <div>
-          <span className="font-medium">Similarity:</span>{" "}
-          <span className="ml-1">{onChainProcess.similarityScore}</span>
+                      <span className="font-medium">Similarity:</span>{" "}
+                      <span className="ml-1">
+                        {onChainProcess.similarityScore}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -215,7 +264,9 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                 {/* Generated covers preview & selection */}
                 {generatedCovers && generatedCovers.length > 0 && (
                   <div className="mt-4">
-                    <div className="text-xs text-muted-foreground mb-2">{POST_STRINGS.generatedCoversLabel}</div>
+                    <div className="text-xs text-muted-foreground mb-2">
+                      {POST_STRINGS.generatedCoversLabel}
+                    </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {generatedCovers.map((c) => {
                         const selected = selectedCoverKeys?.includes(c.key);
@@ -243,7 +294,13 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
                       })}
                     </div>
                     <div className="mt-3 flex items-center justify-end gap-2">
-                      <Button size="xs" disabled={!selectedCoverKeys || selectedCoverKeys.length === 0} onClick={() => onApplyCovers?.()}>
+                      <Button
+                        size="xs"
+                        disabled={
+                          !selectedCoverKeys || selectedCoverKeys.length === 0
+                        }
+                        onClick={() => onApplyCovers?.()}
+                      >
                         {POST_STRINGS.applySelectedCovers}
                       </Button>
                     </div>
@@ -356,7 +413,11 @@ const PostStatusDialog: FC<UnifiedDialogProps> = ({
 
           <div className="mt-5 flex items-center justify-end gap-3">
             {isProcessing ? (
-              <Button size="xs" className="rounded-full px-4 opacity-50" disabled>
+              <Button
+                size="xs"
+                className="rounded-full px-4 opacity-50"
+                disabled
+              >
                 {editorStrings.goNow}
               </Button>
             ) : (

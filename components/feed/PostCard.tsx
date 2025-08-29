@@ -5,20 +5,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  ACTIVE_LABEL,
-  APPROVED,
-  ID_LABEL,
-  INACTIVE_LABEL,
-  PENDING,
-  USER_FALLBACK,
-} from "@/constants/feed";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { APPROVED, ID_LABEL, PENDING, USER_FALLBACK } from "@/constants/feed";
 import type { KonthoKoshFeedPost } from "@/types/post";
+import { Ellipsis } from "lucide-react";
+import { useState } from "react";
+import TextToSpeech from "../post/TextToSpeech";
 import Actions from "./Actions";
 import PostCardMenu from "./PostCardMenu";
 import PostContent from "./PostContent";
 import PostExplainSummaryPopover from "./PostExplainSummaryPopover";
-import ClientPlayer from "../post/ClientPlayer";
-import TextToSpeech from "../post/TextToSpeech";
 
 type Props = {
   post: KonthoKoshFeedPost;
@@ -33,6 +32,7 @@ const PostCard = ({
   showActions = false,
   onTagClick,
 }: Props) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
     if (!rawTags) return [];
@@ -94,13 +94,13 @@ const PostCard = ({
                         {post.isApproved ? APPROVED : PENDING}
                       </Badge>
 
-                      <Badge
+                      {/* <Badge
                         asChild={false}
                         variant={post.isActive ? "secondary" : "outline"}
                         className="text-[10px] rounded-full px-2 py-1"
                       >
                         {post.isActive ? ACTIVE_LABEL : INACTIVE_LABEL}
-                      </Badge>
+                      </Badge> */}
                     </div>
                   </div>
                 </div>
@@ -120,17 +120,56 @@ const PostCard = ({
             </div>
 
             {normalizedTags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {normalizedTags.map((t) => (
-                  <Badge
-                    key={t}
-                    asChild={false}
-                    className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90 cursor-pointer"
-                    onClick={() => onTagClick && onTagClick(t)}
-                  >
-                    {t}
-                  </Badge>
-                ))}
+              <div className="flex items-center gap-2">
+                <div className="flex flex-wrap gap-2">
+                  {normalizedTags.slice(0, 2).map((t) => (
+                    <Badge
+                      key={t}
+                      asChild={false}
+                      className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90 cursor-pointer"
+                      onClick={() => onTagClick && onTagClick(t)}
+                    >
+                      {t}
+                    </Badge>
+                  ))}
+                </div>
+
+                {normalizedTags.length > 2 && (
+                  <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                    <PopoverTrigger>
+                      <div
+                        onMouseEnter={() => setPopoverOpen(true)}
+                        onMouseLeave={() => setPopoverOpen(false)}
+                      >
+                        <Badge className="rounded-full px-1.5 py-0.5 h-5 bg-secondary/90 cursor-pointer">
+                          <Ellipsis className="size-8" />
+                        </Badge>
+                      </div>
+                    </PopoverTrigger>
+
+                    <PopoverContent
+                      onMouseEnter={() => setPopoverOpen(true)}
+                      onMouseLeave={() => setPopoverOpen(false)}
+                      className="p-2 bg-background/75 backdrop-blur-md border-0"
+                    >
+                      <div className="max-w-80 flex flex-wrap gap-2">
+                        {normalizedTags.slice(2).map((t) => (
+                          <Badge
+                            key={t}
+                            asChild={false}
+                            className="text-[10px] rounded-full px-1.5 py-0.5 bg-secondary/90 cursor-pointer"
+                            onClick={() => {
+                              setPopoverOpen(false);
+                              onTagClick && onTagClick(t);
+                            }}
+                          >
+                            {t}
+                          </Badge>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                )}
               </div>
             )}
             {showActions && (

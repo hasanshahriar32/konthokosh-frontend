@@ -62,8 +62,6 @@ export type PostResponse = {
   userId: number;
   isApproved: boolean;
   imagesId: CoverImage[];
-  isActive: boolean;
-  isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
 };
