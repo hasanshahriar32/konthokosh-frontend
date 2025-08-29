@@ -1,6 +1,5 @@
 import { SHOW_LESS, SHOW_MORE } from "@/constants/feed";
-import type { KonthoKoshFeedPost } from "@/types";
-import type { PostTag } from "@/types";
+import type { KonthoKoshFeedPost, PostTag } from "@/types";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -18,7 +17,6 @@ const PostContent: React.FC<Props> = ({ post }) => {
   const normalizedBody =
     typeof body === "string" ? body.replace(/\\r\\n|\\r|\\n/g, "\n") : body;
 
-  // Show only first N lines initially, allow expand/shrink
   const [expanded, setExpanded] = useState(false);
   const LINES_PREVIEW = 5;
 
@@ -54,19 +52,22 @@ const PostContent: React.FC<Props> = ({ post }) => {
       </div>
 
       {imagesId && imagesId.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {imagesId
-            .map((image) => (
-              <Image
-                key={image.key}
-                src={image.publicUrl}
-                alt={`Image ${image}`}
-                width={0}
-                height={0}
-                sizes="full"
-                className="rounded-md w-full max-h-80 object-cover"
-              />
-            ))}
+        <div
+          className={imagesId.length > 1 ? "grid grid-cols-2 gap-2" : "w-full"}
+        >
+          {imagesId.map((image) => (
+            <Image
+              key={image.key}
+              src={image.publicUrl}
+              alt={`Post image ${image.key ?? ""}`}
+              width={0}
+              height={0}
+              sizes={imagesId.length > 1 ? "50vw" : "100vw"}
+              className={`${
+                imagesId.length > 1 ? "h-auto max-h-40" : "h-auto max-h-80"
+              } rounded-md w-full object-cover`}
+            />
+          ))}
         </div>
       )}
     </div>

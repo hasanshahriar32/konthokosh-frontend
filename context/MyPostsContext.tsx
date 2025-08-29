@@ -24,6 +24,11 @@ type MyPostsContextType = {
   publishedPosts: KonthoKoshFeedPost[];
   pendingPosts: KonthoKoshFeedPost[];
   filteredPosts: KonthoKoshFeedPost[];
+  filteredTotalCount: number;
+  filteredPublishedCount: number;
+  filteredPendingCount: number;
+  pageSize: number;
+  filteredTotalPages: number;
   loading: boolean;
   error: string;
   totalPages: number;
@@ -124,8 +129,33 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
     [posts]
   );
 
+  const searchTermLower = useMemo(
+    () => (searchTerm || "").toLowerCase(),
+    [searchTerm]
+  );
+
+  const filteredTotalCount = useMemo(() => {
+    const term = searchTermLower;
+    return posts.filter((post) => post?.post?.toLowerCase()?.includes(term))
+      .length;
+  }, [posts, searchTermLower]);
+
+  const filteredPublishedCount = useMemo(() => {
+    const term = searchTermLower;
+    return posts.filter(
+      (post) => post.isApproved && post?.post?.toLowerCase()?.includes(term)
+    ).length;
+  }, [posts, searchTermLower]);
+
+  const filteredPendingCount = useMemo(() => {
+    const term = searchTermLower;
+    return posts.filter(
+      (post) => !post.isApproved && post?.post?.toLowerCase()?.includes(term)
+    ).length;
+  }, [posts, searchTermLower]);
+
   const filteredPosts = useMemo(() => {
-    const term = (searchTerm || "").toLowerCase();
+    const term = searchTermLower;
     return posts.filter((post) => {
       const matchesSearch = post?.post?.toLowerCase()?.includes(term);
       const matchesTab =
@@ -135,6 +165,20 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
       return matchesSearch && matchesTab;
     });
   }, [posts, searchTerm, activeTab]);
+
+  // page size is controlled by the API call made in loadPosts (size: 10)
+  const pageSize = 10;
+
+  // When filtering locally, compute total pages from filtered counts
+  const filteredTotalPages = useMemo(() => {
+    const totalForTab =
+      activeTab === "all"
+        ? filteredTotalCount
+        : activeTab === "published"
+        ? filteredPublishedCount
+        : filteredPendingCount;
+    return Math.max(1, Math.ceil(totalForTab / pageSize));
+  }, [filteredTotalCount, filteredPublishedCount, filteredPendingCount, activeTab]);
 
   useEffect(() => {
     if (!hasLoaded) loadPosts(1);
@@ -151,6 +195,11 @@ export const MyPostsProvider: React.FC<{ children: React.ReactNode }> = ({
     publishedPosts,
     pendingPosts,
     filteredPosts,
+    filteredTotalCount,
+    filteredPublishedCount,
+    filteredPendingCount,
+  pageSize,
+  filteredTotalPages,
     loading,
     error,
     totalPages,

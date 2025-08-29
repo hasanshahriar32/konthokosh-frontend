@@ -8,7 +8,8 @@ import FeedHeading from "@/components/feed/FeedHeading";
 import PostCard from "@/components/feed/PostCard";
 import SearchBar from "@/components/feed/SearchBar";
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
+import Pagination from "@/components/feed/Pagination";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   FEED_LOADING_MESSAGE,
@@ -30,10 +31,10 @@ const FeedContent: React.FC = () => {
   const {
     posts,
     page,
-  searchInput,
-  setSearchInput,
-  selectedTag,
-  setSelectedTag,
+    searchInput,
+    setSearchInput,
+    selectedTags,
+    setSelectedTags,
     loading,
     error,
     totalPages,
@@ -58,14 +59,14 @@ const FeedContent: React.FC = () => {
   return (
     <Background>
       <Navbar />
-      <main className="container mx-auto px-4 max-w-3xl w-full flex-1 flex flex-col justify-center items-center mt-28">
+      <main className="container mx-auto px-4 max-w-3xl w-full flex-1 flex flex-col justify-center items-center mt-28 mb-8">
         <FeedHeading title={FEED_TITLE} subtitle={FEED_SUBTITLE} />
 
         <SearchBar
           searchInput={searchInput}
           setSearchInput={setSearchInput}
-          selectedTag={selectedTag}
-          setSelectedTag={setSelectedTag}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
           onSearch={handleSearch}
           loading={loading}
           placeholder={SEARCH_PLACEHOLDER}
@@ -100,40 +101,24 @@ const FeedContent: React.FC = () => {
               post={post}
               showActions
               onTagClick={(t) => {
-                setSelectedTag && setSelectedTag(t);
-                void loadPosts(1, searchInput, t);
+                // when clicking a tag on a post, filter by that single tag
+                setSelectedTags && setSelectedTags([t]);
+                void loadPosts(1, searchInput, [t]);
               }}
             />
           ))}
         </section>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between bg-card/80 backdrop-blur-md p-4 rounded-full shadow-lg mt-8 w-full">
-            <div className="text-base text-muted-foreground font-bengali">
-              {PAGE_LABEL} {page} / {totalPages}
-            </div>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePrevPage}
-                disabled={page <= 1 || loading}
-                className="font-bengali rounded-full px-6 py-2"
-              >
-                {PREVIOUS}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNextPage}
-                disabled={page >= totalPages || loading}
-                className="font-bengali rounded-full px-6 py-2"
-              >
-                {NEXT}
-              </Button>
-            </div>
-          </div>
-        )}
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPrev={handlePrevPage}
+          onNext={handleNextPage}
+          disabled={loading}
+          pageLabel={PAGE_LABEL}
+          previousLabel={PREVIOUS}
+          nextLabel={NEXT}
+        />
       </main>
     </Background>
   );

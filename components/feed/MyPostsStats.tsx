@@ -1,20 +1,17 @@
 "use client";
 
-// using a single fluid container layout instead of individual Card components
 import {
-  ACTIVE_LABEL,
   APPROVED_LABEL,
   PENDING_LABEL,
   TOTAL_POSTS_LABEL,
 } from "@/constants/feed";
-import { Eye, FileText, Heart, MessageCircle } from "lucide-react";
+import { Eye, FileText, Heart } from "lucide-react";
 import type { ReactNode } from "react";
 
 type Props = {
   totalCount: number;
   publishedPosts: Array<{ id: number; isApproved: boolean }>;
   pendingPosts: Array<{ id: number; isApproved: boolean }>;
-  posts: Array<{ id: number; isActive: boolean }>;
 };
 
 type StatItemProps = {
@@ -43,25 +40,24 @@ const StatItem = ({
         <p className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 truncate">
           {value}
         </p>
-        <p className="font-bengali text-sm text-slate-500 dark:text-slate-300 truncate">{label}</p>
+        <p className="font-bengali text-sm text-slate-500 dark:text-slate-300 truncate">
+          {label}
+        </p>
       </div>
     </div>
   );
 };
 
-const MyPostsStats = ({
-  totalCount,
-  publishedPosts,
-  pendingPosts,
-  posts,
-}: Props) => {
+const MyPostsStats = ({ totalCount, publishedPosts, pendingPosts }: Props) => {
   return (
     <div className="w-full max-w-3xl mx-auto mb-8">
-      <div className="w-full bg-white/70 dark:bg-slate-900/60 backdrop-blur-md rounded-2xl shadow-md overflow-hidden">
+      <div className="w-full bg-transparent rounded-2xl !shadow-none overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center sm:items-stretch justify-between gap-4 p-4">
             <StatItem
-              icon={<FileText className="h-6 w-6 text-sky-600 dark:text-sky-200" />}
+              icon={
+                <FileText className="h-6 w-6 text-sky-600 dark:text-sky-200" />
+              }
               fromClass="from-sky-50 dark:from-sky-700"
               toClass="to-sky-100 dark:to-sky-800"
               label={TOTAL_POSTS_LABEL}
@@ -69,7 +65,9 @@ const MyPostsStats = ({
             />
 
             <StatItem
-              icon={<Eye className="h-6 w-6 text-emerald-600 dark:text-emerald-200" />}
+              icon={
+                <Eye className="h-6 w-6 text-emerald-600 dark:text-emerald-200" />
+              }
               fromClass="from-emerald-50 dark:from-emerald-700"
               toClass="to-emerald-100 dark:to-emerald-800"
               label={APPROVED_LABEL}
@@ -77,19 +75,13 @@ const MyPostsStats = ({
             />
 
             <StatItem
-              icon={<Heart className="h-6 w-6 text-amber-600 dark:text-amber-300" />}
+              icon={
+                <Heart className="h-6 w-6 text-amber-600 dark:text-amber-300" />
+              }
               fromClass="from-amber-50 dark:from-amber-700"
               toClass="to-amber-100 dark:to-amber-800"
               label={PENDING_LABEL}
               value={pendingPosts.length}
-            />
-
-            <StatItem
-              icon={<MessageCircle className="h-6 w-6 text-violet-600 dark:text-violet-300" />}
-              fromClass="from-violet-50 dark:from-violet-700"
-              toClass="to-violet-100 dark:to-violet-800"
-              label={ACTIVE_LABEL}
-              value={posts.filter((p) => p.isActive).length}
             />
           </div>
         </div>

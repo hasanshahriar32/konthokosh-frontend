@@ -17,8 +17,8 @@ type FeedContextType = {
   page: number;
   setPage: (n: number) => void;
   keyword: string;
-  selectedTag: string;
-  setSelectedTag: (t: string) => void;
+  selectedTags: string[];
+  setSelectedTags: (t: string[]) => void;
   searchInput: string;
   setSearchInput: (s: string) => void;
   loading: boolean;
@@ -29,8 +29,12 @@ type FeedContextType = {
   handleSearch: (e: React.FormEvent) => void;
   handlePrevPage: () => void;
   handleNextPage: () => void;
-  loadPosts: (pageNum: number, searchKeyword?: string, tag?: string) => Promise<void>;
-  handleTagFilter: (tag: string) => void;
+  loadPosts: (
+    pageNum: number,
+    searchKeyword?: string,
+    tags?: string[]
+  ) => Promise<void>;
+  handleTagFilter: (tags: string[]) => void;
 };
 
 const FeedContext = createContext<FeedContextType | undefined>(undefined);
@@ -43,7 +47,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
   const [posts, setPosts] = useState<KonthoKoshFeedPost[]>([]);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
-  const [selectedTag, setSelectedTag] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -52,7 +56,11 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hasLoaded, setHasLoaded] = useState(false);
 
   const loadPosts = useCallback(
-  async (pageNum: number, searchKeyword: string = "", tag: string = "") => {
+    async (
+      pageNum: number,
+      searchKeyword: string = "",
+      tags: string[] = []
+    ) => {
       setLoading(true);
       setError("");
 
@@ -60,8 +68,8 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
         const { posts: fetchedPosts, pagination } = await getFeedPosts({
           page: pageNum,
           size: 10,
-      ...(searchKeyword ? { keyword: searchKeyword } : {}),
-  ...(tag ? { tags: tag } : {}),
+          ...(searchKeyword ? { keyword: searchKeyword } : {}),
+          ...(tags && tags.length > 0 ? { tags } : {}),
         });
 
         if (Array.isArray(fetchedPosts)) {
@@ -78,7 +86,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
         setHasLoaded(true);
       }
     },
-  [getFeedPosts]
+    [getFeedPosts]
   );
 
   useEffect(() => {
@@ -87,16 +95,16 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setKeyword(searchInput);
-    setPage(1);
-  void loadPosts(1, searchInput, selectedTag);
+  setKeyword(searchInput);
+  setPage(1);
+  void loadPosts(1, searchInput, selectedTags);
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
       const newPage = page - 1;
       setPage(newPage);
-  void loadPosts(newPage, keyword, selectedTag);
+  void loadPosts(newPage, keyword, selectedTags);
     }
   };
 
@@ -104,15 +112,15 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     if (page < totalPages) {
       const newPage = page + 1;
       setPage(newPage);
-      void loadPosts(newPage, keyword, selectedTag);
+  void loadPosts(newPage, keyword, selectedTags);
     }
   };
 
-  const handleTagFilter = (tag: string) => {
-    setSelectedTag(tag);
+  const handleTagFilter = (tags: string[]) => {
+    setSelectedTags(tags);
     setPage(1);
-    // keep current keyword when filtering by tag
-    void loadPosts(1, keyword, tag);
+    // keep current keyword when filtering by tag(s)
+    void loadPosts(1, keyword, tags);
   };
 
   const value: FeedContextType = {
@@ -120,8 +128,8 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     page,
     setPage,
     keyword,
-  selectedTag,
-  setSelectedTag,
+  selectedTags,
+  setSelectedTags,
     searchInput,
     setSearchInput,
     loading,
@@ -132,7 +140,7 @@ export const FeedProvider: React.FC<{ children: React.ReactNode }> = ({
     handleSearch,
     handlePrevPage,
     handleNextPage,
-    loadPosts,
+  loadPosts,
   handleTagFilter,
   };
 

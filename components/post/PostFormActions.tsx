@@ -39,7 +39,7 @@ const PostFormActions = ({
 
       <Button
         onClick={onSubmit}
-        disabled={isSubmitting || !title?.trim() || !content.trim()}
+        disabled={isSubmitting || !content.trim()}
         className="order-1 sm:order-2 rounded-full px-6 py-2 shadow-md"
       >
         {isSubmitting ? (

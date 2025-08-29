@@ -24,7 +24,7 @@ import {
   PAGE_LABEL,
   PENDING_LABEL,
   PREVIOUS,
-  WRITE_BUTTON
+  WRITE_BUTTON,
 } from "@/constants/feed";
 import { MyPostsProvider, useMyPosts } from "@/context/MyPostsContext";
 import { motion } from "framer-motion";
@@ -42,17 +42,18 @@ const MyPostsInner: React.FC = () => {
     loading,
     error,
     totalPages,
-    totalCount,
     hasLoaded,
     isApproved,
-    setIsApproved,
     loadPosts,
-    deletePost,
     activeTab,
     setActiveTab,
     publishedPosts,
     pendingPosts,
     filteredPosts,
+    filteredTotalCount,
+    filteredPublishedCount,
+    filteredPendingCount,
+    filteredTotalPages,
   } = useMyPosts();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -103,14 +104,12 @@ const MyPostsInner: React.FC = () => {
             totalCount={posts.length}
             publishedPosts={publishedPosts}
             pendingPosts={pendingPosts}
-            posts={posts}
           />
 
           <MyPostsFilter
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             isApproved={isApproved}
-            setIsApproved={setIsApproved}
             loadPosts={loadPosts}
             loading={loading}
             setPage={setPage}
@@ -131,15 +130,15 @@ const MyPostsInner: React.FC = () => {
             onValueChange={setActiveTab}
             className="w-full max-w-3xl mx-auto"
           >
-            <TabsList className="grid w-full grid-cols-3 bg-white/90 backdrop-blur-sm">
+            <TabsList className="grid w-full grid-cols-3 bg-background/75 backdrop-blur-md">
               <TabsTrigger value="all" className="font-bengali">
-                {ALL_POSTS} ({posts.length})
+                {ALL_POSTS} ({filteredTotalCount})
               </TabsTrigger>
               <TabsTrigger value="published" className="font-bengali">
-                {APPROVED_LABEL} ({publishedPosts.length})
+                {APPROVED_LABEL} ({filteredPublishedCount})
               </TabsTrigger>
               <TabsTrigger value="pending" className="font-bengali">
-                {PENDING_LABEL} ({pendingPosts.length})
+                {PENDING_LABEL} ({filteredPendingCount})
               </TabsTrigger>
             </TabsList>
 
@@ -158,7 +157,12 @@ const MyPostsInner: React.FC = () => {
 
           <Pagination
             page={page}
-            totalPages={totalPages}
+            totalPages={
+              // if user has typed a search term or we're viewing a filtered tab, derive pages from filtered counts
+              searchTerm || activeTab !== "all"
+                ? filteredTotalPages
+                : totalPages
+            }
             onPrev={() => {
               if (page > 1) {
                 const np = page - 1;

@@ -3,5 +3,6 @@
         "Kontho",
         "Kosh"
     ],
-    "findUnusedExports.detectCircularImports": true
+    "findUnusedExports.detectCircularImports": true,
+    "typescript.tsdk": "node_modules\\typescript\\lib"
 }
