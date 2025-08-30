@@ -21,20 +21,30 @@ import {
   ChevronRight,
   Sparkles,
 } from "lucide-react"
-import { demoPosts, getPostById, formatDuration } from "@/lib/posts-data"
+import { formatDuration } from "@/lib/posts-data"
+import Navbar from "@/components/Navbar";
 import { QueueManager } from "@/lib/queue-manager"
 import { ElevenLabsService } from "@/lib/elevenlabs-service"
 import { AudioPlayer, type AudioPlayerState } from "@/lib/audio-player"
 import type { Post, PlayerState } from "@/lib/types"
+import { useKonthoKoshApi } from "@/utils/konthokosh-api"
+import type { KonthoKoshFeedPost } from "@/types/post"
+import ProtectedRoute from "@/components/auth/ProtectedRoute"
 
 export default function AudiobookPlayer() {
+  const { getFeedPosts } = useKonthoKoshApi()
+
+  const [posts, setPosts] = useState<Post[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+
   const [playerState, setPlayerState] = useState<PlayerState>({
-    currentPostId: demoPosts[0].id,
+    currentPostId: null,
     currentLineIndex: 0,
     isPlaying: false,
     volume: 75,
     currentTime: 0,
-    queue: demoPosts.map((post) => ({ post, addedAt: new Date() })),
+    queue: [],
     history: [],
     repeatMode: "off",
     shuffleMode: false,
@@ -54,6 +64,11 @@ export default function AudiobookPlayer() {
   const [lineProgress, setLineProgress] = useState<number>(0)
 
   const [queueManager] = useState(() => new QueueManager(playerState))
+
+  // Update queue manager state when player state changes
+  useEffect(() => {
+    queueManager.updateState(playerState)
+  }, [playerState, queueManager])
   const [elevenLabsService] = useState(() => new ElevenLabsService())
   const audioPlayerRef = useRef<AudioPlayer | null>(null)
   const [audioCache, setAudioCache] = useState<{ [postId: string]: string }>({})
@@ -71,6 +86,50 @@ export default function AudiobookPlayer() {
     handleResize() // Set initial state
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true)
+        const { posts: fetchedPosts } = await getFeedPosts({ page: 1, size: 20 })
+        const transformedPosts: Post[] = fetchedPosts.map((post: KonthoKoshFeedPost) => ({
+          id: post.id.toString(),
+          title: post.title,
+          author: post.user.firstName && post.user.lastName ? `${post.user.firstName} ${post.user.lastName}` : post.user.username || "Unknown Author",
+          content: post.post.split('\n').filter(line => line.trim() !== '').map(line => line.trim()) || [post.post],
+          duration: Math.floor(post.post.length / 10), // rough estimate
+          category: "General",
+          tags: post.tags || [],
+          createdAt: new Date(post.createdAt),
+          isLiked: false,
+          playCount: 0,
+          imageUrl: post.imagesId && post.imagesId.length > 0 ? post.imagesId[0].publicUrl : undefined,
+        }))
+        console.log("Transformed posts:", transformedPosts)
+        setPosts(transformedPosts)
+        if (transformedPosts.length > 0) {
+          setPlayerState(prev => ({
+            ...prev,
+            currentPostId: transformedPosts[0].id,
+            queue: transformedPosts.map(post => ({ post, addedAt: new Date() })),
+          }))
+        }
+      } catch (err) {
+        console.error("Error fetching posts:", err)
+        setError("Failed to load posts")
+        // No fallback to demo posts - let the component handle empty state
+        setPosts([])
+        setPlayerState(prev => ({
+          ...prev,
+          queue: [],
+        }))
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPosts()
   }, [])
 
   useEffect(() => {
@@ -205,7 +264,20 @@ export default function AudiobookPlayer() {
     }
   }, [playerState.repeatMode, playerState.autoPlay, playerState.queue])
 
-  const currentPost = getPostById(playerState.currentPostId || "") || demoPosts[0]
+  const currentPost = posts.find(p => p.id === playerState.currentPostId) || posts[0]
+
+  if (!currentPost) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-green-400 mb-4">No posts available</h1>
+            <p className="text-gray-400">Please try refreshing the page.</p>
+          </div>
+        </div>
+      </ProtectedRoute>
+    )
+  }
   const currentQueueIndex = playerState.queue.findIndex((item) => item.post.id === playerState.currentPostId)
 
   const handlePlayPause = async () => {
@@ -380,326 +452,415 @@ export default function AudiobookPlayer() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col">
-      <div className="flex-1 flex relative">
-        <div className="flex-1 flex flex-col transition-all duration-300">
-          <div className="h-auto lg:h-16 bg-gradient-to-b from-green-900/20 to-transparent flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 lg:px-8 space-y-2 lg:space-y-0">
-            <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-4 w-full lg:w-auto">
-              <h1 className="text-lg lg:text-xl font-bold text-green-400 lg:mr-6">konthokosh</h1>
-              <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-1 lg:space-y-0">
-                <h2 className="text-lg lg:text-xl font-semibold">{currentPost.title}</h2>
-                <div className="flex flex-wrap items-center gap-2 text-sm lg:text-base">
-                  <span className="text-gray-400">by {currentPost.author}</span>
-                  <span className="text-gray-500">• {currentPost.category}</span>
-                  <span className="text-gray-500">• {formatDuration(currentPost.duration)}</span>
-                </div>
-              </div>
-              {audioPlayerState.isLoading && (
-                <div className="flex items-center space-x-2 text-green-400">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span className="text-sm">Generating audio...</span>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center justify-end w-full lg:w-auto">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowQueue(!showQueue)}
-                className="text-gray-400 hover:text-white hover:bg-gray-800"
-              >
-                {showQueue ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
-                <List className="h-5 w-5 ml-1" />
-              </Button>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-black text-white flex flex-col">
+        {loading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center space-x-2 text-green-400">
+              <Loader2 className="h-6 w-6 animate-spin" />
+              <span>Loading posts...</span>
             </div>
           </div>
-
-          <div className="p-4 lg:p-8 pb-32 lg:pb-32 overflow-y-auto">
-            <div className="max-w-4xl mx-auto">
-              {audioPlayerState.error && (
-                <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg">
-                  <p className="text-red-400">{audioPlayerState.error}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 bg-transparent"
-                    onClick={() => {
-                      setAudioCache((prev) => {
-                        const newCache = { ...prev }
-                        delete newCache[currentPost.id]
-                        return newCache
-                      })
-                      setAudioPlayerState((prev) => ({ ...prev, error: null }))
-                    }}
-                  >
-                    Retry
-                  </Button>
-                </div>
-              )}
-
-              <div className="space-y-4 lg:space-y-8">
-                {currentPost.content.map((line, index) => {
-                  const isCurrentLine = index === playerState.currentLineIndex && playerState.isPlaying
-                  const isActiveLine = index === playerState.currentLineIndex
-
-                  return (
-                    <div
-                      key={index}
-                      className={`text-xl sm:text-2xl lg:text-4xl leading-relaxed font-medium transition-all duration-500 cursor-pointer relative ${
-                        isCurrentLine
-                          ? "text-green-400 scale-105 drop-shadow-lg"
-                          : isActiveLine
-                            ? "text-green-300 scale-102"
-                            : "text-gray-300 hover:text-gray-100 hover:scale-101"
-                      }`}
-                      onClick={() => handleLineClick(index)}
-                    >
-                      {isCurrentLine && (
-                        <div
-                          className="absolute bottom-0 left-0 h-1 bg-green-400 rounded-full transition-all duration-300"
-                          style={{ width: `${lineProgress * 100}%` }}
-                        />
-                      )}
-
-                      {isCurrentLine && <div className="absolute inset-0 bg-green-400/10 rounded-lg -z-10 blur-xl" />}
-
-                      <span className="relative z-10">{line}</span>
+        ) : (
+          <>
+            <Navbar />
+            <div className="flex-1 flex relative mt-28 mb-8 ">
+              <div className=" flex-1 flex flex-col transition-all duration-300 ">
+                <div className="h-auto lg:h-16 bg-gradient-to-b flex flex-col lg:flex-row items-start lg:items-center justify-between p-4 lg:px-8 space-y-2 lg:space-y-0">
+                  <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-4 w-full lg:w-auto">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4 space-y-1 lg:space-y-0">
+                      <h2 className="text-lg lg:text-xl font-semibold">
+                        {currentPost.title}
+                      </h2>
+                      <div className="flex flex-wrap items-center gap-2 text-sm lg:text-base">
+                        <span className="text-gray-400">
+                          by {currentPost.author}
+                        </span>
+                        <span className="text-gray-500">
+                          • {currentPost.category}
+                        </span>
+                        <span className="text-gray-500">
+                          • {formatDuration(currentPost.duration)}
+                        </span>
+                      </div>
                     </div>
-                  )
-                })}
+                    {audioPlayerState.isLoading && (
+                      <div className="flex items-center space-x-2 text-green-400">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm">Generating audio...</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-end w-full lg:w-auto">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowQueue(!showQueue)}
+                      className="text-gray-400 hover:text-white hover:bg-gray-800"
+                    >
+                      {showQueue ? (
+                        <ChevronRight className="h-5 w-5" />
+                      ) : (
+                        <ChevronLeft className="h-5 w-5" />
+                      )}
+                      <List className="h-5 w-5 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="p-4 lg:p-8 pb-32 lg:pb-32 overflow-y-auto">
+                  <div className="max-w-4xl mx-auto">
+                    {audioPlayerState.error && (
+                      <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg">
+                        <p className="text-red-400">{audioPlayerState.error}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2 bg-transparent"
+                          onClick={() => {
+                            setAudioCache((prev) => {
+                              const newCache = { ...prev };
+                              delete newCache[currentPost.id];
+                              return newCache;
+                            });
+                            setAudioPlayerState((prev) => ({
+                              ...prev,
+                              error: null,
+                            }));
+                          }}
+                        >
+                          Retry
+                        </Button>
+                      </div>
+                    )}
+
+                    <div className="space-y-4 lg:space-y-8">
+                      {currentPost.content.map((line, index) => {
+                        const isCurrentLine =
+                          index === playerState.currentLineIndex &&
+                          playerState.isPlaying;
+                        const isActiveLine =
+                          index === playerState.currentLineIndex;
+
+                        return (
+                          <div
+                            key={index}
+                            className={`text-xl sm:text-2xl lg:text-4xl leading-relaxed font-medium transition-all duration-500 cursor-pointer relative ${
+                              isCurrentLine
+                                ? "text-green-400 scale-105 drop-shadow-lg"
+                                : isActiveLine
+                                ? "text-green-300 scale-102"
+                                : "text-gray-300 hover:text-gray-100 hover:scale-101"
+                            }`}
+                            onClick={() => handleLineClick(index)}
+                          >
+                            {isCurrentLine && (
+                              <div
+                                className="absolute bottom-0 left-0 h-1 bg-green-400 rounded-full transition-all duration-300"
+                                style={{ width: `${lineProgress * 100}%` }}
+                              />
+                            )}
+
+                            {isCurrentLine && (
+                              <div className="absolute inset-0 bg-green-400/10 rounded-lg -z-10 blur-xl" />
+                            )}
+
+                            <span className="relative z-10">{line}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="mt-8 lg:mt-12 pt-6 lg:pt-8 border-t border-gray-800">
+                      <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-6 text-sm text-gray-400">
+                        <span>
+                          প্লে করা হয়েছে: {currentPost.playCount} বার
+                        </span>
+                        <span>
+                          তৈরি:{" "}
+                          {currentPost.createdAt.toLocaleDateString("bn-BD")}
+                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span>ট্যাগ:</span>
+                          {currentPost.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="bg-gray-800 px-2 py-1 rounded text-xs"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-8 lg:mt-12 pt-6 lg:pt-8 border-t border-gray-800">
-                <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-6 text-sm text-gray-400">
-                  <span>প্লে করা হয়েছে: {currentPost.playCount} বার</span>
-                  <span>তৈরি: {currentPost.createdAt.toLocaleDateString("bn-BD")}</span>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span>ট্যাগ:</span>
-                    {currentPost.tags.map((tag) => (
-                      <span key={tag} className="bg-gray-800 px-2 py-1 rounded text-xs">
-                        {tag}
-                      </span>
+              {showQueue && (
+                <div className="w-full lg:w-80 bg-gray-900 border-l border-gray-800 p-4 fixed top-0 right-0 h-full z-30 overflow-y-auto">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">
+                      Queue ({playerState.queue.length})
+                    </h3>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleShuffleToggle}
+                        className={
+                          playerState.shuffleMode
+                            ? "text-green-400"
+                            : "text-gray-400"
+                        }
+                      >
+                        <Shuffle className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowQueue(false)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 pb-4">
+                    {playerState.queue.map((queueItem, index) => (
+                      <Card
+                        key={queueItem.post.id}
+                        className={`p-3 cursor-pointer transition-colors group ${
+                          queueItem.post.id === playerState.currentPostId
+                            ? "bg-green-900/30 border-green-400"
+                            : "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div
+                            className="flex-1 min-w-0"
+                            onClick={() => handleSelectPost(queueItem.post)}
+                          >
+                            <div className="text-sm font-medium text-white truncate">
+                              {queueItem.post.title}
+                            </div>
+                            <div className="text-xs text-gray-400 truncate">
+                              {queueItem.post.author}
+                            </div>
+                            <div className="text-xs text-gray-500 flex items-center space-x-2">
+                              <span>
+                                {formatDuration(queueItem.post.duration)}
+                              </span>
+                              {audioCache[queueItem.post.id] && (
+                                <span className="text-green-400">●</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveQueueItem(index, "up");
+                              }}
+                              disabled={index === 0}
+                              className="h-6 w-6 p-0"
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMoveQueueItem(index, "down");
+                              }}
+                              disabled={index === playerState.queue.length - 1}
+                              className="h-6 w-6 p-0"
+                            >
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFromQueue(queueItem.post.id);
+                              }}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
                     ))}
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          </div>
-        </div>
 
-        {showQueue && (
-          <div className="w-full lg:w-80 bg-gray-900 border-l border-gray-800 p-4 fixed top-0 right-0 h-full z-30 overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Queue ({playerState.queue.length})</h3>
-              <div className="flex items-center space-x-2">
+            <div className="h-auto lg:h-24 bg-gray-900 border-t border-gray-800 flex flex-col lg:flex-row items-center p-4 lg:px-8 fixed bottom-0 left-0 right-0 z-20 space-y-4 lg:space-y-0">
+              <div className="flex items-center space-x-4 w-full lg:w-auto">
+                <img
+                  src={currentPost.imageUrl || "/bengali-book-cover.png"}
+                  alt="Post cover"
+                  className="w-12 h-12 lg:w-16 lg:h-16 rounded"
+                />
+                <div className="flex-1 lg:flex-none min-w-0">
+                  <div className="font-medium text-sm lg:text-base truncate">
+                    {currentPost.title}
+                  </div>
+                  <div className="text-xs lg:text-sm text-gray-400 truncate">
+                    {currentPost.author}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 flex flex-col items-center space-y-2 w-full lg:w-auto">
+                <div className="flex items-center space-x-2 lg:space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleRepeatToggle}
+                    className={`text-gray-400 hover:text-white ${
+                      playerState.repeatMode !== "off" ? "text-green-400" : ""
+                    } hidden sm:flex`}
+                  >
+                    {playerState.repeatMode === "one" ? (
+                      <Repeat1 className="h-4 w-4" />
+                    ) : (
+                      <Repeat className="h-4 w-4" />
+                    )}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handlePrevious}
+                    disabled={!queueManager.getPreviousPost()}
+                    className="text-gray-400 hover:text-white disabled:opacity-50"
+                  >
+                    <SkipBack className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="lg"
+                    onClick={handlePlayPause}
+                    disabled={audioPlayerState.isLoading}
+                    className="bg-green-500 hover:bg-green-400 text-black rounded-full w-10 h-10 lg:w-12 lg:h-12 disabled:opacity-50"
+                  >
+                    {audioPlayerState.isLoading ? (
+                      <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin" />
+                    ) : audioPlayerState.isPlaying ? (
+                      <Pause className="h-5 w-5 lg:h-6 lg:w-6" />
+                    ) : audioCache[currentPost.id] ? (
+                      <Play className="h-5 w-5 lg:h-6 lg:w-6 ml-1" />
+                    ) : (
+                      <Sparkles className="h-5 w-5 lg:h-6 lg:w-6" />
+                    )}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleNext}
+                    disabled={!queueManager.getNextPost()}
+                    className="text-gray-400 hover:text-white disabled:opacity-50"
+                  >
+                    <SkipForward className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleShuffleToggle}
+                    className={`text-gray-400 hover:text-white ${
+                      playerState.shuffleMode ? "text-green-400" : ""
+                    } hidden sm:flex`}
+                  >
+                    <Shuffle className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center space-x-2 w-full max-w-xs lg:max-w-md">
+                  <span className="text-xs text-gray-400 hidden sm:inline">
+                    {Math.floor(audioPlayerState.currentTime / 60)}:
+                    {Math.floor(audioPlayerState.currentTime % 60)
+                      .toString()
+                      .padStart(2, "0")}
+                  </span>
+                  <div
+                    className="flex-1 bg-gray-600 rounded-full h-1 cursor-pointer"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const clickX = e.clientX - rect.left;
+                      const percentage = clickX / rect.width;
+                      const newTime = percentage * audioPlayerState.duration;
+                      handleSeek(newTime);
+                    }}
+                  >
+                    <div
+                      className="bg-green-400 h-1 rounded-full transition-all duration-300"
+                      style={{
+                        width: `${
+                          audioPlayerState.duration > 0
+                            ? (audioPlayerState.currentTime /
+                                audioPlayerState.duration) *
+                              100
+                            : 0
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-400 hidden sm:inline">
+                    {Math.floor(audioPlayerState.duration / 60)}:
+                    {Math.floor(audioPlayerState.duration % 60)
+                      .toString()
+                      .padStart(2, "0")}
+                  </span>
+                </div>
+              </div>
+
+              <div className="hidden lg:flex items-center space-x-4">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={handleShuffleToggle}
-                  className={playerState.shuffleMode ? "text-green-400" : "text-gray-400"}
-                >
-                  <Shuffle className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => setShowQueue(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2 pb-4">
-              {playerState.queue.map((queueItem, index) => (
-                <Card
-                  key={queueItem.post.id}
-                  className={`p-3 cursor-pointer transition-colors group ${
-                    queueItem.post.id === playerState.currentPostId
-                      ? "bg-green-900/30 border-green-400"
-                      : "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                  onClick={handleAutoPlayToggle}
+                  className={`text-xs ${
+                    playerState.autoPlay ? "text-green-400" : "text-gray-400"
                   }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 min-w-0" onClick={() => handleSelectPost(queueItem.post)}>
-                      <div className="text-sm font-medium text-white truncate">{queueItem.post.title}</div>
-                      <div className="text-xs text-gray-400 truncate">{queueItem.post.author}</div>
-                      <div className="text-xs text-gray-500 flex items-center space-x-2">
-                        <span>{formatDuration(queueItem.post.duration)}</span>
-                        {audioCache[queueItem.post.id] && <span className="text-green-400">●</span>}
-                      </div>
-                    </div>
+                  Auto
+                </Button>
 
-                    <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleMoveQueueItem(index, "up")
-                        }}
-                        disabled={index === 0}
-                        className="h-6 w-6 p-0"
-                      >
-                        <ChevronUp className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleMoveQueueItem(index, "down")
-                        }}
-                        disabled={index === playerState.queue.length - 1}
-                        className="h-6 w-6 p-0"
-                      >
-                        <ChevronDown className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleRemoveFromQueue(queueItem.post.id)
-                        }}
-                        className="h-6 w-6 p-0"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
+                <div className="flex items-center space-x-2">
+                  <Volume2 className="h-5 w-5 text-gray-400" />
+                  <div
+                    className="w-24 bg-gray-600 rounded-full h-1 cursor-pointer"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const clickX = e.clientX - rect.left;
+                      const percentage = clickX / rect.width;
+                      const newVolume = Math.round(percentage * 100);
+                      handleVolumeChange(newVolume);
+                    }}
+                  >
+                    <div
+                      className="bg-white h-1 rounded-full"
+                      style={{ width: `${audioPlayerState.volume * 100}%` }}
+                    ></div>
                   </div>
-                </Card>
-              ))}
+                </div>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </div>
-
-      <div className="h-auto lg:h-24 bg-gray-900 border-t border-gray-800 flex flex-col lg:flex-row items-center p-4 lg:px-8 fixed bottom-0 left-0 right-0 z-20 space-y-4 lg:space-y-0">
-        <div className="flex items-center space-x-4 w-full lg:w-auto">
-          <img src="/bengali-book-cover.png" alt="Post cover" className="w-12 h-12 lg:w-16 lg:h-16 rounded" />
-          <div className="flex-1 lg:flex-none min-w-0">
-            <div className="font-medium text-sm lg:text-base truncate">{currentPost.title}</div>
-            <div className="text-xs lg:text-sm text-gray-400 truncate">{currentPost.author}</div>
-          </div>
-        </div>
-
-        <div className="flex-1 flex flex-col items-center space-y-2 w-full lg:w-auto">
-          <div className="flex items-center space-x-2 lg:space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleRepeatToggle}
-              className={`text-gray-400 hover:text-white ${playerState.repeatMode !== "off" ? "text-green-400" : ""} hidden sm:flex`}
-            >
-              {playerState.repeatMode === "one" ? <Repeat1 className="h-4 w-4" /> : <Repeat className="h-4 w-4" />}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handlePrevious}
-              disabled={!queueManager.getPreviousPost()}
-              className="text-gray-400 hover:text-white disabled:opacity-50"
-            >
-              <SkipBack className="h-4 w-4 lg:h-5 lg:w-5" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="lg"
-              onClick={handlePlayPause}
-              disabled={audioPlayerState.isLoading}
-              className="bg-green-500 hover:bg-green-400 text-black rounded-full w-10 h-10 lg:w-12 lg:h-12 disabled:opacity-50"
-            >
-              {audioPlayerState.isLoading ? (
-                <Loader2 className="h-5 w-5 lg:h-6 lg:w-6 animate-spin" />
-              ) : audioPlayerState.isPlaying ? (
-                <Pause className="h-5 w-5 lg:h-6 lg:w-6" />
-              ) : audioCache[currentPost.id] ? (
-                <Play className="h-5 w-5 lg:h-6 lg:w-6 ml-1" />
-              ) : (
-                <Sparkles className="h-5 w-5 lg:h-6 lg:w-6" />
-              )}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleNext}
-              disabled={!queueManager.getNextPost()}
-              className="text-gray-400 hover:text-white disabled:opacity-50"
-            >
-              <SkipForward className="h-4 w-4 lg:h-5 lg:w-5" />
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleShuffleToggle}
-              className={`text-gray-400 hover:text-white ${playerState.shuffleMode ? "text-green-400" : ""} hidden sm:flex`}
-            >
-              <Shuffle className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="flex items-center space-x-2 w-full max-w-xs lg:max-w-md">
-            <span className="text-xs text-gray-400 hidden sm:inline">
-              {Math.floor(audioPlayerState.currentTime / 60)}:
-              {Math.floor(audioPlayerState.currentTime % 60)
-                .toString()
-                .padStart(2, "0")}
-            </span>
-            <div
-              className="flex-1 bg-gray-600 rounded-full h-1 cursor-pointer"
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect()
-                const clickX = e.clientX - rect.left
-                const percentage = clickX / rect.width
-                const newTime = percentage * audioPlayerState.duration
-                handleSeek(newTime)
-              }}
-            >
-              <div
-                className="bg-green-400 h-1 rounded-full transition-all duration-300"
-                style={{
-                  width: `${audioPlayerState.duration > 0 ? (audioPlayerState.currentTime / audioPlayerState.duration) * 100 : 0}%`,
-                }}
-              ></div>
-            </div>
-            <span className="text-xs text-gray-400 hidden sm:inline">
-              {Math.floor(audioPlayerState.duration / 60)}:
-              {Math.floor(audioPlayerState.duration % 60)
-                .toString()
-                .padStart(2, "0")}
-            </span>
-          </div>
-        </div>
-
-        <div className="hidden lg:flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleAutoPlayToggle}
-            className={`text-xs ${playerState.autoPlay ? "text-green-400" : "text-gray-400"}`}
-          >
-            Auto
-          </Button>
-
-          <div className="flex items-center space-x-2">
-            <Volume2 className="h-5 w-5 text-gray-400" />
-            <div
-              className="w-24 bg-gray-600 rounded-full h-1 cursor-pointer"
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect()
-                const clickX = e.clientX - rect.left
-                const percentage = clickX / rect.width
-                const newVolume = Math.round(percentage * 100)
-                handleVolumeChange(newVolume)
-              }}
-            >
-              <div className="bg-white h-1 rounded-full" style={{ width: `${audioPlayerState.volume * 100}%` }}></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+    </ProtectedRoute>
+  );
 }

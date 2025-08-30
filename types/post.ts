@@ -129,6 +129,7 @@ export type Pagination = {
 export type KonthoKoshFeedPost = Omit<PostResponse, "imagesId"> & {
   imagesId?: CoverImage[];
   user: UserFeed;
+  tags?: string[];
 };
 
 /**

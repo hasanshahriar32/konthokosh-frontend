@@ -9,6 +9,7 @@ export interface Post {
   createdAt: Date
   isLiked: boolean
   playCount: number
+  imageUrl?: string
 }
 
 export interface QueueItem {
