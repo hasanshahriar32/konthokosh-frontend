@@ -50,6 +50,7 @@ export class AudioPlayer {
     try {
       if (this.audio) {
         this.audio.pause()
+        this.audio.currentTime = 0
         this.audio.removeEventListener("timeupdate", this.handleTimeUpdate)
         this.audio.removeEventListener("ended", this.handleEnded)
         this.audio.removeEventListener("error", this.handleError)
@@ -57,6 +58,7 @@ export class AudioPlayer {
 
       this.audio = new Audio(audioUrl)
       this.audio.volume = this.state.volume
+      this.audio.currentTime = 0
 
       // Add event listeners
       // Update duration and loading state when metadata is available
@@ -138,6 +140,14 @@ export class AudioPlayer {
     }
   }
 
+  stop(): void {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+      this.updateState({ isPlaying: false, currentTime: 0 });
+    }
+  }
+
   setVolume(volume: number): void {
     const clampedVolume = Math.max(0, Math.min(1, volume))
     if (this.audio) {
@@ -208,6 +218,7 @@ export class AudioPlayer {
   destroy(): void {
     if (this.audio) {
       this.audio.pause()
+      this.audio.currentTime = 0
       this.audio.removeEventListener("timeupdate", this.handleTimeUpdate)
       this.audio.removeEventListener("ended", this.handleEnded)
       this.audio.removeEventListener("error", this.handleError)
