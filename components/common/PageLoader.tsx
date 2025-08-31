@@ -1,4 +1,5 @@
 import { Icons } from "@/components/common/Icons";
+import { RESTRICT } from "@/constants/restrict";
 
 type PageLoaderProps = {
   message?: string;
@@ -6,7 +7,7 @@ type PageLoaderProps = {
 };
 
 const PageLoader = ({
-  message = "Loading...",
+  message = RESTRICT.loading,
   compact = false,
 }: PageLoaderProps) => {
   if (compact) {

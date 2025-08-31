@@ -16,7 +16,7 @@ export const NO_POSTS = "কোন পোস্ট পাওয়া যায়ন�
 export const TRY_DIFFERENT_KEYWORD = "অন্য কীওয়ার্ড দিয়ে চেষ্টা করুন।";
 
 export const USER_FALLBACK = "ব্যবহারকারী";
-export const ID_LABEL = "ID:";
+export const ID_LABEL = "আইডি";
 export const APPROVED = "অনুমোদিত";
 export const PENDING = "অপেক্ষমাণ";
 

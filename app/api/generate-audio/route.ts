@@ -19,9 +19,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Get environment variables (server-side only)
-    const apiKey = process.env.ELEVENLABS_KEY
-    const voiceId = process.env.ELEVENLABS_VOICE || "iP95p4xoKVk53GoZ742B"
-    const modelId = process.env.ELEVENLABS_MODEL || "eleven_v3"
+    const apiKey = process.env.NEXT_PUBLIC_ELEVENLABS_KEY
+    const voiceId =
+      process.env.NEXT_PUBLIC_ELEVENLABS_VOICE || "iP95p4xoKVk53GoZ742B";
+    const modelId = process.env.NEXT_PUBLIC_ELEVENLABS_MODEL || "eleven_v3";
 
     if (!apiKey) {
       return NextResponse.json({ error: "ElevenLabs API key not configured" }, { status: 500 })
