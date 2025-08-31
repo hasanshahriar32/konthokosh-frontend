@@ -125,9 +125,16 @@ export class AudioPlayer {
   }
 
   pause(): void {
+    console.log("AudioPlayer.pause() called, audio exists:", !!this.audio);
     if (this.audio) {
-      this.audio.pause()
-      this.updateState({ isPlaying: false })
+      console.log("Calling audio.pause(), current isPlaying:", this.state.isPlaying);
+      console.log("Audio element paused state before pause:", this.audio.paused);
+      this.audio.pause();
+      console.log("Audio element paused state after pause:", this.audio.paused);
+      this.updateState({ isPlaying: false });
+      console.log("Audio paused, state updated");
+    } else {
+      console.log("No audio element to pause");
     }
   }
 

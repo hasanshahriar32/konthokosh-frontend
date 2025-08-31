@@ -64,6 +64,7 @@ export type PostResponse = {
   imagesId: CoverImage[];
   createdAt: string;
   updatedAt: string;
+  blockchain: BlockchainObject;
 };
 
 /**
@@ -209,6 +210,15 @@ export type OnChainEntry = {
   updatedAt: string;
   post: ApiPost;
   user: ApiUser;
+};
+
+export type BlockchainObject = {
+  id: number;
+  onChainId: string;
+  oracleStatus: string;
+  ipfsHash: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type OnChainSubmitResponse = {

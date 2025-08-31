@@ -3,6 +3,7 @@
 import { Icons } from "@/components/common/Icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -33,6 +34,13 @@ const PostCard = ({
   onTagClick,
 }: Props) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const handleCopyIpfsHash = async () => {
+    if (post.blockchain?.ipfsHash) {
+      await navigator.clipboard.writeText(post.blockchain.ipfsHash);
+    }
+  };
+
   const rawTags = (post as any).tags ?? (post as any).generatedTags ?? [];
   const normalizedTags: string[] = (() => {
     if (!rawTags) return [];
@@ -82,10 +90,24 @@ const PostCard = ({
                 </div>
                 <div className="text-xs font-bengali text-muted-foreground text-right flex items-start gap-3">
                   <div>
-                    <div>
-                      {ID_LABEL} {post.id}
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {ID_LABEL}: {post.id}
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        <span>IPFSHash:</span>
+                        <Button
+                          variant="ghost-text"
+                          size="sm"
+                          className="h-6 w-6 p-0 rounded-full relative overflow-hidden group-hover:text-white"
+                          onClick={handleCopyIpfsHash}
+                          title={post.blockchain?.ipfsHash || "No IPFS hash"}
+                        >
+                          <Icons.Copy className="h-3 w-3 relative z-10" />
+                        </Button>
+                      </div>
                     </div>
-                    <div className="mt-1.5 flex items-end gap-1">
+                    <div className="mt-1.5 flex items-center justify-end gap-1">
                       <Badge
                         asChild={false}
                         variant={post.isApproved ? "default" : "destructive"}
