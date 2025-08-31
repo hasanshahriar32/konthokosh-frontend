@@ -89,24 +89,7 @@ const PostCard = ({
                   </p>
                 </div>
                 <div className="text-xs font-bengali text-muted-foreground text-right flex items-start gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span>
-                        {ID_LABEL}: {post.id}
-                      </span>
-                      <div className="flex items-center gap-0.5">
-                        <span>IPFSHash:</span>
-                        <Button
-                          variant="ghost-text"
-                          size="sm"
-                          className="h-6 w-6 p-0 rounded-full relative overflow-hidden group-hover:text-white"
-                          onClick={handleCopyIpfsHash}
-                          title={post.blockchain?.ipfsHash || "No IPFS hash"}
-                        >
-                          <Icons.Copy className="h-3 w-3 relative z-10" />
-                        </Button>
-                      </div>
-                    </div>
+                  <div className="flex flex-col gap-1">
                     <div className="mt-1.5 flex items-center justify-end gap-1">
                       <Badge
                         asChild={false}
@@ -123,6 +106,23 @@ const PostCard = ({
                       >
                         {post.isActive ? ACTIVE_LABEL : INACTIVE_LABEL}
                       </Badge> */}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>
+                        {ID_LABEL}: {post.id}
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        <span>IPFSHash:</span>
+                        <Button
+                          variant="ghost-text"
+                          size="sm"
+                          className="h-6 w-6 p-0 rounded-full relative overflow-hidden group-hover:text-white"
+                          onClick={handleCopyIpfsHash}
+                          title={post.blockchain?.ipfsHash || "No IPFS hash"}
+                        >
+                          <Icons.Copy className="h-3 w-3 relative z-10" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
