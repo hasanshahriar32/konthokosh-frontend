@@ -7,7 +7,7 @@ import type {
   CoverImage,
   OnChainSubmitResponse,
 } from "@/types/post";
-import { type FC } from "react";
+import { type FC, useState, useEffect } from "react";
 import Spinner from "../ui/spinner";
 
 type SubmitStatus = "idle" | "submitting" | "onchain" | "completed" | "error";
@@ -33,6 +33,41 @@ const PostStatusBlock: FC<PostStatusBlockProps> = ({
   onToggleCoverKey,
   onApplyCovers,
 }) => {
+  const [isApplyingCovers, setIsApplyingCovers] = useState(false);
+  const [coversApplied, setCoversApplied] = useState(false);
+
+  // Reset cover states when post is successfully created
+  useEffect(() => {
+    if (status === "completed") {
+      setIsApplyingCovers(false);
+      setCoversApplied(false);
+    }
+  }, [status]);
+
+  // Reset states when generatedCovers changes (indicating new post session)
+  useEffect(() => {
+    setIsApplyingCovers(false);
+    setCoversApplied(false);
+  }, [generatedCovers]);
+
+  const handleApplyCovers = async () => {
+    setIsApplyingCovers(true);
+    try {
+      const result = onApplyCovers?.();
+      if (result instanceof Promise) {
+        await result;
+      } else {
+        // For synchronous operations, add a small delay to ensure spinner is visible
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      setCoversApplied(true);
+    } catch (error) {
+      console.error('Error applying covers:', error);
+    } finally {
+      setIsApplyingCovers(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Status Header */}
@@ -106,10 +141,10 @@ const PostStatusBlock: FC<PostStatusBlockProps> = ({
           <div className="space-y-4">
             {onChainSubmit && (
               <div className="p-4 rounded-xl bg-gradient-to-r from-muted/20 to-muted/10">
-                <h4 className="text-sm font-medium text-foreground mb-3">Transaction Details</h4>
+                <h4 className="text-sm font-medium text-foreground mb-3">{POST_STRINGS.transactionDetails}</h4>
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-muted-foreground">Txn Hash:</span>
+                    <span className="font-medium text-muted-foreground">{POST_STRINGS.txnHashLabel}</span>
                     <code className="bg-background/80 px-3 py-2 rounded-lg text-foreground font-mono break-all">
                       {onChainSubmit.transactionHash}
                     </code>
@@ -126,10 +161,10 @@ const PostStatusBlock: FC<PostStatusBlockProps> = ({
 
             {onChainProcess && (
               <div className="p-4 rounded-xl bg-gradient-to-r from-muted/20 to-muted/10">
-                <h4 className="text-sm font-medium text-foreground mb-3">IPFS Details</h4>
+                <h4 className="text-sm font-medium text-foreground mb-3">{POST_STRINGS.ipfsDetails}</h4>
                 <div className="space-y-3 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-muted-foreground">IPFS Hash:</span>
+                    <span className="font-medium text-muted-foreground">{POST_STRINGS.ipfsHashLabel}</span>
                     <code className="bg-background/80 px-3 py-2 rounded-lg text-foreground font-mono break-all">
                       {onChainProcess.ipfsHash}
                     </code>
@@ -189,14 +224,23 @@ const PostStatusBlock: FC<PostStatusBlockProps> = ({
               })}
             </div>
             <div className="flex justify-end">
-              <Button
-                size="sm"
-                disabled={!selectedCoverKeys || selectedCoverKeys.length === 0}
-                onClick={() => onApplyCovers?.()}
-                className="rounded-full px-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-200"
-              >
-                {POST_STRINGS.applySelectedCovers}
-              </Button>
+              {!coversApplied && (
+                <Button
+                  size="sm"
+                  disabled={!selectedCoverKeys || selectedCoverKeys.length === 0 || isApplyingCovers}
+                  onClick={handleApplyCovers}
+                  className="rounded-full px-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-200"
+                >
+                  {isApplyingCovers ? (
+                    <div className="flex items-center gap-2">
+                      <Spinner size="sm" className="text-primary" ariaLabel="Applying covers" />
+                      <span>{POST_STRINGS.applySelectedCovers}</span>
+                    </div>
+                  ) : (
+                    POST_STRINGS.applySelectedCovers
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         )}

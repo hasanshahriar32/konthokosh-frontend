@@ -42,6 +42,16 @@ export const POST_STRINGS = {
   goNow: "এখন যান",
   close: "বন্ধ করুন",
 
+  // Success block strings
+  postCreatedSuccessfully: "পোস্ট সফলভাবে তৈরি হয়েছে",
+  contentPublishedMessage: "আপনার কনটেন্ট প্রকাশিত হয়েছে",
+
+  // Transaction and blockchain details
+  transactionDetails: "লেনদেনের বিস্তারিত",
+  txnHashLabel: "ট্রানজ্যাকশন হ্যাশ:",
+  ipfsDetails: "IPFS বিস্তারিত",
+  ipfsHashLabel: "IPFS হ্যাশ:",
+
   // Per-step labels and messages (distinguishable)
   statuses: {
     submittingLabel: "সাবমিশন (সার্ভারে পোস্ট তৈরি)",

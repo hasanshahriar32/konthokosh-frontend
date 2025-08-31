@@ -146,6 +146,8 @@ export default function WritePage() {
           setOnChainSubmitResp(null);
           setOnChainProcessResp(null);
           setOnChainStatusMessage("");
+          setGeneratedCovers(null);
+          setSelectedCoverKeys([]);
         }
         return newOpen;
       });
