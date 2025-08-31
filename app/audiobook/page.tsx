@@ -265,7 +265,7 @@ export default function AudiobookPlayer() {
         if (nextPost) {
           // Stop current audio before switching
           if (audioPlayerRef.current) {
-            audioPlayerRef.current.pause();
+            audioPlayerRef.current.stop();
           }
 
           // Switch to next post
@@ -464,7 +464,7 @@ export default function AudiobookPlayer() {
 
   const handlePrevious = () => {
     if (audioPlayerRef.current) {
-      audioPlayerRef.current.pause();
+      audioPlayerRef.current.stop();
     }
 
     const previousPost = queueManager.getPreviousPost();
@@ -500,7 +500,7 @@ export default function AudiobookPlayer() {
 
   const handleNext = () => {
     if (audioPlayerRef.current) {
-      audioPlayerRef.current.pause();
+      audioPlayerRef.current.stop();
     }
 
     const nextPost = queueManager.getNextPost();
@@ -534,7 +534,7 @@ export default function AudiobookPlayer() {
 
   const handleSelectPost = (post: Post) => {
     if (audioPlayerRef.current) {
-      audioPlayerRef.current.pause();
+      audioPlayerRef.current.stop();
     }
 
     setPlayerState((prev) => ({

@@ -4,6 +4,7 @@ export const paths = {
   feed: "/feed",
   write: "/feed/new",
   "my-post": "/feed/me",
+  audiobook: "/audiobook",
 };
 
 export const pathTitles = {
@@ -12,6 +13,7 @@ export const pathTitles = {
   feed: "ফিড",
   write: "লিখুন",
   "my-post": "আমার পোস্ট",
+  audiobook: "অডিওবুক",
 };
 
 export const routes = {
@@ -34,5 +36,9 @@ export const routes = {
   "my-post": {
     path: paths["my-post"],
     title: pathTitles["my-post"],
+  },
+  audiobook: {
+    path: paths.audiobook,
+    title: pathTitles.audiobook,
   },
 };
