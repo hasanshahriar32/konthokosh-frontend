@@ -59,19 +59,38 @@ export class AudioPlayer {
       this.audio.volume = this.state.volume
 
       // Add event listeners
-      this.audio.addEventListener("loadedmetadata", () => {
-        this.updateState({
-          duration: this.audio?.duration || 0,
-          isLoading: false,
-        })
-      })
+      // Update duration and loading state when metadata is available
+      this.audio.addEventListener(
+        "loadedmetadata",
+        () => {
+          this.updateState({
+            duration: this.audio?.duration || 0,
+            isLoading: false,
+          })
+        },
+        { once: true }
+      )
 
       this.audio.addEventListener("timeupdate", this.handleTimeUpdate)
       this.audio.addEventListener("ended", this.handleEnded)
       this.audio.addEventListener("error", this.handleError)
 
-      // Load the audio
-      await this.audio.load()
+      // Load the audio and wait until metadata is loaded or an error occurs
+      await new Promise<void>((resolve, reject) => {
+        const onLoaded = () => resolve()
+        const onError = () => reject(new Error("Failed to load audio"))
+
+        // one-time listeners for readiness
+        this.audio?.addEventListener("loadedmetadata", onLoaded, { once: true })
+        this.audio?.addEventListener("error", onError, { once: true })
+
+        try {
+          // kick off loading
+          this.audio?.load()
+        } catch (e) {
+          reject(e)
+        }
+      })
     } catch (error) {
       this.updateState({
         isLoading: false,
@@ -82,8 +101,26 @@ export class AudioPlayer {
 
   play(): void {
     if (this.audio && !this.state.isLoading) {
-      this.audio.play()
-      this.updateState({ isPlaying: true })
+      try {
+        const playResult = this.audio.play()
+        // If play() returns a promise, update state on resolution/rejection
+        if (playResult && typeof (playResult as Promise<void>).then === "function") {
+          (playResult as Promise<void>)
+            .then(() => {
+              this.updateState({ isPlaying: true })
+            })
+            .catch((err) => {
+              console.error("Audio play failed:", err)
+              this.updateState({ isPlaying: false, error: "Playback failed" })
+            })
+        } else {
+          // play() executed synchronously
+          this.updateState({ isPlaying: true })
+        }
+      } catch (err) {
+        console.error("Audio play exception:", err)
+        this.updateState({ isPlaying: false, error: "Playback exception" })
+      }
     }
   }
 
